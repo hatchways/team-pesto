@@ -2,11 +2,13 @@
     "env": {
         "commonjs": true,
         "es6": true,
-        "node": true
+        "node": true,
+        "mocha": true
     },
     "extends": [
         "airbnb-base",
-        "plugin:prettier/recommended"
+        "plugin:prettier/recommended",
+        "plugin:mocha/recommended"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -15,6 +17,9 @@
     "parserOptions": {
         "ecmaVersion": 2018
     },
+    "plugins": [
+        "mocha"
+    ],
     "rules": {
     }
 }
