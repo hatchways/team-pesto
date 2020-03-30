@@ -5,13 +5,16 @@ import { BrowserRouter, Route } from "react-router-dom";
 import { theme } from "./themes/theme";
 import LandingPage from "./pages/Landing";
 
+import Test from "./components/LoginSignupContainer";
+
 import "./App.css";
 
 function App() {
   return (
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
-        <Route path="/" component={LandingPage} />
+        {/* <Route path="/" component={LandingPage} /> */}
+        <Route path="/" component={Test} />
       </BrowserRouter>
     </MuiThemeProvider>
   );
