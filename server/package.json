@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "run-s start-mongo server-dev",
     "debug": "nodemon  --inspect ./bin/www",
+    "lint": "npx eslint .",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000",
     "server-dev": "nodemon ./bin/www",
     "start-mongo": "mongod --port 27017 --fork --logpath /dev/null",
-    "stop-mongo": "mongod --shutdown"
+    "stop-mongo": "mongod --shutdown",
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -24,6 +25,13 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
-    "mocha": "^6.2.0"
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-mocha": "^6.3.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "mocha": "^6.2.0",
+    "prettier": "^2.0.2"
   }
 }
