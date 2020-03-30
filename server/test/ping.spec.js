@@ -5,8 +5,8 @@ const app = require("../app.js");
 chai.should();
 chai.use(chaiHttp);
 
-describe("/POST ping", () => {
-  it("it should return 400", done => {
+describe("/POST ping", function () {
+  it("it should return 400", function (done) {
     chai
       .request(app)
       .post(`/ping/`)
