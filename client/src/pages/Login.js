@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@material-ui/core";
+import { Button, TextField } from "@material-ui/core";
 
 const Login = () => {
   const [inputs, setInputs] = useState({ email: "", password: "" });
@@ -19,17 +19,18 @@ const Login = () => {
   return (
     <form onSubmit={submit}>
       <h1>Welcome back!</h1>
-      <input
-        name="email"
-        type="text"
-        placeholder="E-mail address"
+      <TextField
+        id="email-input"
+        label="E-mail address"
+        variant="outlined"
         value={inputs.email}
         onChange={handleChange}
       />
-      <input
-        name="password"
-        type="password"
-        placeholder="Password"
+
+      <TextField
+        id="password"
+        label="Password"
+        variant="outlined"
         value={inputs.password}
         onChange={handleChange}
       />
