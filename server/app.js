@@ -7,12 +7,12 @@ const logger = require("morgan");
 const indexRouter = require("./routes/index");
 const pingRouter = require("./routes/ping");
 
+// connect to MongoDB
+require("./mongoose_setup");
+
 const { json, urlencoded } = express;
 
-// connect to MongoDB
-require('./mongoose');
-
-var app = express();
+const app = express();
 
 app.use(logger("dev"));
 app.use(json());
