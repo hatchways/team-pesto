@@ -9,6 +9,9 @@ const pingRouter = require("./routes/ping");
 
 const { json, urlencoded } = express;
 
+// connect to MongoDB
+require('./mongoose');
+
 var app = express();
 
 app.use(logger("dev"));

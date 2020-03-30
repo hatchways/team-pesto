@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start-mongo": "mongod --port 27017 --fork --logpath /dev/null",
-    "stop-mongo": "mongod --shutdown",
-    "server-dev": "nodemon ./bin/www",
     "dev": "run-s start-mongo server-dev",
     "debug": "nodemon  --inspect ./bin/www",
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000"
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000",
+    "server-dev": "nodemon ./bin/www",
+    "start-mongo": "mongod --port 27017 --fork --logpath /dev/null",
+    "stop-mongo": "mongod --shutdown"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
