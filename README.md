@@ -1,4 +1,4 @@
-# RFP: Peer Code Review
+# Team Pesto: Peer Code Review
 
 ### Formatting with Prettier and Linting with ESLint
 
