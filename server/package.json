@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "mongo": "mongod --port 27017 --fork --logpath /dev/null",
+    "start-mongo": "mongod --port 27017 --fork --logpath /dev/null",
+    "stop-mongo": "mongod --shutdown",
     "server-dev": "nodemon ./bin/www",
-    "dev": "run-s mongo server-dev",
+    "dev": "run-s start-mongo server-dev",
     "debug": "nodemon  --inspect ./bin/www",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000"
   },
@@ -15,6 +16,7 @@
     "dotenv": "^8.0.0",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
+    "mongoose": "^5.9.6",
     "morgan": "~1.9.1",
     "nodemon": "^1.19.1",
     "npm-run-all": "^4.1.5"
