@@ -9,7 +9,7 @@
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000",
     "server-dev": "nodemon ./bin/www",
     "start-mongo": "mongod --port 27017 --fork --logpath /dev/null",
-    "stop-mongo": "mongod --shutdown",
+    "stop-mongo": "mongod --shutdown"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
