@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles, Button, TextField, Grid } from "@material-ui/core";
+import Onboarding from "./Onboarding";
 
 // TODO Figure out where to move useStyles to avoid duplicate code
 const useStyles = makeStyles(theme => ({
@@ -51,7 +52,9 @@ const SignUp = () => {
     email: "",
     password: "",
     password2: "",
-    error: ""
+    error: "",
+    submitted: false,
+    userLanguages: []
   });
 
   const handleChange = name => event => {
@@ -70,10 +73,7 @@ const SignUp = () => {
       console.log(inputs);
       setInputs({
         ...inputs,
-        name: "",
-        email: "",
-        password: "",
-        password2: "",
+        submitted: true,
         error: ""
       });
     } else {
@@ -84,7 +84,9 @@ const SignUp = () => {
     }
   };
 
-  return (
+  return inputs.submitted ? (
+    <Onboarding />
+  ) : (
     <Grid container spacing={2} className={classes.grid}>
       <Grid item xs={12}>
         <Grid container justify="center">
