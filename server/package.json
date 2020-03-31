@@ -12,6 +12,7 @@
     "stop-mongo": "mongod --shutdown"
   },
   "dependencies": {
+    "bcrypt": "^4.0.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^8.0.0",
