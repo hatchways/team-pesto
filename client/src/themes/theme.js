@@ -9,7 +9,11 @@ const theme = createMuiTheme({
     }
   },
   palette: {
-    primary: { main: "#DF1B1B" }
+    primary: {
+      light: "#7889E0",
+      main: "#DF1B1B",
+      dark: "#6E3ADB"
+    }
   }
 });
 

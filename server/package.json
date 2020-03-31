@@ -3,10 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon ./bin/www",
+    "dev": "run-s start-mongo server-dev",
     "debug": "nodemon  --inspect ./bin/www",
-    "lint": "npx eslint .",
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000"
+    "lint": "npx eslint . --fix",
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000",
+    "server-dev": "nodemon ./bin/www",
+    "start-mongo": "mongod --port 27017 --fork --logpath /dev/null",
+    "stop-mongo": "mongod --shutdown"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -14,8 +17,10 @@
     "dotenv": "^8.0.0",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
+    "mongoose": "^5.9.6",
     "morgan": "~1.9.1",
-    "nodemon": "^1.19.1"
+    "nodemon": "^1.19.1",
+    "npm-run-all": "^4.1.5"
   },
   "devDependencies": {
     "chai": "^4.2.0",
