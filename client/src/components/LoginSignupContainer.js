@@ -12,8 +12,10 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center"
   },
   paper: {
-    height: "75%",
-    width: "50%"
+    padding: "2rem",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
   }
 }));
 

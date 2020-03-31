@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles, Button, TextField, Grid } from "@material-ui/core";
+import LoginSignupContainer from "./LoginSignupContainer";
 
 // TODO Figure out where to move useStyles to avoid duplicate code
 const useStyles = makeStyles(theme => ({
@@ -15,11 +16,10 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
-    height: "100vh"
+    alignItems: "center"
   },
   button: {
-    marginTop: 15,
+    marginTop: 30,
     marginBottom: 60,
     borderRadius: 20,
     color: "#FFFFFF",
@@ -40,7 +40,8 @@ const useStyles = makeStyles(theme => ({
     textDecoration: "none"
   },
   h1: {
-    fontSize: "xx-large"
+    fontSize: "xx-large",
+    marginBottom: 50
   }
 }));
 
@@ -61,53 +62,55 @@ const Login = () => {
   };
 
   return (
-    <Grid container spacing={2} className={classes.grid}>
-      <Grid item xs={12}>
-        <Grid container justify="center">
-          <form onSubmit={submit} className={classes.form}>
-            <h1 className={classes.h1}>Welcome back!</h1>
-            <TextField
-              id="email-input"
-              type="email"
-              label="E-mail address"
-              variant="outlined"
-              required
-              value={inputs.email}
-              onChange={handleChange("email")}
-              className={classes.textfield}
-            />
+    <LoginSignupContainer>
+      <Grid container spacing={2} className={classes.grid}>
+        <Grid item xs={12}>
+          <Grid container justify="center">
+            <form onSubmit={submit} className={classes.form}>
+              <h1 className={classes.h1}>Welcome back!</h1>
+              <TextField
+                id="email-input"
+                type="email"
+                label="E-mail address"
+                variant="outlined"
+                required
+                value={inputs.email}
+                onChange={handleChange("email")}
+                className={classes.textfield}
+              />
 
-            <TextField
-              id="password-input"
-              type="password"
-              label="Password"
-              variant="outlined"
-              required
-              value={inputs.password}
-              onChange={handleChange("password")}
-              className={classes.textfield}
-            />
+              <TextField
+                id="password-input"
+                type="password"
+                label="Password"
+                variant="outlined"
+                required
+                value={inputs.password}
+                onChange={handleChange("password")}
+                className={classes.textfield}
+              />
 
-            <Button
-              type="submit"
-              variant="contained"
-              className={classes.button}
-            >
-              Login
-            </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                className={classes.button}
+              >
+                Login
+              </Button>
 
-            <div>
-              <strong>
-                Don't have an account?{" "}
-                <Link to="/sign-up" className={classes.link}>
-                  Create
-                </Link>
-              </strong>
-            </div>
-          </form>
+              <div>
+                <strong>
+                  Don't have an account?{" "}
+                  <Link to="/sign-up" className={classes.link}>
+                    Create
+                  </Link>
+                </strong>
+              </div>
+            </form>
+          </Grid>
         </Grid>
       </Grid>
-    </Grid>
+    </LoginSignupContainer>
   );
 };
 

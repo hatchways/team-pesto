@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles, Button, TextField, Grid } from "@material-ui/core";
+import LoginSignupContainer from "./LoginSignupContainer";
 
 // TODO Figure out where to move useStyles to avoid duplicate code
 const useStyles = makeStyles(theme => ({
@@ -15,8 +16,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
-    height: "100vh"
+    alignItems: "center"
   },
   button: {
     marginTop: 15,
@@ -85,76 +85,78 @@ const SignUp = () => {
   };
 
   return (
-    <Grid container spacing={2} className={classes.grid}>
-      <Grid item xs={12}>
-        <Grid container justify="center">
-          <form onSubmit={submit} className={classes.form}>
-            <h1 className={classes.h1}>Create an account</h1>
-            <TextField
-              id="name-input"
-              type="text"
-              label="Name"
-              variant="outlined"
-              required
-              value={inputs.name}
-              onChange={handleChange("name")}
-              className={classes.textfield}
-            />
+    <LoginSignupContainer>
+      <Grid container spacing={2} className={classes.grid}>
+        <Grid item xs={12}>
+          <Grid container justify="center">
+            <form onSubmit={submit} className={classes.form}>
+              <h1 className={classes.h1}>Create an account</h1>
+              <TextField
+                id="name-input"
+                type="text"
+                label="Name"
+                variant="outlined"
+                required
+                value={inputs.name}
+                onChange={handleChange("name")}
+                className={classes.textfield}
+              />
 
-            <TextField
-              id="email-input"
-              type="email"
-              label="E-mail address"
-              variant="outlined"
-              required
-              value={inputs.email}
-              onChange={handleChange("email")}
-              className={classes.textfield}
-            />
+              <TextField
+                id="email-input"
+                type="email"
+                label="E-mail address"
+                variant="outlined"
+                required
+                value={inputs.email}
+                onChange={handleChange("email")}
+                className={classes.textfield}
+              />
 
-            <TextField
-              id="password-input"
-              type="password"
-              label="Password"
-              variant="outlined"
-              required
-              value={inputs.password}
-              helperText={inputs.error}
-              onChange={handleChange("password")}
-              className={classes.textfield}
-            />
+              <TextField
+                id="password-input"
+                type="password"
+                label="Password"
+                variant="outlined"
+                required
+                value={inputs.password}
+                helperText={inputs.error}
+                onChange={handleChange("password")}
+                className={classes.textfield}
+              />
 
-            <TextField
-              id="password2-input"
-              type="password"
-              label="Confirm Password"
-              variant="outlined"
-              required
-              value={inputs.password2}
-              onChange={handleChange("password2")}
-              className={classes.textfield}
-            />
+              <TextField
+                id="password2-input"
+                type="password"
+                label="Confirm Password"
+                variant="outlined"
+                required
+                value={inputs.password2}
+                onChange={handleChange("password2")}
+                className={classes.textfield}
+              />
 
-            <Button
-              type="submit"
-              variant="contained"
-              className={classes.button}
-            >
-              Continue
-            </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                className={classes.button}
+              >
+                Continue
+              </Button>
 
-            <div>
-              <strong>
-                Already have an account?{" "}
-                <Link to="/login" className={classes.link}>
-                  Login
-                </Link>
-              </strong>
-            </div>
-          </form>
+              <div>
+                <strong>
+                  Already have an account?{" "}
+                  <Link to="/login" className={classes.link}>
+                    Login
+                  </Link>
+                </strong>
+              </div>
+            </form>
+          </Grid>
         </Grid>
       </Grid>
-    </Grid>
+    </LoginSignupContainer>
   );
 };
 
