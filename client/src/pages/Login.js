@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles, Button, TextField, Grid } from "@material-ui/core";
 
+// TODO Figure out where to move useStyles to avoid duplicate code
 const useStyles = makeStyles(theme => ({
   grid: {
     flexGrow: 1
@@ -9,7 +10,7 @@ const useStyles = makeStyles(theme => ({
   form: {
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
-      width: "30ch"
+      width: "40ch"
     },
     display: "flex",
     flexDirection: "column",
@@ -22,7 +23,8 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 20,
     color: "#FFFFFF",
     backgroundColor: "#43DDC1",
-    width: "15ch"
+    width: "15ch",
+    padding: 10
   },
   textfield: {
     "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
@@ -31,6 +33,10 @@ const useStyles = makeStyles(theme => ({
     "& label.Mui-focused": {
       color: "purple"
     }
+  },
+  link: {
+    color: "purple",
+    textDecoration: "none"
   }
 }));
 
@@ -87,7 +93,10 @@ const Login = () => {
             </Button>
 
             <div>
-              Don't have an account? <Link to="/sign-up">Create</Link>
+              Don't have an account?{" "}
+              <Link to="/sign-up" className={classes.link}>
+                <strong>Create</strong>
+              </Link>
             </div>
           </form>
         </Grid>
