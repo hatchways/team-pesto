@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
   root: {
-    background: 'linear-gradient(to bottom, #6E3ADB, #501CBD)',
+    background: 'linear-gradient(to bottom, #43DDC1, #501CBD)',
     height: '100vh',
     width: '100vw',
     display: 'flex',
