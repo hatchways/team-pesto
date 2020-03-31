@@ -3,41 +3,45 @@ import { Link } from "react-router-dom";
 import { makeStyles, Button, TextField, Grid } from "@material-ui/core";
 
 // TODO Figure out where to move useStyles to avoid duplicate code
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   grid: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   form: {
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
-      width: "40ch",
+      width: "40ch"
     },
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    height: "100vh",
+    height: "100vh"
   },
   button: {
-    marginBottom: "10ch",
+    marginTop: 15,
+    marginBottom: 60,
     borderRadius: 20,
     color: "#FFFFFF",
     backgroundColor: "#43DDC1",
     width: "15ch",
-    padding: 10,
+    padding: 10
   },
   textfield: {
     "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "purple",
+      borderColor: "purple"
     },
     "& label.Mui-focused": {
-      color: "purple",
-    },
+      color: "purple"
+    }
   },
   link: {
     color: "purple",
-    textDecoration: "none",
+    textDecoration: "none"
   },
+  h1: {
+    fontSize: "xx-large"
+  }
 }));
 
 const Login = () => {
@@ -45,11 +49,11 @@ const Login = () => {
 
   const [inputs, setInputs] = useState({ email: "", password: "" });
 
-  const handleChange = (name) => (event) => {
+  const handleChange = name => event => {
     setInputs({ ...inputs, [name]: event.target.value });
   };
 
-  const submit = (event) => {
+  const submit = event => {
     event.preventDefault();
 
     console.log(inputs);
@@ -59,9 +63,9 @@ const Login = () => {
   return (
     <Grid container spacing={2} className={classes.grid}>
       <Grid item xs={12}>
-        <Grid container justify="center" spacing={2}>
+        <Grid container justify="center">
           <form onSubmit={submit} className={classes.form}>
-            <h1>Welcome back!</h1>
+            <h1 className={classes.h1}>Welcome back!</h1>
             <TextField
               id="email-input"
               type="email"
@@ -89,14 +93,16 @@ const Login = () => {
               variant="contained"
               className={classes.button}
             >
-              Submit
+              Login
             </Button>
 
             <div>
-              Don't have an account?{" "}
-              <Link to="/sign-up" className={classes.link}>
-                <strong>Create</strong>
-              </Link>
+              <strong>
+                Don't have an account?{" "}
+                <Link to="/sign-up" className={classes.link}>
+                  Create
+                </Link>
+              </strong>
             </div>
           </form>
         </Grid>
