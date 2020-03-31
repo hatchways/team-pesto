@@ -22,10 +22,7 @@ function LoginSignupContainer(props) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        {/* {props.children} */}
-        <div>
-          YOYOYOO
-        </div>
+        {props.children}
       </Paper>
     </div>
   );

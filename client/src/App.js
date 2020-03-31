@@ -5,7 +5,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 import { theme } from "./themes/theme";
 import LandingPage from "./pages/Landing";
 
-import Test from "./components/LoginSignupContainer";
+import Test from "./components/test";
 
 import "./App.css";
 
