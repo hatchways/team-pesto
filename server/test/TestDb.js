@@ -22,7 +22,12 @@ exports.close = async () => {
   await mongod.close();
 };
 
-// drop database
+// clear database collections
 exports.clear = async () => {
-  await mongoose.connection.dropDatabase();
+  /* eslint-disable */
+  const { collections } = mongoose.connection;
+  for (const k in collections) {
+    await collections[k].deleteMany();
+  }
+  /* eslint-enable */
 };

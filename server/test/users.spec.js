@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 
 const usersRouter = require("../routes/api/users");
 const { passportSecret } = require("../config/keys");
+const User = require("../models/User");
+const testDb = require("./TestDb");
 
 const should = chai.should();
 chai.use(chaiHttp);
@@ -14,7 +16,15 @@ const app = express();
 app.use(json());
 app.use("/api/users", usersRouter);
 
+testDb.connect();
+
 describe("POST /api/users/signup", () => {
+  before((done) => {
+    testDb.clear().then(() => {
+      done();
+    });
+  });
+
   it("should return status code 400 if missing name", (done) => {
     chai
       .request(app)
@@ -84,7 +94,14 @@ describe("POST /api/users/signup", () => {
       });
   });
 
-  it("should return status code 409 if email already registered", (done) => {
+  it("should return status code 409 if email already registered", async (done) => {
+    const existingUser = new User({
+      name: "Jane Doe",
+      email: "test@email.com",
+      password: "scoobydoo",
+    });
+    await existingUser.save();
+
     chai
       .request(app)
       .post("/api/users/signup")
