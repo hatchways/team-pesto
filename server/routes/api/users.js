@@ -8,20 +8,24 @@ const validatePassword = require("../../validation/password");
 
 const router = express.Router();
 
-router.post("/signup", async (req, res) => {
-  const { name, email, password } = req.body;
-
-  // validate inputs
+const validateSignupInputs = (body) => {
+  const { name, email, password } = body;
   let isValid = true;
   if (!name || !validateEmail(email) || !validatePassword(password))
     isValid = false;
 
-  if (!isValid) {
+  return isValid;
+};
+
+router.post("/signup", async (req, res) => {
+  if (!validateSignupInputs(req.body)) {
     res.status(400).send({
       response: "Invalid input.",
     });
     return;
   }
+
+  const { name, email, password } = req.body;
 
   try {
     // check if email exists in database
@@ -33,7 +37,7 @@ router.post("/signup", async (req, res) => {
       return;
     }
 
-    // register user then return jwt
+    // register user
     const newUser = new User({
       name,
       email,
