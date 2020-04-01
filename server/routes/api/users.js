@@ -1,6 +1,5 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 
 const User = require("../../models/User");
 const { passportSecret } = require("../../config/keys");
@@ -34,16 +33,14 @@ router.post("/signup", async (req, res) => {
       return;
     }
 
-    // hash password, register user, then return jwt
-    const hash = await bcrypt.hash(password, 10);
-
+    // register user then return jwt
     const newUser = new User({
       name,
       email,
-      password: hash,
+      password,
     });
+    await newUser.save(); // password hashed on save
 
-    await newUser.save();
     // sign and return jwt as Bearer token in Authorization header
     const payload = {
       id: newUser.id,
@@ -52,9 +49,11 @@ router.post("/signup", async (req, res) => {
     };
     const token = jwt.sign(payload, passportSecret);
     res.status(201).set("Authorization", `Bearer ${token}`).end();
-  } catch {
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.log(err);
     res.status(500).end();
-  };
+  }
 });
 
 router.post("/login", (req, res) => {});
