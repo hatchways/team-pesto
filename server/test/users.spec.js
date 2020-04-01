@@ -181,10 +181,36 @@ describe("POST /api/users/login", () => {
     chai
       .request(app)
       .post("/api/users/login")
-      .send({ email: "luigi@nintedo.com", password: "zrWLfy3JG8" })
+      .send({ email: "luigi@nintendo.com", password: "zrWLfy3JG8" })
       .end((err, res) => {
         should.not.exist(err);
         res.should.have.status(200);
+
+        done();
+      });
+  });
+
+  it("should return status code 400 if email missing", (done) => {
+    chai
+      .request(app)
+      .post("/api/users/login")
+      .send({ password: "zrWLfy3JG8" })
+      .end((err, res) => {
+        should.not.exist(err);
+        res.should.have.status(400);
+
+        done();
+      });
+  });
+
+  it("should return status code 400 if password missing", (done) => {
+    chai
+      .request(app)
+      .post("/api/users/login")
+      .send({ email: "luigi@nintendo.com" })
+      .end((err, res) => {
+        should.not.exist(err);
+        res.should.have.status(400);
 
         done();
       });
