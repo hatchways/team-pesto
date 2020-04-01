@@ -8,8 +8,6 @@ router.post("/signup", (req, res) => {
   const { name, email, password } = req.body;
 
   User.findOne({ email }, (err, user) => {
-    console.log(user);
-
     if (!user) {
       const newUser = new User({ name, email, password });
       newUser.save(() => {});

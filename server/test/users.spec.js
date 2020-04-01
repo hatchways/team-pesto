@@ -14,8 +14,8 @@ const app = express();
 app.use(json());
 app.use("/api/users", usersRouter);
 
-describe("POST /api/users/signup", function () {
-  it("should return status code 400 if missing name", function (done) {
+describe("POST /api/users/signup", () => {
+  it("should return status code 400 if missing name", (done) => {
     chai
       .request(app)
       .post("/api/users/signup")
@@ -31,7 +31,7 @@ describe("POST /api/users/signup", function () {
       });
   });
 
-  it("should return status code 400 if missing email", function (done) {
+  it("should return status code 400 if missing email", (done) => {
     chai
       .request(app)
       .post("/api/users/signup")
@@ -47,7 +47,7 @@ describe("POST /api/users/signup", function () {
       });
   });
 
-  it("should return status code 400 if missing password", function (done) {
+  it("should return status code 400 if missing password", (done) => {
     chai
       .request(app)
       .post("/api/users/signup")
@@ -63,7 +63,7 @@ describe("POST /api/users/signup", function () {
       });
   });
 
-  it("should return status code 201 and JWT token on success", function (done) {
+  it("should return status code 201 and JWT token on success", (done) => {
     chai
       .request(app)
       .post("/api/users/signup")
@@ -84,7 +84,7 @@ describe("POST /api/users/signup", function () {
       });
   });
 
-  it("should return status code 409 if email already registered", function (done) {
+  it("should return status code 409 if email already registered", (done) => {
     chai
       .request(app)
       .post("/api/users/signup")

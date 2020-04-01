@@ -13,8 +13,8 @@ const app = express();
 app.use(json());
 app.use("/ping", pingRouter);
 
-describe("/POST ping", function () {
-  it("it should return 400", function (done) {
+describe("/POST ping", () => {
+  it("it should return 400", (done) => {
     chai
       .request(app)
       .post(`/ping/`)
