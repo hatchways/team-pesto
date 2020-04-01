@@ -4,7 +4,7 @@ const User = require("../../models/User");
 
 const router = express.Router();
 
-router.post('/register', (req, res) => {
+router.post("/signup", (req, res) => {
   const { name, email, password } = req.body;
 
   User.findOne({ email }, (err, user) => {
@@ -16,11 +16,9 @@ router.post('/register', (req, res) => {
     }
   });
 
-  res.end();
+  res.status(201).send({}).end();
 });
 
-router.post('/login', (req, res) => {
-
-});
+router.post("/login", (req, res) => {});
 
 module.exports = router;
