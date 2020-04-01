@@ -4,19 +4,19 @@ import { makeStyles, Button, TextField, Grid } from "@material-ui/core";
 import LoginSignupContainer from "./LoginSignupContainer";
 
 // TODO Figure out where to move useStyles to avoid duplicate code
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   grid: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   form: {
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
-      width: "40ch"
+      width: "40ch",
     },
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   button: {
     marginTop: 15,
@@ -25,38 +25,38 @@ const useStyles = makeStyles(theme => ({
     color: "#FFFFFF",
     backgroundColor: "#43DDC1",
     width: "15ch",
-    padding: 10
+    padding: 10,
   },
   textfield: {
     "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "purple"
+      borderColor: "purple",
     },
     "& label.Mui-focused": {
-      color: "purple"
-    }
+      color: "purple",
+    },
   },
   link: {
     color: "purple",
-    textDecoration: "none"
+    textDecoration: "none",
   },
   h1: {
-    fontSize: "xx-large"
-  }
+    fontSize: "xx-large",
+  },
 }));
 
 const SignUp = () => {
   const classes = useStyles();
-  const [name, setName] = useState("");
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [error, setError] = useState("");
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
     switch (name) {
-      case "name":
-        setName(value);
+      case "userName":
+        setUserName(value);
         break;
       case "email":
         setEmail(value);
@@ -73,13 +73,13 @@ const SignUp = () => {
     }
   };
 
-  const submit = event => {
+  const submit = (event) => {
     event.preventDefault();
 
     if (password.length < 6) {
       setError("Password needs to be at least 6 characters long");
     } else if (password === password2) {
-      console.log(name, email, password, password2);
+      console.log(userName, email, password, password2);
       setError("");
     } else {
       setError("Passwords do not match");
@@ -94,13 +94,13 @@ const SignUp = () => {
             <form onSubmit={submit} className={classes.form}>
               <h1 className={classes.h1}>Create an account</h1>
               <TextField
-                id="name-input"
+                id="userName-input"
                 type="text"
                 label="Name"
-                name="name"
+                name="userName"
                 variant="outlined"
                 required
-                value={name}
+                value={userName}
                 onChange={handleChange}
                 className={classes.textfield}
               />
