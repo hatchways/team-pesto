@@ -94,27 +94,28 @@ describe("POST /api/users/signup", () => {
       });
   });
 
-  it("should return status code 409 if email already registered", async (done) => {
+  it("should return status code 409 if email already registered", (done) => {
     const existingUser = new User({
       name: "Jane Doe",
       email: "test@email.com",
       password: "scoobydoo",
     });
-    await existingUser.save();
 
-    chai
-      .request(app)
-      .post("/api/users/signup")
-      .send({
-        name: "Bobby Bob",
-        email: "test@email.com",
-        password: "password123",
-      })
-      .end((err, res) => {
-        should.not.exist(err);
-        res.should.have.status(409);
+    existingUser.save().then(() => {
+      chai
+        .request(app)
+        .post("/api/users/signup")
+        .send({
+          name: "Bobby Bob",
+          email: "test@email.com",
+          password: "password123",
+        })
+        .end((err, res) => {
+          should.not.exist(err);
+          res.should.have.status(409);
 
-        done();
-      });
+          done();
+        });
+    });
   });
 });

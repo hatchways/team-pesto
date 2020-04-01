@@ -1,20 +1,48 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const User = require("../../models/User");
+const { passportSecret } = require("../../config/keys");
 
 const router = express.Router();
 
 router.post("/signup", (req, res) => {
   const { name, email, password } = req.body;
 
-  User.findOne({ email }, (err, user) => {
-    if (!user) {
-      const newUser = new User({ name, email, password });
-      newUser.save(() => {});
-    }
-  });
+  // check if email exists in database
+  User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        res.status(409).send({
+          response: "An account already exists with that email address.",
+        });
+        return;
+      }
 
-  res.status(201).send({}).end();
+      // hash password, register user, then return jwt
+      bcrypt.hash(password, 10).then((hash) => {
+        const newUser = new User({
+          name,
+          email,
+          password: hash,
+        });
+
+        newUser.save().then(() => {
+          // sign and return jwt as Bearer token in Authorization header
+          const payload = {
+            id: newUser.id,
+            name: newUser.name,
+            email: newUser.email,
+          };
+          const token = jwt.sign(payload, passportSecret);
+          res.status(201).set("Authorization", `Bearer ${token}`).end();
+        });
+      });
+    })
+    .catch(() => {
+      res.status(500).end();
+    });
 });
 
 router.post("/login", (req, res) => {});
