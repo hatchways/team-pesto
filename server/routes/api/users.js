@@ -4,11 +4,25 @@ const bcrypt = require("bcrypt");
 
 const User = require("../../models/User");
 const { passportSecret } = require("../../config/keys");
+const validateEmail = require("../../validation/email");
+const validatePassword = require("../../validation/password");
 
 const router = express.Router();
 
 router.post("/signup", (req, res) => {
   const { name, email, password } = req.body;
+
+  // validate inputs
+  let isValid = true;
+  if (!name || !validateEmail(email) || !validatePassword(password))
+    isValid = false;
+
+  if (!isValid) {
+    res.status(400).send({
+      response: "Invalid input.",
+    });
+    return;
+  }
 
   // check if email exists in database
   User.findOne({ email })

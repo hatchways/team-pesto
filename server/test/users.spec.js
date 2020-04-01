@@ -1,10 +1,8 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const express = require("express");
-const jwt = require("jsonwebtoken");
 
 const usersRouter = require("../routes/api/users");
-const { passportSecret } = require("../config/keys");
 const User = require("../models/User");
 const testDb = require("./TestDb");
 
@@ -85,10 +83,7 @@ describe("POST /api/users/signup", () => {
       .end((err, res) => {
         should.not.exist(err);
         res.should.have.status(201);
-
-        const decoded = jwt.verify(res.data, passportSecret);
-        decoded.name.should.eql("John Smith");
-        decoded.email.should.eql("email@email.com");
+        res.should.have.header("Authorization");
 
         done();
       });
