@@ -4,19 +4,19 @@ import { makeStyles, Button, TextField, Grid } from "@material-ui/core";
 import LoginSignupContainer from "./LoginSignupContainer";
 
 // TODO Figure out where to move useStyles to avoid duplicate code
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   grid: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   form: {
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
-      width: "40ch",
+      width: "40ch"
     },
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
   button: {
     marginTop: 30,
@@ -25,40 +25,48 @@ const useStyles = makeStyles((theme) => ({
     color: "#FFFFFF",
     backgroundColor: "#43DDC1",
     width: "15ch",
-    padding: 10,
+    padding: 10
   },
   textfield: {
     "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "purple",
+      borderColor: "purple"
     },
     "& label.Mui-focused": {
-      color: "purple",
-    },
+      color: "purple"
+    }
   },
   link: {
     color: "purple",
-    textDecoration: "none",
+    textDecoration: "none"
   },
   h1: {
     fontSize: "xx-large",
-    marginBottom: 50,
-  },
+    marginBottom: 50
+  }
 }));
 
 const Login = () => {
   const classes = useStyles();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [inputs, setInputs] = useState({ email: "", password: "" });
+  const handleChange = event => {
+    const { name, value } = event.target;
 
-  const handleChange = (name) => (event) => {
-    setInputs({ ...inputs, [name]: event.target.value });
+    switch (name) {
+      case "email":
+        setEmail(value);
+        break;
+      case "password":
+        setPassword(value);
+        break;
+    }
   };
 
-  const submit = (event) => {
+  const submit = event => {
     event.preventDefault();
 
-    console.log(inputs);
-    setInputs({ ...inputs, email: "", password: "" });
+    console.log(email, password);
   };
 
   return (
@@ -72,10 +80,11 @@ const Login = () => {
                 id="email-input"
                 type="email"
                 label="E-mail address"
+                name="email"
                 variant="outlined"
                 required
-                value={inputs.email}
-                onChange={handleChange("email")}
+                value={email}
+                onChange={handleChange}
                 className={classes.textfield}
               />
 
@@ -83,10 +92,11 @@ const Login = () => {
                 id="password-input"
                 type="password"
                 label="Password"
+                name="password"
                 variant="outlined"
                 required
-                value={inputs.password}
-                onChange={handleChange("password")}
+                value={password}
+                onChange={handleChange}
                 className={classes.textfield}
               />
 
