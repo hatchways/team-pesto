@@ -17,10 +17,8 @@ app.use("/api/users", usersRouter);
 testDb.connect();
 
 describe("POST /api/users/signup", () => {
-  before((done) => {
-    testDb.clear().then(() => {
-      done();
-    });
+  before(async () => {
+    await testDb.clear();
   });
 
   it("should return status code 400 if missing name", (done) => {
@@ -112,5 +110,83 @@ describe("POST /api/users/signup", () => {
           done();
         });
     });
+  });
+});
+
+describe("POST /api/users/login", () => {
+  before(async () => {
+    await testDb.clear();
+
+    const users = [
+      new User({
+        name: "Mario",
+        email: "mario@nintendo.com",
+        password: "zrWLfy3JG8",
+      }).save(),
+      new User({
+        name: "Luigi",
+        email: "luigi@nintendo.com",
+        password: "zrWLfy3JG8",
+      }).save(),
+      new User({
+        name: "Sonic",
+        email: "rings@sega.com",
+        password: "NymRit",
+      }).save(),
+    ];
+
+    await Promise.all(users);
+  });
+
+  it("should return status code 200 and jwt on success", (done) => {
+    chai
+      .request(app)
+      .post("/api/users/login")
+      .send({ email: "rings@sega.com", password: "NymRit" })
+      .end((err, res) => {
+        should.not.exist(err);
+        res.should.have.status(200);
+
+        done();
+      });
+  });
+
+  it("should return status code 401 if email is unregistered", (done) => {
+    chai
+      .request(app)
+      .post("/api/users/login")
+      .send({ email: "saint_nick@northpole.org", password: "NymRit" })
+      .end((err, res) => {
+        should.not.exist(err);
+        res.should.have.status(401);
+
+        done();
+      });
+  });
+
+  it("should return status code 401 if password is incorrect", (done) => {
+    chai
+      .request(app)
+      .post("/api/users/login")
+      .send({ email: "rings@sega.com", password: "fwFOJf" })
+      .end((err, res) => {
+        should.not.exist(err);
+        res.should.have.status(401);
+
+        done();
+      });
+  });
+
+  it("should return the correct user if password is shared", (done) => {
+    chai
+      .request(app)
+      .post("/api/users/login")
+      .send({ email: "luigi@nintedo.com", password: "zrWLfy3JG8" })
+      .end((err, res) => {
+        should.not.exist(err);
+        res.should.have.status(200);
+
+        done();
+      });
   });
 });

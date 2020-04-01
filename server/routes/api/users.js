@@ -60,6 +60,8 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-router.post("/login", (req, res) => {});
+router.post("/login", (req, res) => {
+  res.status(500).end();
+});
 
 module.exports = router;
