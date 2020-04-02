@@ -83,7 +83,10 @@ describe("POST /api/users/signup", () => {
         res.should.have.status(201);
         res.body.should.have.property("token");
 
-        done();
+        User.findOne({ email: "email@email.com" }).then((user) => {
+          should.exist(user);
+          done();
+        });
       });
   });
 
@@ -139,17 +142,21 @@ describe("POST /api/users/login", () => {
   });
 
   it("should return status code 200 and jwt on success", (done) => {
-    chai
-      .request(app)
-      .post("/api/users/login")
-      .send({ email: "rings@sega.com", password: "NymRit" })
-      .end((err, res) => {
-        should.not.exist(err);
-        res.should.have.status(200);
-        res.body.should.have.property("token");
+    User.findOne({ email: "rings@sega.com" }).then((user) => {
+      should.exist(user);
 
-        done();
-      });
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({ email: "rings@sega.com", password: "NymRit" })
+        .end((err, res) => {
+          should.not.exist(err);
+          res.should.have.status(200);
+          res.body.should.have.property("token");
+
+          done();
+        });
+    });
   });
 
   it("should return status code 401 if email is unregistered", (done) => {

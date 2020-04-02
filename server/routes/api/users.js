@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -56,7 +57,7 @@ router.post("/signup", async (req, res) => {
     res.status(201).send({ token });
   } catch (err) {
     // eslint-disable-next-line no-console
-    console.log(err);
+    console.error(err);
     res.status(500).end();
   }
 });
@@ -93,7 +94,7 @@ router.post("/login", async (req, res) => {
     res.status(200).send({ token });
   } catch (err) {
     // eslint-disable-next-line no-console
-    console.log(err);
+    console.error(err);
     res.status(500).end();
   }
 });

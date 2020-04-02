@@ -18,10 +18,7 @@ async function hashHook(next) {
 const userSchema = new Schema({
   email: { type: String, required: true },
   name: { type: String, required: true },
-  password: {
-    type: String,
-    required: true,
-  },
+  password: { type: String, required: true },
 });
 
 // hash password before saving
