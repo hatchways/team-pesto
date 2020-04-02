@@ -1,5 +1,6 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const User = require("../../models/User");
 const { passportSecret } = require("../../config/keys");
@@ -52,7 +53,7 @@ router.post("/signup", async (req, res) => {
       email: newUser.email,
     };
     const token = jwt.sign(payload, passportSecret);
-    res.status(201).set("Authorization", `Bearer ${token}`).end();
+    res.status(201).send({ token });
   } catch (err) {
     // eslint-disable-next-line no-console
     console.log(err);
@@ -60,8 +61,41 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-router.post("/login", (req, res) => {
-  res.status(500).end();
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    res.status(400).send({ response: "Invalid input." });
+    return;
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      res.status(401).send({ response: "Incorrect user credentials." });
+      return;
+    }
+
+    const hash = user.password;
+    const match = await bcrypt.compare(password, hash);
+    if (!match) {
+      res.status(401).send({ response: "Incorrect user credentials." });
+      return;
+    }
+
+    // sign and return jwt
+    const payload = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
+    const token = jwt.sign(payload, passportSecret);
+    res.status(200).send({ token });
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.log(err);
+    res.status(500).end();
+  }
 });
 
 module.exports = router;

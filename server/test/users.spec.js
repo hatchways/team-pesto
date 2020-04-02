@@ -81,7 +81,7 @@ describe("POST /api/users/signup", () => {
       .end((err, res) => {
         should.not.exist(err);
         res.should.have.status(201);
-        res.should.have.header("Authorization");
+        res.body.should.have.property("token");
 
         done();
       });
@@ -146,6 +146,7 @@ describe("POST /api/users/login", () => {
       .end((err, res) => {
         should.not.exist(err);
         res.should.have.status(200);
+        res.body.should.have.property("token");
 
         done();
       });
