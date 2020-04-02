@@ -11,47 +11,59 @@ import {
 const useStyles = makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(1),
-    minWidth: "20ch"
+    minWidth: "25ch"
   },
   selectEmpty: {
     marginTop: theme.spacing(2)
+  },
+  circleButton: {
+    color: "#ff0011",
+    minHeight: "20px",
+    minWidth: "20px",
+    fontSize: "15px",
+    fontWeight: "bold",
+    borderRadius: "50%",
+    backgroundColor: "rgba(255, 0, 17, .1)",
+    marginRight: "10px"
+  },
+  li: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
   }
 }));
 
-const DynamicSelect = ({ updateList, data, index }) => {
+const DynamicSelect = ({ updateList, data, index, removeLanguage }) => {
   const classes = useStyles();
-
-  const [language, setLanguage] = useState("");
-  const [level, setLevel] = useState("");
 
   const handleChange = event => {
     const { name, value } = event.target;
 
-    // eslint-disable-next-line
-    switch (name) {
-      case "language":
-        setLanguage(value);
-        break;
-      case "level":
-        setLevel(value);
-        break;
-    }
+    updateList({ type: name, value: value }, index);
+  };
 
-    if (language && level) {
-      console.log("dynamicSelect: ", language, level);
-      updateList({ [language]: level }, index);
-    }
+  const remove = () => {
+    removeLanguage(index);
   };
 
   return (
-    <li>
+    <li className={classes.li}>
+      <Button
+        type="button"
+        variant="contained"
+        className={classes.circleButton}
+        onClick={remove}
+      >
+        -
+      </Button>
+
       <FormControl variant="outlined" className={classes.formControl}>
         <InputLabel id="language">Language</InputLabel>
         <Select
           labelId="language"
           id="language"
           name="language"
-          value={language}
+          value={data.language}
           onChange={handleChange}
           label="Language"
         >
@@ -72,7 +84,7 @@ const DynamicSelect = ({ updateList, data, index }) => {
           labelId="level"
           id="level"
           name="level"
-          value={level}
+          value={data.level}
           onChange={handleChange}
           label="Level"
         >

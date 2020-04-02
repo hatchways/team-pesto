@@ -52,16 +52,26 @@ const useStyles = makeStyles(theme => ({
 const Onboarding = () => {
   const classes = useStyles();
 
-  // const [inputs, setInputs] = useState([{ language: "", level: "" }]);
-  const [languageList, setLanguageList] = useState([]);
+  const [languageList, setLanguageList] = useState([
+    { language: "", level: "" }
+  ]);
 
   const addLanguage = () => {
-    setLanguageList([...languageList, {}]);
+    setLanguageList([...languageList, { language: "", level: "" }]);
+  };
+
+  const removeLanguage = index => {
+    const updatedLanguageList = languageList.slice();
+    updatedLanguageList.splice(index, 1);
+    setLanguageList(updatedLanguageList);
   };
 
   const updateList = (userInput, index) => {
     const updatedLanguageList = languageList.slice();
-    updatedLanguageList[index] = userInput;
+    updatedLanguageList[index] = {
+      ...updatedLanguageList[index],
+      [userInput.type]: userInput.value
+    };
     setLanguageList(updatedLanguageList);
   };
 
@@ -81,9 +91,10 @@ const Onboarding = () => {
             {languageList.map((data, index) => (
               <DynamicSelect
                 key={index}
-                data={data}
                 index={index}
+                data={data}
                 updateList={updateList}
+                removeLanguage={removeLanguage}
               />
             ))}
           </ul>
