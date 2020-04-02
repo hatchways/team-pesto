@@ -6,23 +6,35 @@ import theme from "themes/theme";
 import SignUp from "components/SignUp";
 import Login from "components/Login";
 
+import Home from "pages/Home";
+
 import "./App.css";
 
 function App() {
   const [user, setUser] = useState(null);
 
   // on mount
-  useEffect(async () => {
-    setUser(await /* SOME CODE THAT CALLS THE BACK END TO GET USER */);
+  
+  useEffect(() => {
+  // useEffect(async () => {
+    // setUser(await /* SOME CODE THAT CALLS THE BACK END TO GET USER */);
+
+    // temporary mock user:
+    setUser({
+      id: 1,
+      email: "mock_user@email.com",
+      name: "Mock User",
+    });
   }, []);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
-          <Redirect to="/sign-up" />
+          <Route path="/" component={Home} />
+          {/* <Redirect to="/sign-up" />
           <Route path="/sign-up" component={SignUp} />
-          <Route path="/login" component={Login} />
+          <Route path="/login" component={Login} /> */}
         </BrowserRouter>
       </MuiThemeProvider>
     </UserContext.Provider>
