@@ -13,8 +13,11 @@ import "./App.css";
 function App() {
   const [user, setUser] = useState(null);
 
+  const logout = () => {
+    setUser(null);
+  };
+
   // on mount
-  
   useEffect(() => {
   // useEffect(async () => {
     // setUser(await /* SOME CODE THAT CALLS THE BACK END TO GET USER */);
@@ -28,7 +31,11 @@ function App() {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{
+      user,
+      setUser,
+      logout,
+    }}>
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
           <Route path="/" component={Home} />

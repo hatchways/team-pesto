@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { AppBar, Toolbar, Button, Menu, MenuItem } from "@material-ui/core";
+// import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import UserContext from "../context/UserContext";
 // import styles from "";        // some centralized styles file
 
@@ -10,11 +11,16 @@ import UserContext from "../context/UserContext";
 const Navbar = () => {
   // const classes = useStyles();
 
-  const { user } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
 
   const [anchorEl, setAnchorEl] = useState(null);
 
   // const handleMenu = e => setAnchorEl(e.currentTarget);
+
+  const handleLogout = () => {
+    logout();
+    setAnchorEl(null)
+  }
 
   return (
     <AppBar>
@@ -27,6 +33,7 @@ const Navbar = () => {
             <Button>Upload Code</Button>
           </Link>
           <Button onClick={(e) => setAnchorEl(e.currentTarget)}>Profile</Button>
+          {/* <AccountCircleIcon /> */}
           <Menu
             anchorEl={anchorEl}
             open={!!anchorEl}
@@ -35,7 +42,7 @@ const Navbar = () => {
             <MenuItem>
               <Link to="/profile">Go to Profile</Link>
             </MenuItem>
-            <MenuItem>Logout</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </Toolbar>
       </Toolbar>
