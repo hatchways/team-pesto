@@ -19,40 +19,28 @@ const Navbar = () => {
   return (
     <AppBar>
       <Toolbar>
-        <img src="logo.png"></img>
+        <img src="logo.png" />
         <Toolbar>
-          <Link to="/reviews">
-            Reviews
-          </Link>
-          <Link to="/balance">
-            Balance
-          </Link>
+          <Link to="/reviews">Reviews</Link>
+          <Link to="/balance">Balance</Link>
           <Link to="/upload">
-            <Button>
-              Upload Code
-            </Button>
+            <Button>Upload Code</Button>
           </Link>
-          <Button onClick={e => setAnchorEl(e.currentTarget)}>
-            Profile
-          </Button>
+          <Button onClick={(e) => setAnchorEl(e.currentTarget)}>Profile</Button>
           <Menu
             anchorEl={anchorEl}
             open={!!anchorEl}
             onClose={() => setAnchorEl(null)}
           >
             <MenuItem>
-              <Link to="/profile">
-                Go to Profile
-              </Link>
+              <Link to="/profile">Go to Profile</Link>
             </MenuItem>
-            <MenuItem>
-              Logout
-            </MenuItem>
+            <MenuItem>Logout</MenuItem>
           </Menu>
         </Toolbar>
       </Toolbar>
     </AppBar>
   );
-}
+};
 
 export default Navbar;

@@ -26,6 +26,6 @@ const LoginSignupContainer = (props) => {
       <Paper className={classes.paper}>{props.children}</Paper>
     </div>
   );
-}
+};
 
 export default LoginSignupContainer;

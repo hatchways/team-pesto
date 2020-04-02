@@ -18,10 +18,9 @@ const Home = () => {
   //   </Fragment>
   // );
 
-  console.log(user)
+  console.log(user);
 
-  return <Navbar />
-
+  return <Navbar />;
 };
 
 export default Home;
