@@ -56,6 +56,8 @@ const Onboarding = () => {
     { language: "", level: "" }
   ]);
 
+  const [error, setError] = useState(false);
+
   const addLanguage = () => {
     setLanguageList([...languageList, { language: "", level: "" }]);
   };
@@ -78,7 +80,12 @@ const Onboarding = () => {
   const submit = event => {
     event.preventDefault();
 
-    console.log("languageList: ", languageList);
+    if (languageList.some(obj => obj.language === "" || obj.level === "")) {
+      setError(true);
+    } else {
+      setError(false);
+      console.log("languageList: ", languageList);
+    }
   };
 
   return (
@@ -95,6 +102,7 @@ const Onboarding = () => {
                 data={data}
                 updateList={updateList}
                 removeLanguage={removeLanguage}
+                error={error}
               />
             ))}
           </ul>

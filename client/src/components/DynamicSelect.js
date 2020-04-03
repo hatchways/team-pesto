@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   makeStyles,
   Button,
   InputLabel,
   MenuItem,
   FormControl,
-  Select
+  Select,
+  FormHelperText
 } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
@@ -33,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const DynamicSelect = ({ updateList, data, index, removeLanguage }) => {
+const DynamicSelect = ({ updateList, data, index, removeLanguage, error }) => {
   const classes = useStyles();
 
   const handleChange = event => {
@@ -45,6 +46,9 @@ const DynamicSelect = ({ updateList, data, index, removeLanguage }) => {
   const remove = () => {
     removeLanguage(index);
   };
+
+  const options = ["JavaScript", "Python", "Java", "C++", "Ruby"];
+  const levels = ["Beginner", "Intermediate", "Advanced"];
 
   return (
     <li className={classes.li}>
@@ -70,11 +74,11 @@ const DynamicSelect = ({ updateList, data, index, removeLanguage }) => {
           <MenuItem value="">
             <em>None</em>
           </MenuItem>
-          <MenuItem value="JavaScript">JavaScript</MenuItem>
-          <MenuItem value="Python">Python</MenuItem>
-          <MenuItem value="Java">Java</MenuItem>
-          <MenuItem value="C++">C++</MenuItem>
-          <MenuItem value="Ruby">Ruby</MenuItem>
+          {options.map(option => (
+            <MenuItem key={option} value={option} require="true">
+              {option}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
 
@@ -91,11 +95,15 @@ const DynamicSelect = ({ updateList, data, index, removeLanguage }) => {
           <MenuItem value="">
             <em>None</em>
           </MenuItem>
-          <MenuItem value="Beginner">Beginner</MenuItem>
-          <MenuItem value="Intermediate">Intermediate</MenuItem>
-          <MenuItem value="Advanced">Advanced</MenuItem>
+          {levels.map(level => (
+            <MenuItem key={level} value={level} require="true">
+              {level}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
+
+      {error && <FormHelperText>Please fill in all fields</FormHelperText>}
     </li>
   );
 };
