@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
+import axios from "axios";
+
 import UserContext from "./context/UserContext";
 import theme from "themes/theme";
 import SignUp from "components/SignUp";
@@ -20,13 +22,14 @@ function App() {
   // on mount
   useEffect(() => {
   // useEffect(async () => {
-    // setUser(await /* SOME CODE THAT CALLS THE BACK END TO GET USER */);
+    // setUser(await axios.get("/users/me"));
 
     // temporary mock user:
     setUser({
       id: 1,
       email: "mock_user@email.com",
       name: "Mock User",
+      image: "mock-user.png",
     });
   }, []);
 
