@@ -12,10 +12,39 @@ import useStyles from './CodeUploadDialog.css';
 const CodeUploadDialog = () => {
   const classes = useStyles();
 
+  const languages = {
+    python: 'Python',
+    java: 'Java',
+    'c++': 'C++',
+    javascript: 'JavaScript',
+    ruby: 'Ruby',
+  };
+  const defaultLanguage = Object.keys(languages)[0];
+
   const [ open, setOpen ] = useState(true);
+  const [ title, setTitle ] = useState('');
+  const [ language, setLanguage ] = useState(defaultLanguage);
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleTitleChange = event => {
+    event.preventDefault();
+    setTitle(event.target.value);
+  };
+
+  const handleLanguageChange = event => {
+    event.preventDefault();
+    setLanguage(event.target.value);
+  };
+
+  const renderLanguageChoices = () => {
+    return Object.keys(languages).map(k => (
+      <MenuItem key={k} value={k}>
+        {languages[k]}
+      </MenuItem>
+    ));
   };
 
   return (
@@ -34,6 +63,8 @@ const CodeUploadDialog = () => {
               label='Title'
               InputLabelProps={{ shrink: true }}
               fullWidth
+              value={title}
+              onChange={handleTitleChange}
             />
           </Grid>
 
@@ -42,10 +73,12 @@ const CodeUploadDialog = () => {
               select
               variant='outlined'
               label='Language'
+              InputLabelProps={{ shrink: true }}
               fullWidth
+              value={language}
+              onChange={handleLanguageChange}
             >
-              <MenuItem value='javascript'>JavaScript</MenuItem>
-              <MenuItem value='python'>Python</MenuItem>
+              {renderLanguageChoices()}
             </TextField>
           </Grid>
         </Grid>
