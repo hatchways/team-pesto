@@ -18,8 +18,7 @@ const Home = () => {
   //   </Fragment>
   // );
 
-  console.log(user);
-
+  // TESTING THE NAVBAR:
   return <Navbar />;
 };
 
