@@ -6,16 +6,15 @@ import {
   MenuItem,
   FormControl,
   Select,
-  FormHelperText
 } from "@material-ui/core";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
-    minWidth: "25ch"
+    minWidth: "25ch",
   },
   selectEmpty: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   circleButton: {
     color: "#ff0011",
@@ -25,30 +24,39 @@ const useStyles = makeStyles(theme => ({
     fontWeight: "bold",
     borderRadius: "50%",
     backgroundColor: "rgba(255, 0, 17, .1)",
-    marginRight: "10px"
+    marginRight: "10px",
   },
   li: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
+  select: {
+    root: {
+      borderColor: `${theme.palette.primary.main}`,
+    },
+  },
 }));
 
-const DynamicSelect = ({ updateList, data, index, removeLanguage, error }) => {
+const DynamicSelect = ({
+  updateList,
+  languageObj,
+  index,
+  removeLanguage,
+  options,
+  levels,
+}) => {
   const classes = useStyles();
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
 
     updateList({ type: name, value: value }, index);
   };
 
   const remove = () => {
-    removeLanguage(index);
+    removeLanguage(index, languageObj.language);
   };
-
-  const options = ["JavaScript", "Python", "Java", "C++", "Ruby"];
-  const levels = ["Beginner", "Intermediate", "Advanced"];
 
   return (
     <li className={classes.li}>
@@ -67,18 +75,19 @@ const DynamicSelect = ({ updateList, data, index, removeLanguage, error }) => {
           labelId="language"
           id="language"
           name="language"
-          value={data.language}
+          value={languageObj.language}
           onChange={handleChange}
           label="Language"
+          className={classes.select}
         >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          {options.map(option => (
-            <MenuItem key={option} value={option} require="true">
-              {option}
-            </MenuItem>
-          ))}
+          {// eslint-disable-next-line
+          Object.keys(options).map((option) => {
+            return (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            );
+          })}
         </Select>
       </FormControl>
 
@@ -88,22 +97,17 @@ const DynamicSelect = ({ updateList, data, index, removeLanguage, error }) => {
           labelId="level"
           id="level"
           name="level"
-          value={data.level}
+          value={languageObj.level}
           onChange={handleChange}
           label="Level"
         >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          {levels.map(level => (
-            <MenuItem key={level} value={level} require="true">
+          {levels.map((level) => (
+            <MenuItem key={level} value={level}>
               {level}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
-
-      {error && <FormHelperText>Please fill in all fields</FormHelperText>}
     </li>
   );
 };

@@ -28,14 +28,14 @@ const useStyles = makeStyles(theme => ({
   },
   textfield: {
     "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "purple"
+      borderColor: `${theme.palette.primary.dark}`
     },
     "& label.Mui-focused": {
-      color: "purple"
+      color: `${theme.palette.primary.dark}`
     }
   },
   link: {
-    color: "purple",
+    color: `${theme.palette.primary.dark}`,
     textDecoration: "none"
   },
   h1: {
