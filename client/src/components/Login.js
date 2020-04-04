@@ -5,45 +5,45 @@ import LoginSignupContainer from "pages/LoginSignupContainer";
 import GridTemplateContainer from "pages/GridTemplateContainer";
 
 // TODO Figure out where to move useStyles to avoid duplicate code
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   grid: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   form: {
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
-      width: "40ch"
+      width: "40ch",
     },
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   button: {
     marginTop: 30,
     marginBottom: 60,
     borderRadius: 20,
     color: "#FFFFFF",
-    backgroundColor: "#43DDC1",
+    backgroundColor: `${theme.palette.primary.green}`,
     width: "15ch",
-    padding: 10
+    padding: 10,
   },
   textfield: {
     "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: `${theme.palette.primary.dark}`
+      borderColor: `${theme.palette.primary.dark}`,
     },
     "& label.Mui-focused": {
-      color: `${theme.palette.primary.dark}`
-    }
+      color: `${theme.palette.primary.dark}`,
+    },
   },
   link: {
     color: `${theme.palette.primary.dark}`,
-    textDecoration: "none"
+    textDecoration: "none",
   },
   h1: {
     fontSize: "xx-large",
-    marginBottom: 50
-  }
+    marginBottom: 50,
+  },
 }));
 
 const Login = () => {
@@ -51,7 +51,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
 
     // eslint-disable-next-line
@@ -65,7 +65,7 @@ const Login = () => {
     }
   };
 
-  const submit = event => {
+  const submit = (event) => {
     event.preventDefault();
 
     console.log(email, password);
