@@ -89,9 +89,34 @@ router.post("/login", async (req, res) => {
       id: user.id,
       name: user.name,
       email: user.email,
+      experience: user.experience,
     };
     const token = jwt.sign(payload, passportSecret);
     res.status(200).send({ token });
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error(err);
+    res.status(500).end();
+  }
+});
+
+// TODO Finished update route for adding experience
+router.post("/experience", async (req, res) => {
+  const { userId, experience } = req.body;
+
+  try {
+    // check if userId exists in database
+    const user = await User.updateOne(
+      { email: objectId(userId) },
+      { $set: experience }
+    );
+
+    // sign and return jwt as Bearer token in Authorization header
+    const payload = {
+      id: user.id,
+      experience: user.experience,
+    };
+    res.status(201).send({ payload });
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error(err);
