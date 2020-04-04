@@ -70,7 +70,6 @@ const Onboarding = () => {
     const updatedLanguageList = languageList.slice();
     updatedLanguageList.splice(index, 1);
     setLanguageList(updatedLanguageList);
-    setOptions({ ...options, [lang]: true });
   };
 
   const updateList = (userInput, index) => {
@@ -80,15 +79,14 @@ const Onboarding = () => {
       [userInput.type]: userInput.value,
     };
 
-    if (userInput.type === "language" && !options[userInput.value]) {
+    if (
+      userInput.type === "language" &&
+      languageList.some((obj) => obj.language === userInput.value)
+    ) {
       setDuplicateError({ error: true, lang: userInput.value });
     } else {
       setDuplicateError({ error: false, lang: "" });
       setLanguageList(updatedLanguageList);
-    }
-
-    if (userInput.type === "language") {
-      updateOptions(userInput.value);
     }
   };
 
@@ -103,19 +101,8 @@ const Onboarding = () => {
     }
   };
 
-  const [options, setOptions] = useState({
-    JavaScript: true,
-    Python: true,
-    Java: true,
-    "C++": true,
-    Ruby: true,
-  });
-
+  const options = ["JavaScript", "Python", "Java", "C++", "Ruby"];
   const levels = ["Beginner", "Intermediate", "Advanced"];
-
-  const updateOptions = (lang) => {
-    setOptions({ ...options, [lang]: false });
-  };
 
   return (
     <LoginSignupContainer>

@@ -81,7 +81,7 @@ const DynamicSelect = ({
           className={classes.select}
         >
           {// eslint-disable-next-line
-          Object.keys(options).map((option) => {
+          options.map((option) => {
             return (
               <MenuItem key={option} value={option}>
                 {option}
