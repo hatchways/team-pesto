@@ -62,6 +62,8 @@ const Onboarding = () => {
     lang: "",
   });
 
+  const [selecOneError, setSelectOneError] = useState(false);
+
   const addLanguage = () => {
     setLanguageList([...languageList, { language: "", level: "" }]);
   };
@@ -94,8 +96,12 @@ const Onboarding = () => {
     event.preventDefault();
 
     if (languageList.some((obj) => obj.language === "" || obj.level === "")) {
+      setSelectOneError(false);
       setError(true);
+    } else if (languageList.length === 0) {
+      setSelectOneError(true);
     } else {
+      setSelectOneError(false);
       setError(false);
       console.log("languageList: ", languageList);
     }
@@ -135,6 +141,12 @@ const Onboarding = () => {
           {duplicateError.error && (
             <FormHelperText className={classes.formHelper}>
               Oops, you already selected {duplicateError.lang}!
+            </FormHelperText>
+          )}
+
+          {selecOneError && (
+            <FormHelperText className={classes.formHelper}>
+              You must select at least one language.
             </FormHelperText>
           )}
 

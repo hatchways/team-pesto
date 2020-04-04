@@ -32,8 +32,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   select: {
-    root: {
-      borderColor: `${theme.palette.primary.main}`,
+    notchedOutline: {
+      borderWidth: "1px",
+      borderColor: "yellow !important",
     },
   },
 }));
