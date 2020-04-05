@@ -7,7 +7,6 @@ const passport = require("passport");
 
 const configurePassport = require("./config/passport");
 const indexRouter = require("./routes/index");
-const pingRouter = require("./routes/ping");
 
 const usersRouter = require("./routes/api/users");
 
@@ -30,7 +29,6 @@ configurePassport(passport);
 
 // routes
 app.use("/", indexRouter);
-app.use("/ping", pingRouter);
 app.use("/users", usersRouter);
 
 // catch 404 and forward to error handler
