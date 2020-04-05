@@ -19,13 +19,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function LoginSignupContainer(props) {
-  const classes = useStyles(props);
+const LoginSignupContainer = (props) => {
+  const classes = useStyles();
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>{props.children}</Paper>
     </div>
   );
-}
+};
 
 export default LoginSignupContainer;

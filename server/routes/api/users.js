@@ -99,4 +99,12 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.get("/me", (req, res, next) => {
+  if (!req.user) res.status(401).end();
+  next();
+}, (req, res, next) => {
+  const { id, email, name, experience, image } = req.user;
+  res.json({ id, email, name, experience, image });
+});
+
 module.exports = router;
