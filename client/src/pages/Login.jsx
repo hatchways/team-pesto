@@ -7,12 +7,14 @@ import {
   TextField,
   FormHelperText,
 } from "@material-ui/core";
-import LoginSignupContainer from "pages/LoginSignupContainer";
-import GridTemplateContainer from "pages/GridTemplateContainer";
-import Onboarding from "./Onboarding";
+import LoginSignupContainer from "components/LoginSignupContainer";
+import GridTemplateContainer from "components/GridTemplateContainer";
 
 // TODO Figure out where to move useStyles to avoid duplicate code
 const useStyles = makeStyles((theme) => ({
+  grid: {
+    flexGrow: 1,
+  },
   form: {
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
@@ -24,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   button: {
-    marginTop: 15,
+    marginTop: 30,
     marginBottom: 60,
     borderRadius: 20,
     color: "#FFFFFF",
@@ -46,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
   h1: {
     fontSize: "xx-large",
+    marginBottom: 50,
   },
   formHelper: {
     marginBottom: 10,
@@ -53,84 +56,51 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignUp = () => {
+const Login = () => {
   const classes = useStyles();
-  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmedPass, setConfirmedPass] = useState("");
   const [error, setError] = useState("");
-  const [nextPage, setNextPage] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
 
     // eslint-disable-next-line
     switch (name) {
-      case "userName":
-        setUserName(value);
-        break;
       case "email":
         setEmail(value);
         break;
       case "password":
         setPassword(value);
         break;
-      case "confirmedPass":
-        setConfirmedPass(value);
-        break;
-      case "error":
-        setError(value);
-        break;
     }
   };
 
   const submit = async (event) => {
     event.preventDefault();
+    try {
+      const { data } = await axios.post("/api/users/login", {
+        email: email,
+        password: password,
+      });
 
-    if (password.length < 7) {
-      setError("Password needs to be at least 7 characters long");
-    } else if (password === confirmedPass) {
-      try {
-        const { data } = await axios.post("/api/users/signup", {
-          name: userName,
-          email: email,
-          password: password,
-        });
+      localStorage.token = data.token;
 
-        localStorage.token = data.token;
-
-        if (localStorage.token) {
-          setNextPage(true);
-        }
-      } catch (err) {
-        console.error(err);
-        setError(err.response.data.response);
+      if (localStorage.token) {
+        // TODO redirect to homepage
+        console.log(localStorage.token);
       }
-    } else {
-      setError("Passwords do not match");
+    } catch (err) {
+      console.error(err);
+      setError(err.response.data.response);
     }
   };
 
-  return nextPage ? (
-    <Onboarding />
-  ) : (
+  return (
     <LoginSignupContainer>
       <GridTemplateContainer>
         <form onSubmit={submit} className={classes.form}>
-          <h1 className={classes.h1}>Create an account</h1>
-          <TextField
-            id="userName-input"
-            type="text"
-            label="Name"
-            name="userName"
-            variant="outlined"
-            required
-            value={userName}
-            onChange={handleChange}
-            className={classes.textfield}
-          />
-
+          <h1 className={classes.h1}>Welcome back!</h1>
           <TextField
             id="email-input"
             type="email"
@@ -155,18 +125,6 @@ const SignUp = () => {
             className={classes.textfield}
           />
 
-          <TextField
-            id="confirmedPass-input"
-            type="password"
-            label="Confirm Password"
-            name="confirmedPass"
-            variant="outlined"
-            required
-            value={confirmedPass}
-            onChange={handleChange}
-            className={classes.textfield}
-          />
-
           {error && (
             <FormHelperText className={classes.formHelper}>
               {error}
@@ -174,14 +132,14 @@ const SignUp = () => {
           )}
 
           <Button type="submit" variant="contained" className={classes.button}>
-            Continue
+            Login
           </Button>
 
           <div>
             <strong>
-              Already have an account?{" "}
-              <Link to="/login" className={classes.link}>
-                Login
+              Don't have an account?{" "}
+              <Link to="/sign-up" className={classes.link}>
+                Create
               </Link>
             </strong>
           </div>
@@ -191,4 +149,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Login;

@@ -5,8 +5,8 @@ import axios from "axios";
 
 import UserContext from "./context/UserContext";
 import theme from "themes/theme";
-import SignUp from "components/SignUp";
-import Login from "components/Login";
+import SignUp from "pages/SignUp";
+import Login from "pages/Login";
 
 import Home from "pages/Home";
 

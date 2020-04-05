@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { makeStyles, Button, FormHelperText } from "@material-ui/core";
-import DynamicSelect from "components/DynamicSelect";
-import GridTemplateContainer from "pages/GridTemplateContainer";
-import LoginSignupContainer from "pages/LoginSignupContainer";
+import DynamicSelect from "pages/DynamicSelect";
+import GridTemplateContainer from "components/GridTemplateContainer";
+import LoginSignupContainer from "components/LoginSignupContainer";
 
 const useStyles = makeStyles((theme) => ({
   form: {
