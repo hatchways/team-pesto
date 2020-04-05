@@ -17,14 +17,12 @@ function App() {
 
   const logout = () => {
     setUser(null);
+    localStorage.removeItem("token");   // TO DO: agree on a name for this token
   };
 
   // on mount
   useEffect(() => {
-  // useEffect(async () => {
-    // setUser(await axios.get("/users/me"));
-
-    // temporary mock user:
+  // TO DO: remove hardcoded user, and write async func that invokes setUser(await axios.get("/users/me"))
     setUser({
       id: 1,
       email: "mock_user@email.com",
@@ -41,13 +39,9 @@ function App() {
     }}>
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
-        
-          <Route path="/" component={Home} />
-
-          {/* <Redirect to="/sign-up" />
+          <Redirect to="/sign-up" />
           <Route path="/sign-up" component={SignUp} />
-          <Route path="/login" component={Login} /> */}
-          
+          <Route path="/login" component={Login} />
         </BrowserRouter>
       </MuiThemeProvider>
     </UserContext.Provider>

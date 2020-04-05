@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { AppBar, Toolbar, Button, Menu, MenuItem, Avatar, Badge } from "@material-ui/core";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
-import UserContext from "../context/UserContext";
-// import styles from "";        // some centralized styles file
+import UserContext from "context/UserContext";
+
+// TO DO: import styles from centralized location
 
 const useStyles = makeStyles((theme) => ({
   logo: {
