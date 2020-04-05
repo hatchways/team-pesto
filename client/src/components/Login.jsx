@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { makeStyles, Button, TextField } from "@material-ui/core";
+import axios from "axios";
+import {
+  makeStyles,
+  Button,
+  TextField,
+  FormHelperText,
+} from "@material-ui/core";
 import LoginSignupContainer from "pages/LoginSignupContainer";
 import GridTemplateContainer from "pages/GridTemplateContainer";
 
@@ -24,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 60,
     borderRadius: 20,
     color: "#FFFFFF",
-    backgroundColor: `${theme.palette.primary.green}`,
+    backgroundColor: `${theme.palette.secondary.main}`,
     width: "15ch",
     padding: 10,
   },
@@ -44,12 +50,17 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "xx-large",
     marginBottom: 50,
   },
+  formHelper: {
+    marginBottom: 10,
+    color: "#ff0011",
+  },
 }));
 
 const Login = () => {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -65,10 +76,24 @@ const Login = () => {
     }
   };
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
+    try {
+      const { data } = await axios.post("/api/users/login", {
+        email: email,
+        password: password,
+      });
 
-    console.log(email, password);
+      localStorage.token = data.token;
+
+      if (localStorage.token) {
+        // TODO redirect to homepage
+        console.log(localStorage.token);
+      }
+    } catch (err) {
+      console.error(err);
+      setError(err.response.data.response);
+    }
   };
 
   return (
@@ -99,6 +124,12 @@ const Login = () => {
             onChange={handleChange}
             className={classes.textfield}
           />
+
+          {error && (
+            <FormHelperText className={classes.formHelper}>
+              {error}
+            </FormHelperText>
+          )}
 
           <Button type="submit" variant="contained" className={classes.button}>
             Login

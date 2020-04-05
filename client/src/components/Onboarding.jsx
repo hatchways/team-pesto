@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 60,
     borderRadius: 20,
     color: "#FFFFFF",
-    backgroundColor: `${theme.palette.primary.green}`,
+    backgroundColor: `${theme.palette.secondary.main}`,
     width: "15ch",
     padding: 10,
   },
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "10px",
   },
   addAction: {
-    color: `${theme.palette.primary.green}`,
+    color: `${theme.palette.secondary.main}`,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

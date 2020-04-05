@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { makeStyles, Button, TextField } from "@material-ui/core";
+import {
+  makeStyles,
+  Button,
+  TextField,
+  FormHelperText,
+} from "@material-ui/core";
 import LoginSignupContainer from "pages/LoginSignupContainer";
 import GridTemplateContainer from "pages/GridTemplateContainer";
 import Onboarding from "./Onboarding";
@@ -23,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 60,
     borderRadius: 20,
     color: "#FFFFFF",
-    backgroundColor: `${theme.palette.primary.green}`,
+    backgroundColor: `${theme.palette.secondary.main}`,
     width: "15ch",
     padding: 10,
   },
@@ -41,6 +46,10 @@ const useStyles = makeStyles((theme) => ({
   },
   h1: {
     fontSize: "xx-large",
+  },
+  formHelper: {
+    marginBottom: 10,
+    color: "#ff0011",
   },
 }));
 
@@ -79,8 +88,8 @@ const SignUp = () => {
   const submit = async (event) => {
     event.preventDefault();
 
-    if (password.length < 6) {
-      setError("Password needs to be at least 6 characters long");
+    if (password.length < 7) {
+      setError("Password needs to be at least 7 characters long");
     } else if (password === confirmedPass) {
       try {
         const { data } = await axios.post("/api/users/signup", {
@@ -89,11 +98,10 @@ const SignUp = () => {
           password: password,
         });
 
-        console.log(data);
+        localStorage.token = data.token;
 
-        if (data) {
+        if (localStorage.token) {
           setNextPage(true);
-          setError("");
         }
       } catch (err) {
         console.error(err);
@@ -143,7 +151,6 @@ const SignUp = () => {
             variant="outlined"
             required
             value={password}
-            helperText={error}
             onChange={handleChange}
             className={classes.textfield}
           />
@@ -159,6 +166,12 @@ const SignUp = () => {
             onChange={handleChange}
             className={classes.textfield}
           />
+
+          {error && (
+            <FormHelperText className={classes.formHelper}>
+              {error}
+            </FormHelperText>
+          )}
 
           <Button type="submit" variant="contained" className={classes.button}>
             Continue
