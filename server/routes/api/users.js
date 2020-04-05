@@ -100,23 +100,17 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// TODO Finished update route for adding experience
-router.post("/experience", async (req, res) => {
+router.put("/experience", async (req, res) => {
   const { userId, experience } = req.body;
 
   try {
     // check if userId exists in database
-    const user = await User.updateOne(
-      { email: objectId(userId) },
-      { $set: experience }
-    );
+    const user = await User.findOne({ _id: userId });
 
-    // sign and return jwt as Bearer token in Authorization header
-    const payload = {
-      id: user.id,
-      experience: user.experience,
-    };
-    res.status(201).send({ payload });
+    user.experience = experience;
+    await user.save();
+
+    res.status(200).end();
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error(err);
