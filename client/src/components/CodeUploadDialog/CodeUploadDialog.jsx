@@ -11,6 +11,7 @@ import { useTheme } from '@material-ui/core/styles';
 
 import useStyles from './CodeUploadDialog.css';
 import CodeEditor from '../CodeEditor';
+import SubmitButton from '../ui/SubmitButton';
 
 const CodeUploadDialog = () => {
   const theme = useTheme();
@@ -34,13 +35,15 @@ const CodeUploadDialog = () => {
   };
 
   const handleTitleChange = event => {
-    event.preventDefault();
     setTitle(event.target.value);
   };
 
   const handleLanguageChange = event => {
-    event.preventDefault();
     setLanguage(event.target.value);
+  };
+
+  const handleSubmit = event => {
+    event.preventDefault();
   };
 
   const renderLanguageChoices = () => {
@@ -59,37 +62,53 @@ const CodeUploadDialog = () => {
       onClose={handleClose}
       fullScreen={useMediaQuery(theme.breakpoints.down('xs'))}
     >
-      <Box width='80%' mx='auto' py={4}>
-        <h2 className={classes.header}>Request a code review</h2>
-        
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            <TextField
-              variant='outlined'
-              label='Title'
-              InputLabelProps={{ shrink: true }}
-              fullWidth
-              value={title}
-              onChange={handleTitleChange}
-            />
+      <form onSubmit={handleSubmit}>
+        <Box
+          display='flex'
+          flexDirection='column'
+          alignItems='center'
+          width='80%'
+          mx='auto'
+          py={6}          
+        >
+          <h2 className={classes.header}>
+            Request a code review
+          </h2>
+
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={8}>
+              <TextField
+                variant='outlined'
+                label='Title'
+                InputLabelProps={{ shrink: true }}
+                fullWidth
+                value={title}
+                onChange={handleTitleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <TextField
+                select
+                variant='outlined'
+                label='Language'
+                InputLabelProps={{ shrink: true }}
+                fullWidth
+                value={language}
+                onChange={handleLanguageChange}
+              >
+                {renderLanguageChoices()}
+              </TextField>
+            </Grid>
           </Grid>
 
-          <Grid item xs={12} md={4}>
-            <TextField
-              select
-              variant='outlined'
-              label='Language'
-              InputLabelProps={{ shrink: true }}
-              fullWidth
-              value={language}
-              onChange={handleLanguageChange}
-            >
-              {renderLanguageChoices()}
-            </TextField>
-          </Grid>
-        </Grid>
-        <CodeEditor language={language} theme='dark' />
-      </Box>
+          <CodeEditor language={language} theme='dark' />
+
+          <SubmitButton>
+            Submit
+          </SubmitButton>
+        </Box>
+      </form>
     </Dialog>
   );
 };

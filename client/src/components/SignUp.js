@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles, Button, TextField, Grid } from "@material-ui/core";
+
 import LoginSignupContainer from "./LoginSignupContainer";
+import SubmitButton from './ui/SubmitButton';
 
 // TODO Figure out where to move useStyles to avoid duplicate code
 const useStyles = makeStyles((theme) => ({
@@ -21,11 +23,6 @@ const useStyles = makeStyles((theme) => ({
   button: {
     marginTop: 15,
     marginBottom: 60,
-    borderRadius: 20,
-    color: "#FFFFFF",
-    backgroundColor: "#43DDC1",
-    width: "15ch",
-    padding: 10,
   },
   textfield: {
     "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
@@ -142,13 +139,9 @@ const SignUp = () => {
                 className={classes.textfield}
               />
 
-              <Button
-                type="submit"
-                variant="contained"
-                className={classes.button}
-              >
+              <SubmitButton className={classes.button}>
                 Continue
-              </Button>
+              </SubmitButton>
 
               <div>
                 <strong>
