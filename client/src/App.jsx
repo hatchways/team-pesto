@@ -27,6 +27,7 @@ function App() {
       id: 1,
       email: "mock_user@email.com",
       name: "Mock User",
+      balance: 3,
       image: "mock-user.png",
     });
   }, []);
@@ -39,9 +40,10 @@ function App() {
     }}>
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
-          <Redirect to="/sign-up" />
+          <Route path="/" component={Home} />
+          {/* <Redirect to="/sign-up" />
           <Route path="/sign-up" component={SignUp} />
-          <Route path="/login" component={Login} />
+          <Route path="/login" component={Login} /> */}
         </BrowserRouter>
       </MuiThemeProvider>
     </UserContext.Provider>

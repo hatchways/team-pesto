@@ -4,14 +4,17 @@ import UserContext from "context/UserContext";
 
 import Navbar from "components/Navbar";
 
+import Balance from "pages/Balance";
+
 const Home = () => {
   const { user } = useContext(UserContext);
-  return user ? (
+  return user && false ? (
     <Redirect to="/login"/>
   ) : (
     <Fragment>
       <Navbar />
       <Switch>
+        <Route path="/" component={Balance} />
         {/* various Routes here */}
       </Switch>
     </Fragment>
