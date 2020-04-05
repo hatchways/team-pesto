@@ -29,6 +29,7 @@ const CodeUploadDialog = () => {
   const [ open, setOpen ] = useState(true);
   const [ title, setTitle ] = useState('');
   const [ language, setLanguage ] = useState(defaultLanguage);
+  const [ comments, setComments ] = useState('');
 
   const handleClose = () => {
     setOpen(false);
@@ -44,6 +45,10 @@ const CodeUploadDialog = () => {
 
   const handleSubmit = event => {
     event.preventDefault();
+  };
+
+  const handleCommentsChange = event => {
+    setComments(event.target.value);
   };
 
   const renderLanguageChoices = () => {
@@ -71,38 +76,55 @@ const CodeUploadDialog = () => {
           mx='auto'
           py={6}          
         >
-          <h2 className={classes.header}>
-            Request a code review
-          </h2>
+          <Box mb={6}>
+            <h2 className={classes.header}>
+              Request a code review
+            </h2>
+          </Box>
 
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={8}>
-              <TextField
-                variant='outlined'
-                label='Title'
-                InputLabelProps={{ shrink: true }}
-                fullWidth
-                value={title}
-                onChange={handleTitleChange}
-              />
-            </Grid>
+          <Box mb={3} width='100%'>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={8}>
+                <TextField
+                  variant='outlined'
+                  label='Title'
+                  InputLabelProps={{ shrink: true }}
+                  fullWidth
+                  value={title}
+                  onChange={handleTitleChange}
+                />
+              </Grid>
 
-            <Grid item xs={12} md={4}>
-              <TextField
-                select
-                variant='outlined'
-                label='Language'
-                InputLabelProps={{ shrink: true }}
-                fullWidth
-                value={language}
-                onChange={handleLanguageChange}
-              >
-                {renderLanguageChoices()}
-              </TextField>
+              <Grid item xs={12} md={4}>
+                <TextField
+                  select
+                  variant='outlined'
+                  label='Language'
+                  InputLabelProps={{ shrink: true }}
+                  fullWidth
+                  value={language}
+                  onChange={handleLanguageChange}
+                >
+                  {renderLanguageChoices()}
+                </TextField>
+              </Grid>
             </Grid>
-          </Grid>
+          </Box>
 
           <CodeEditor language={language} theme='dark' />
+
+          <Box my={3} width='100%'>
+            <TextField
+              variant='outlined'
+              label='Additional Comments'
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              multiline
+              rows={5}
+              value={comments}
+              onChange={handleCommentsChange}
+            />
+          </Box>
 
           <SubmitButton>
             Submit
