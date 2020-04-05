@@ -34,6 +34,7 @@ const CodeEditor = ({ language, theme, value }) => {
       showPrintMargin={false}
       width='100%'
       setOptions={{ useWorker: false }}
+      style={{ borderRadius: '5px' }}
     />
   );
 };
