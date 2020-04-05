@@ -5,17 +5,21 @@ import {
   Grid,
   TextField,
   MenuItem,
+  useMediaQuery,
 } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 
 import useStyles from './CodeUploadDialog.css';
+import CodeEditor from '../CodeEditor';
 
 const CodeUploadDialog = () => {
+  const theme = useTheme();
   const classes = useStyles();
 
   const languages = {
     python: 'Python',
     java: 'Java',
-    'c++': 'C++',
+    c_cpp: 'C++',
     javascript: 'JavaScript',
     ruby: 'Ruby',
   };
@@ -53,9 +57,11 @@ const CodeUploadDialog = () => {
       maxWidth='md'
       open={open}
       onClose={handleClose}
+      fullScreen={useMediaQuery(theme.breakpoints.down('xs'))}
     >
-      <Box p={4}>
+      <Box width='80%' mx='auto' py={4}>
         <h2 className={classes.header}>Request a code review</h2>
+        
         <Grid container spacing={3}>
           <Grid item xs={12} md={8}>
             <TextField
@@ -82,6 +88,7 @@ const CodeUploadDialog = () => {
             </TextField>
           </Grid>
         </Grid>
+        <CodeEditor language={language} theme='dark' />
       </Box>
     </Dialog>
   );
