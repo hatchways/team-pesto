@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import { makeStyles, Button, TextField } from "@material-ui/core";
 import LoginSignupContainer from "pages/LoginSignupContainer";
 import GridTemplateContainer from "pages/GridTemplateContainer";
@@ -75,15 +76,29 @@ const SignUp = () => {
     }
   };
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
 
     if (password.length < 6) {
       setError("Password needs to be at least 6 characters long");
     } else if (password === confirmedPass) {
-      setNextPage(true);
-      console.log(userName, email, password, confirmedPass, nextPage);
-      setError("");
+      try {
+        const { data } = await axios.post("/api/users/signup", {
+          name: userName,
+          email: email,
+          password: password,
+        });
+
+        console.log(data);
+
+        if (data) {
+          setNextPage(true);
+          setError("");
+        }
+      } catch (err) {
+        console.error(err);
+        setError(err.response.data.response);
+      }
     } else {
       setError("Passwords do not match");
     }
