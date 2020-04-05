@@ -113,4 +113,22 @@ router.get(
   }
 );
 
+router.put("/experience", async (req, res) => {
+  const { userId, experience } = req.body;
+
+  console.log(userId, experience);
+
+  try {
+    const user = await User.findOne({ _id: userId });
+    user.experience = experience;
+    user.save();
+
+    res.status(200).end();
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error(err);
+    res.status(500).end();
+  }
+});
+
 module.exports = router;

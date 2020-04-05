@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { makeStyles, Button, FormHelperText } from "@material-ui/core";
 import DynamicSelect from "pages/DynamicSelect";
 import GridTemplateContainer from "components/GridTemplateContainer";
@@ -52,6 +53,8 @@ const useStyles = makeStyles((theme) => ({
 const Onboarding = () => {
   const classes = useStyles();
 
+  const { user } = useContext(UserContext);
+
   const [languageList, setLanguageList] = useState([
     { language: "", level: "" },
   ]);
@@ -92,7 +95,7 @@ const Onboarding = () => {
     }
   };
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
 
     if (languageList.some((obj) => obj.language === "" || obj.level === "")) {
@@ -103,7 +106,16 @@ const Onboarding = () => {
     } else {
       setSelectOneError(false);
       setError(false);
-      console.log("languageList: ", languageList);
+      try {
+        const { data } = axios.put("/api/users/experience", {
+          userId: user["_id"],
+          experience: languageList,
+        });
+
+        // TODO add redirect to homepage
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
