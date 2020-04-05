@@ -13,7 +13,7 @@ import useStyles from './CodeUploadDialog.css';
 import CodeEditor from '../CodeEditor';
 import SubmitButton from '../ui/SubmitButton';
 
-const CodeUploadDialog = () => {
+const CodeUploadDialog = ({ open, onClose }) => {
   const theme = useTheme();
   const classes = useStyles();
 
@@ -26,15 +26,10 @@ const CodeUploadDialog = () => {
   };
   const defaultLanguage = Object.keys(languages)[0];
 
-  const [ open, setOpen ] = useState(true);
   const [ title, setTitle ] = useState('');
   const [ language, setLanguage ] = useState(defaultLanguage);
   const [ codeSnippet, setCodeSnippet ] = useState('');
   const [ comments, setComments ] = useState('');
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const handleTitleChange = event => {
     setTitle(event.target.value);
@@ -69,7 +64,7 @@ const CodeUploadDialog = () => {
       fullWidth
       maxWidth='md'
       open={open}
-      onClose={handleClose}
+      onClose={onClose}
       fullScreen={useMediaQuery(theme.breakpoints.down('xs'))}
     >
       <form className={classes.form} onSubmit={handleSubmit}>

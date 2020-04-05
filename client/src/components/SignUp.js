@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { makeStyles, TextField, Grid } from "@material-ui/core";
 
 import LoginSignupContainer from "./LoginSignupContainer";
-import SubmitButton from './ui/SubmitButton';
+import SubmitButton from "./ui/SubmitButton";
 
 // TODO Figure out where to move useStyles to avoid duplicate code
 const useStyles = makeStyles((theme) => ({
@@ -139,9 +139,7 @@ const SignUp = () => {
                 className={classes.textfield}
               />
 
-              <SubmitButton className={classes.button}>
-                Continue
-              </SubmitButton>
+              <SubmitButton className={classes.button}>Continue</SubmitButton>
 
               <div>
                 <strong>

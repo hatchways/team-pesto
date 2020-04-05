@@ -1,3 +1,3 @@
-import CodeUploadDialog from './CodeUploadDialog';
+import CodeUploadDialog from "./CodeUploadDialog";
 
 export default CodeUploadDialog;
