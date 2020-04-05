@@ -1,9 +1,16 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
-  header: {
-    textAlign: 'center',
-    margin: '0',
+  form: {
+    '& label.Mui-focused': {
+      color: 'purple',
+    },
+
+    '& .MuiOutlinedInput-root': {
+      '&.Mui-focused fieldset': {
+        borderColor: 'purple',
+      },
+    },
   },
 });
 

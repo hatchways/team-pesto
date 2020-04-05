@@ -9,7 +9,7 @@ import "ace-builds/src-noconflict/mode-ruby";
 import "ace-builds/src-noconflict/theme-twilight";
 import "ace-builds/src-noconflict/theme-tomorrow";
 
-const CodeEditor = ({ language, theme, value }) => {
+const CodeEditor = ({ language, theme, value, onChange }) => {
   const defaultLanguage = 'python';
   const defaultValue = '';
 
@@ -33,6 +33,7 @@ const CodeEditor = ({ language, theme, value }) => {
       hightlightActiveLine={true}
       showPrintMargin={false}
       width='100%'
+      onChange={onChange}
       setOptions={{ useWorker: false }}
       style={{ borderRadius: '5px' }}
     />

@@ -29,6 +29,7 @@ const CodeUploadDialog = () => {
   const [ open, setOpen ] = useState(true);
   const [ title, setTitle ] = useState('');
   const [ language, setLanguage ] = useState(defaultLanguage);
+  const [ codeSnippet, setCodeSnippet ] = useState('');
   const [ comments, setComments ] = useState('');
 
   const handleClose = () => {
@@ -43,12 +44,16 @@ const CodeUploadDialog = () => {
     setLanguage(event.target.value);
   };
 
-  const handleSubmit = event => {
-    event.preventDefault();
+  const handleCodeSnippetChange = value => {
+    setCodeSnippet(value);
   };
 
   const handleCommentsChange = event => {
     setComments(event.target.value);
+  };
+
+  const handleSubmit = event => {
+    event.preventDefault();
   };
 
   const renderLanguageChoices = () => {
@@ -67,14 +72,14 @@ const CodeUploadDialog = () => {
       onClose={handleClose}
       fullScreen={useMediaQuery(theme.breakpoints.down('xs'))}
     >
-      <form onSubmit={handleSubmit}>
+      <form className={classes.form} onSubmit={handleSubmit}>
         <Box
           display='flex'
           flexDirection='column'
           alignItems='center'
           width='80%'
           mx='auto'
-          py={6}          
+          py={4}          
         >
           <Box mb={6}>
             <h2 className={classes.header}>
@@ -89,6 +94,7 @@ const CodeUploadDialog = () => {
                   variant='outlined'
                   label='Title'
                   InputLabelProps={{ shrink: true }}
+                  color='primary'
                   fullWidth
                   value={title}
                   onChange={handleTitleChange}
@@ -111,7 +117,12 @@ const CodeUploadDialog = () => {
             </Grid>
           </Box>
 
-          <CodeEditor language={language} theme='dark' />
+          <CodeEditor
+            language={language}
+            theme='dark'
+            value={codeSnippet}
+            onChange={handleCodeSnippetChange}
+          />
 
           <Box my={3} width='100%'>
             <TextField
@@ -126,9 +137,9 @@ const CodeUploadDialog = () => {
             />
           </Box>
 
-          <SubmitButton>
-            Submit
-          </SubmitButton>
+          <Box mt={3} mb={2}>
+            <SubmitButton>Submit</SubmitButton>
+          </Box>
         </Box>
       </form>
     </Dialog>
