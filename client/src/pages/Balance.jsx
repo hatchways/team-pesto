@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
     color: "#FFFFFF",
     backgroundColor: `${theme.palette.secondary.main}`,
     width: "15ch",
-    // padding: 10,
     textTransform: "none",
   },
   grayButton: {
@@ -35,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
     color: "#FFFFFF",
     backgroundColor: "#AAAAAA",
     width: "15ch",
-    // padding: 10,
     textTransform: "none",
   },
   h1: {
