@@ -4,7 +4,7 @@ import UserContext from "context/UserContext";
 
 import Navbar from "components/Navbar";
 
-import Balance from "pages/Balance";
+import Balance from "pages/Balance/index.js";
 
 const Home = () => {
   const { user } = useContext(UserContext);
