@@ -10,6 +10,7 @@ import {
 import LoginSignupContainer from "components/LoginSignupContainer";
 import GridTemplateContainer from "components/GridTemplateContainer";
 import Onboarding from "./Onboarding";
+import { addToLocalStorage } from "utils/localstorage";
 
 // TODO Figure out where to move useStyles to avoid duplicate code
 const useStyles = makeStyles((theme) => ({
@@ -98,7 +99,7 @@ const SignUp = () => {
           password: password,
         });
 
-        localStorage.token = data.token;
+        addToLocalStorage(data.token);
 
         if (localStorage.token) {
           setNextPage(true);
