@@ -4,12 +4,9 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.1.3",
-<<<<<<< HEAD
     "ace-builds": "^1.4.9",
-=======
     "@material-ui/icons": "^4.9.1",
     "axios": "^0.19.2",
->>>>>>> 1605bfd9d113cb599989f7884c34939f15834a80
     "react": "^16.8.6",
     "react-ace": "^8.1.0",
     "react-dom": "^16.8.6",
