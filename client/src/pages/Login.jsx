@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import LoginSignupContainer from "components/LoginSignupContainer";
 import GridTemplateContainer from "components/GridTemplateContainer";
-import { addToLocalStorage } from "utils/localstorage";
+import { store } from "utils/storage";
 
 // TODO Figure out where to move useStyles to avoid duplicate code
 const useStyles = makeStyles((theme) => ({
@@ -85,7 +85,7 @@ const Login = () => {
         password: password,
       });
 
-      addToLocalStorage(data.token);
+      store(data.token);
 
       if (localStorage.token) {
         // TODO redirect to homepage

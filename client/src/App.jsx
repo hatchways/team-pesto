@@ -7,7 +7,7 @@ import UserContext from "./context/UserContext";
 import theme from "themes/theme";
 import SignUp from "pages/SignUp";
 import Login from "pages/Login";
-import { removeFromLocalStorage } from "utils/localstorage";
+import { remove } from "utils/storage";
 
 import Home from "pages/Home";
 
@@ -18,7 +18,7 @@ function App() {
 
   const logout = () => {
     setUser(null);
-    removeFromLocalStorage("token"); // TO DO: agree on a name for this token
+    remove("token"); // TO DO: agree on a name for this token
   };
 
   // on mount
