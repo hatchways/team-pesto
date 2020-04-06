@@ -28,7 +28,6 @@ router.post("/signup", async (req, res) => {
   }
 
   const { name, email, password } = req.body;
-  console.log(name, email, password);
 
   try {
     // check if email exists in database
@@ -115,8 +114,6 @@ router.get(
 
 router.put("/experience", async (req, res) => {
   const { userId, experience } = req.body;
-
-  console.log(userId, experience);
 
   try {
     const user = await User.findOne({ _id: userId });
