@@ -14,8 +14,7 @@ const Home = () => {
     <Fragment>
       <Navbar />
       <Switch>
-        <Route path="/" component={Balance} />
-        {/* various Routes here */}
+        <Route path="/balance" component={Balance} />
       </Switch>
     </Fragment>
   );

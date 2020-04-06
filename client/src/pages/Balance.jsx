@@ -3,6 +3,8 @@ import axios from "axios";
 import {
   makeStyles,
   Button,
+  Grid,
+  Typography,
   TextField,
   FormHelperText,
 } from "@material-ui/core";
@@ -11,18 +13,11 @@ import GridTemplateContainer from "components/GridTemplateContainer";
 
 import UserContext from "context/UserContext";
 
+import AddBoxIcon from '@material-ui/icons/AddBox';
+import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
+
 // TO DO: figure out where to move useStyles to avoid duplicate code
 const useStyles = makeStyles((theme) => ({
-  form: {
-    "& .MuiTextField-root": {
-      margin: theme.spacing(1),
-      width: "40ch",
-    },
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   button: {
     marginTop: 15,
     marginBottom: 60,
@@ -30,27 +25,53 @@ const useStyles = makeStyles((theme) => ({
     color: "#FFFFFF",
     backgroundColor: `${theme.palette.secondary.main}`,
     width: "15ch",
-    padding: 10,
+    // padding: 10,
     textTransform: "none",
   },
-  textfield: {
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: `${theme.palette.primary.dark}`,
-    },
-    "& label.Mui-focused": {
-      color: `${theme.palette.primary.dark}`,
-    },
-  },
-  link: {
-    color: `${theme.palette.primary.dark}`,
-    textDecoration: "none",
+  grayButton: {
+    marginTop: 15,
+    marginBottom: 60,
+    borderRadius: 20,
+    color: "#FFFFFF",
+    backgroundColor: "#AAAAAA",
+    width: "15ch",
+    // padding: 10,
+    textTransform: "none",
   },
   h1: {
-    fontSize: "xx-large",
+    fontSize: "x-large",
+    fontWeight: "bold",
   },
-  formHelper: {
-    marginBottom: 10,
-    color: "#ff0011",
+  balanceText: {
+    color: "#7341DC",
+    fontSize: "large",
+    fontWeight: "bold",
+  },
+  h2: {
+    fontSize: "medium",
+    fontWeight: "bold",
+  },
+  input: {
+    borderStyle: "solid",
+    borderWidth: "1px",
+    borderRadius: 5,
+    borderColor: "#EEEEEE",
+    padding: 10,
+  },
+  subtract: {
+    color: "#F44335",
+    cursor: "pointer"
+  },
+  disabled: {
+    color: "#AAAAAA",
+    cursor: "pointer"
+  },
+  add: {
+    color: `${theme.palette.primary.main}`,
+    cursor: "pointer"
+  },
+  counter: {
+    padding: "0px 20px 0px 20px",
   },
 }));
 
@@ -58,49 +79,125 @@ const Balance = () => {
   const classes = useStyles();
   const { user } = useContext(UserContext);
 
-  const [refillAmount, setRefillAmount] = useState(0);
+  let [refillAmount, setRefillAmount] = useState(1);
   const [checkoutPage, setCheckoutPage] = useState(false);
 
-  // const submit = async (event) => {
-  //   event.preventDefault();
+  const decrement = () => {
+    if (refillAmount > 1) setRefillAmount(--refillAmount);
+  };
 
-  //   if (password.length < 7) {
-  //     setError("Password needs to be at least 7 characters long");
-  //   } else if (password === confirmedPass) {
-  //     try {
-  //       const { data } = await axios.post("/api/users/signup", {
-  //         name: userName,
-  //         email: email,
-  //         password: password,
-  //       });
+  const increment = () => {
+    setRefillAmount(++refillAmount);
+  };
 
-  //       localStorage.token = data.token;
+  const handleCheckout = () => {
+    setCheckoutPage(true);
+  }
 
-  //       if (localStorage.token) {
-  //         setNextPage(true);
-  //       }
-  //     } catch (err) {
-  //       console.error(err);
-  //       setError(err.response.data.response);
-  //     }
-  //   } else {
-  //     setError("Passwords do not match");
-  //   }
-  // };
+  const handleGoBack = () => {
+    setCheckoutPage(false);
+  }
 
   return (
     <MainContainer>
       <GridTemplateContainer>
         {!checkoutPage ? (
-          <form className={classes.form}>
-            <h1 className={classes.h1}>Your balance:</h1>
-            <p>{user && user.balance} credits</p>
-            <Button type="submit" variant="contained" className={classes.button}>
-              Checkout
-            </Button>
-          </form>
+          <Grid container direction="column" alignItems="center" spacing={2}>
+            <Grid item>
+              <Grid container direction="column" alignItems="center" spacing={2}>
+                <Grid item>
+                  <Typography className={classes.h1}>Your balance:</Typography>
+                </Grid>
+                <Grid item>
+                  <Typography className={classes.balanceText}>{user && user.balance} credits</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Grid container direction="column" alignItems="center" spacing={2}>
+                <Grid item>
+                  <Typography className={classes.h2}>Top Up:</Typography>
+                </Grid>
+                <Grid item>
+                  <Grid className={classes.input} container direction="row" justify="center" alignItems="center">
+                    <Grid item>
+                      <IndeterminateCheckBoxIcon
+                        className={refillAmount !== 1 ? classes.subtract : classes.disabled}
+                        onClick={decrement}
+                        disabled={refillAmount === 1}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Typography className={classes.counter}>{refillAmount}</Typography>
+                    </Grid>
+                    <Grid item>
+                      <AddBoxIcon
+                        className={classes.add}
+                        onClick={increment}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Button className={classes.button} onClick={handleCheckout}>
+                Checkout
+              </Button>
+            </Grid>
+          </Grid>
         ) : (
-          <p>CHECKOUT PAGE IS TRUE</p>
+          <Grid container direction="column" alignItems="center" spacing={2}>
+            <Grid item>
+              <Typography className={classes.h1}>Checkout</Typography>
+            </Grid>
+            <Grid item>
+              <Grid container direction="column">
+                <Grid item>
+                  <Typography className={classes.h2}>Card number</Typography>
+                </Grid>
+                <Grid item>
+                  <TextField />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Grid container direction="row" justify="center">
+                <Grid item>
+                  <Grid container direction="column">
+                    <Grid item>
+                      <Typography className={classes.h2}>Expiry date</Typography>
+                    </Grid>
+                    <Grid item>
+                      <TextField />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <Grid container direction="column">
+                    <Grid item>
+                      <Typography className={classes.h2}>CVC</Typography>
+                    </Grid>
+                    <Grid item>
+                      <TextField />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container direction="row" justify="center">
+              <Grid item>
+                <Button className={classes.grayButton} onClick={handleGoBack}>
+                  Go back
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button className={classes.button} onClick={handleCheckout}>
+                  Pay ${refillAmount * 10}
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
         )}
       </GridTemplateContainer>
     </MainContainer>

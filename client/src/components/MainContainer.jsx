@@ -13,9 +13,11 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     padding: "2rem",
+    width: "40vw",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    boxShadow: "0px 20px 50px 1px #BBBBBB",
   },
 }));
 
