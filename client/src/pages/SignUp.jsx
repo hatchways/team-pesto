@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import {
   makeStyles,
-  Button,
   TextField,
   FormHelperText,
 } from "@material-ui/core";
 import LoginSignupContainer from "components/LoginSignupContainer";
 import GridTemplateContainer from "components/GridTemplateContainer";
+import SubmitButton from 'components/SubmitButton';
 import Onboarding from "./Onboarding";
 import { store } from "utils/storage";
 
@@ -27,11 +27,6 @@ const useStyles = makeStyles((theme) => ({
   button: {
     marginTop: 15,
     marginBottom: 60,
-    borderRadius: 20,
-    color: "#FFFFFF",
-    backgroundColor: `${theme.palette.secondary.main}`,
-    width: "15ch",
-    padding: 10,
   },
   textfield: {
     "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
@@ -174,9 +169,9 @@ const SignUp = () => {
             </FormHelperText>
           )}
 
-          <Button type="submit" variant="contained" className={classes.button}>
+          <SubmitButton className={classes.button}>
             Continue
-          </Button>
+          </SubmitButton>
 
           <div>
             <strong>
