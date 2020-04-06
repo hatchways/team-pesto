@@ -10,8 +10,8 @@ import {
 import { useTheme } from '@material-ui/core/styles';
 
 import useStyles from './CodeUploadDialog.css';
-import CodeEditor from '../CodeEditor';
-import SubmitButton from '../ui/SubmitButton';
+import CodeEditor from 'components/CodeEditor';
+import SubmitButton from 'components/ui/SubmitButton';
 
 const CodeUploadDialog = ({ open, onClose }) => {
   const theme = useTheme();
