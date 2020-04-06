@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
+import { useTheme } from '@material-ui/core/styles';
 import { 
   Dialog,
   Box,
+  IconButton,
   Grid,
   TextField,
   MenuItem,
   useMediaQuery,
 } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
+import CloseIcon from '@material-ui/icons/Close';
 
 import useStyles from './CodeUploadDialog.css';
 import CodeEditor from 'components/CodeEditor';
@@ -75,6 +77,17 @@ const CodeUploadDialog = ({ open, onClose }) => {
       onClose={onClose}
       fullScreen={useMediaQuery(theme.breakpoints.down('xs'))}
     >
+      <Box
+        display={{ xs: 'block', sm: 'none', }}
+        position='fixed'
+        top={1}
+        right={1}
+      >
+        <IconButton aria-label='close' onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      </Box>
+
       <form className={classes.form} onSubmit={handleSubmit}>
         <Box
           display='flex'
