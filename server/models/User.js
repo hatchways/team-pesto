@@ -16,10 +16,12 @@ async function hashHook(next) {
 }
 
 // TO DO: in SignUp.jsx, when creating new user, add default balance and image values (?) to POST request body
+// OR make it a default value in mongo
 const userSchema = new Schema({
   email: { type: String, required: true },
   name: { type: String, required: true },
   password: { type: String, required: true },
+  experience: { type: Array },
   balance: { type: Number, required: true },      // TO DO: see above. init 3
   image: { type: String },                        // TO DO: see above. init ???
 });
