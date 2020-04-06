@@ -20,7 +20,7 @@ const CodeUploadDialog = ({ open, onClose }) => {
   const languages = {
     python: 'Python',
     java: 'Java',
-    c_cpp: 'C++',
+    cpp: 'C++',
     javascript: 'JavaScript',
     ruby: 'Ruby',
   };

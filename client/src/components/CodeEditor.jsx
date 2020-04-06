@@ -10,8 +10,15 @@ import "ace-builds/src-noconflict/theme-twilight";
 import "ace-builds/src-noconflict/theme-tomorrow";
 
 const CodeEditor = ({ language, theme, value, onChange }) => {
-  const defaultLanguage = 'python';
-  const defaultValue = '';
+  const modes = {
+    python: 'python',
+    java: 'java',
+    cpp: 'c_cpp',
+    javascript: 'javascript',
+    ruby: 'ruby',
+  };
+  const defaultMode = 'python';
+  const mode = modes[language] || defaultMode;
 
   let aceTheme;
   switch (theme) {
@@ -27,9 +34,9 @@ const CodeEditor = ({ language, theme, value, onChange }) => {
   return (
     <AceEditor
       fontSize={16}
-      mode={language || defaultLanguage}
+      mode={mode}
       theme={aceTheme}
-      value={value || defaultValue}
+      value={value}
       hightlightActiveLine={true}
       showPrintMargin={false}
       width='100%'
