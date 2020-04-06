@@ -31,20 +31,28 @@ const CodeUploadDialog = ({ open, onClose }) => {
   const [ codeSnippet, setCodeSnippet ] = useState('');
   const [ comments, setComments ] = useState('');
 
-  const handleTitleChange = event => {
-    setTitle(event.target.value);
-  };
+  const handleFormChange = event => {
+    const { name, value } = event.target;
 
-  const handleLanguageChange = event => {
-    setLanguage(event.target.value);
+    switch (name) {
+      case 'title':
+        setTitle(value);
+        break;
+      case 'language':
+        setLanguage(value);
+        break;
+      case 'code-snippet':
+        setCodeSnippet(value);
+        break;
+      case 'comments':
+        setComments(value);
+        break;
+      default:
+    }
   };
 
   const handleCodeSnippetChange = value => {
     setCodeSnippet(value);
-  };
-
-  const handleCommentsChange = event => {
-    setComments(event.target.value);
   };
 
   const handleSubmit = event => {
@@ -86,25 +94,27 @@ const CodeUploadDialog = ({ open, onClose }) => {
             <Grid container spacing={3}>
               <Grid item xs={12} md={8}>
                 <TextField
+                  name='title'
                   variant='outlined'
                   label='Title'
                   InputLabelProps={{ shrink: true }}
                   color='primary'
                   fullWidth
                   value={title}
-                  onChange={handleTitleChange}
+                  onChange={handleFormChange}
                 />
               </Grid>
 
               <Grid item xs={12} md={4}>
                 <TextField
+                  name='language'
                   select
                   variant='outlined'
                   label='Language'
                   InputLabelProps={{ shrink: true }}
                   fullWidth
                   value={language}
-                  onChange={handleLanguageChange}
+                  onChange={handleFormChange}
                 >
                   {renderLanguageChoices()}
                 </TextField>
@@ -121,6 +131,7 @@ const CodeUploadDialog = ({ open, onClose }) => {
 
           <Box my={3} width='100%'>
             <TextField
+              name='comments'
               variant='outlined'
               label='Additional Comments'
               InputLabelProps={{ shrink: true }}
@@ -128,7 +139,7 @@ const CodeUploadDialog = ({ open, onClose }) => {
               multiline
               rows={5}
               value={comments}
-              onChange={handleCommentsChange}
+              onChange={handleFormChange}
             />
           </Box>
 
