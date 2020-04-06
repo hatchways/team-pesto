@@ -28,6 +28,7 @@ function App() {
       id: 1,
       email: "mock_user@email.com",
       name: "Mock User",
+      balance: 3,
       image: "mock-user.png",
     });
   }, []);

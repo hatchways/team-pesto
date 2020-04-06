@@ -4,6 +4,8 @@ import UserContext from "context/UserContext";
 
 import Navbar from "components/Navbar";
 
+import Balance from "pages/Balance/index.js";
+
 const Home = () => {
   const { user } = useContext(UserContext);
   return user ? (
@@ -12,7 +14,7 @@ const Home = () => {
     <Fragment>
       <Navbar />
       <Switch>
-        {/* various Routes here */}
+        <Route path="/balance" component={Balance} />
       </Switch>
     </Fragment>
   );
