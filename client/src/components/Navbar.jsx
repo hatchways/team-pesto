@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { AppBar, Toolbar, Button, Menu, MenuItem, Avatar, Badge } from "@material-ui/core";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import UserContext from "context/UserContext";
+import CodeUploadDialog from 'pages/CodeUploadDialog';
 
 // TO DO: import styles from centralized location
 
@@ -55,7 +56,12 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = () => {
   const classes = useStyles();
   const { user, logout } = useContext(UserContext);
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleUploadDialog = () => {
+    setUploadDialogOpen(!uploadDialogOpen);
+  };
 
   const handleMenu = e => {
     setAnchorEl(e.currentTarget);
@@ -76,13 +82,16 @@ const Navbar = () => {
         <Toolbar className={classes.logo}>
           <img src="logo.png" />
         </Toolbar>
+
         <Toolbar className={classes.toolbar}>
           <Button className={classes.clickable}>
             <Link className={classes.link} to="/reviews">Reviews</Link>
           </Button>
+
           <Button className={classes.clickable}>
             <Link className={classes.link} to="/balance">Balance</Link>
           </Button>
+
           <Button className={classes.clickable}>
             <Avatar className={classes.notification}>
               <Badge color="secondary" variant="dot">
@@ -90,14 +99,20 @@ const Navbar = () => {
               </Badge>
             </Avatar>
           </Button>
-          <Button className={classes.clickable}>
-            <Link className={classes.button} to="/upload">Upload Code</Link>
-          </Button>
+
+          <Button
+            className={`${classes.clickable} ${classes.button}`}
+            onClick={handleUploadDialog}
+          >
+            Upload Code
+          </Button>          
+
           <Button className={classes.profileButton} onClick={handleMenu}>
             <Avatar src={user && user.image}/>
             <div className={classes.link}>Profile</div>
             <div className={classes.triangle} />
           </Button>
+
           <Menu
             anchorEl={anchorEl}
             open={!!anchorEl}
@@ -106,10 +121,16 @@ const Navbar = () => {
             <MenuItem>
               <Link to="/profile">Go to Profile</Link>
             </MenuItem>
+
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </Toolbar>
       </Toolbar>
+      
+      <CodeUploadDialog
+        open={uploadDialogOpen}
+        onClose={handleUploadDialog}
+      />
     </AppBar>
   );
 };
