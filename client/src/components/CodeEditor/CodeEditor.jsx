@@ -1,6 +1,5 @@
 import React from 'react';
 import AceEditor from 'react-ace';
-
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-c_cpp";
@@ -9,7 +8,11 @@ import "ace-builds/src-noconflict/mode-ruby";
 import "ace-builds/src-noconflict/theme-twilight";
 import "ace-builds/src-noconflict/theme-tomorrow";
 
+import useStyles from './CodeEditor.css';
+
 const CodeEditor = ({ language, theme, value, onChange }) => {
+  const classes = useStyles();
+
   const modes = {
     python: 'python',
     java: 'java',
@@ -33,6 +36,7 @@ const CodeEditor = ({ language, theme, value, onChange }) => {
 
   return (
     <AceEditor
+      className={classes.codeEditor}
       fontSize={16}
       mode={mode}
       theme={aceTheme}
@@ -42,7 +46,6 @@ const CodeEditor = ({ language, theme, value, onChange }) => {
       width='100%'
       onChange={onChange}
       setOptions={{ useWorker: false }}
-      style={{ borderRadius: '5px' }}
     />
   );
 };
