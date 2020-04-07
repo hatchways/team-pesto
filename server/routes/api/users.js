@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const passport = require("passport");
 
 const User = require("../../models/User");
 const { passportSecret } = require("../../config/keys");
@@ -102,11 +103,12 @@ router.post("/login", async (req, res) => {
 
 router.get(
   "/me",
+  passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
     if (!req.user) res.status(401).end();
     next();
   },
-  (req, res, next) => {
+  (req, res) => {
     const { id, email, name, experience, image } = req.user;
     res.json({ id, email, name, experience, image });
   }

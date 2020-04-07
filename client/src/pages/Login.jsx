@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 import {
   makeStyles,
@@ -9,6 +9,7 @@ import {
 } from "@material-ui/core";
 import LoginSignupContainer from "components/LoginSignupContainer";
 import GridTemplateContainer from "components/GridTemplateContainer";
+import UserContext from "context/UserContext";
 import { store } from "utils/storage";
 
 // TODO Figure out where to move useStyles to avoid duplicate code
@@ -63,6 +64,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const { user, setUser } = useContext(UserContext);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -87,67 +90,78 @@ const Login = () => {
 
       store(data.token);
 
-      if (localStorage.token) {
-        // TODO redirect to homepage
-        console.log(localStorage.token);
-      }
+      const AuthStr = localStorage.token;
+      const response = await axios.get("/api/users/me", {
+        headers: { Authorization: "Bearer " + AuthStr },
+      });
+
+      setUser(response.data);
     } catch (err) {
       console.error(err);
       setError(err.response.data.response);
     }
   };
 
-  return (
-    <LoginSignupContainer>
-      <GridTemplateContainer>
-        <form onSubmit={submit} className={classes.form}>
-          <h1 className={classes.h1}>Welcome back!</h1>
-          <TextField
-            id="email-input"
-            type="email"
-            label="E-mail address"
-            name="email"
-            variant="outlined"
-            required
-            value={email}
-            onChange={handleChange}
-            className={classes.textfield}
-          />
+  if (localStorage.token && user) {
+    console.log("runnning");
+    return <Redirect to="/" />;
+  } else {
+    return (
+      <LoginSignupContainer>
+        <GridTemplateContainer>
+          <form onSubmit={submit} className={classes.form}>
+            <h1 className={classes.h1}>Welcome back!</h1>
+            <TextField
+              id="email-input"
+              type="email"
+              label="E-mail address"
+              name="email"
+              variant="outlined"
+              required
+              value={email}
+              onChange={handleChange}
+              className={classes.textfield}
+            />
 
-          <TextField
-            id="password-input"
-            type="password"
-            label="Password"
-            name="password"
-            variant="outlined"
-            required
-            value={password}
-            onChange={handleChange}
-            className={classes.textfield}
-          />
+            <TextField
+              id="password-input"
+              type="password"
+              label="Password"
+              name="password"
+              variant="outlined"
+              required
+              value={password}
+              onChange={handleChange}
+              className={classes.textfield}
+            />
 
-          {error && (
-            <FormHelperText className={classes.formHelper}>
-              {error}
-            </FormHelperText>
-          )}
+            {error && (
+              <FormHelperText className={classes.formHelper}>
+                {error}
+              </FormHelperText>
+            )}
 
-          <Button type="submit" variant="contained" className={classes.button}>
-            Login
-          </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              className={classes.button}
+            >
+              Login
+            </Button>
 
-          <div>
-            <strong>
-              Don't have an account?{" "}
-              <Link to="/sign-up" className={classes.link}>
-                Create
-              </Link>
-            </strong>
-          </div>
-        </form>
-      </GridTemplateContainer>
-    </LoginSignupContainer>
-  );
+            <div>
+              <strong>
+                Don't have an account?{" "}
+                <Link to="/sign-up" className={classes.link}>
+                  Create
+                </Link>
+              </strong>
+            </div>
+          </form>
+        </GridTemplateContainer>
+      </LoginSignupContainer>
+    );
+  }
 };
 
 export default Login;

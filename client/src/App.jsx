@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import axios from "axios";
 
 import UserContext from "./context/UserContext";
@@ -22,16 +22,23 @@ function App() {
   };
 
   // on mount
-  useEffect(() => {
-    // TO DO: remove hardcoded user, and write async func that invokes setUser(await axios.get("/users/me"))
-    setUser({
-      id: 1,
-      email: "mock_user@email.com",
-      name: "Mock User",
-      balance: 3,
-      image: "mock-user.png",
-    });
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     const AuthStr = localStorage.token;
+  //     async function getUserData() {
+  //       const { data } = await axios.get("/api/users/me", {
+  //         headers: { Authorization: "Bearer " + AuthStr },
+  //       });
+
+  //       console.log(data);
+  //       setUser(data);
+  //     }
+
+  //     getUserData();
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // }, []);
 
   return (
     <UserContext.Provider
@@ -43,9 +50,11 @@ function App() {
     >
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
-          <Route exact path="/sign-up" component={SignUp} />
-          <Route exact path="/" component={SignUp} />
-          <Route exact path="/login" component={Login} />
+          <Switch>
+            <Route exact path="/sign-up" component={SignUp} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/" component={Home} />
+          </Switch>
         </BrowserRouter>
       </MuiThemeProvider>
     </UserContext.Provider>
