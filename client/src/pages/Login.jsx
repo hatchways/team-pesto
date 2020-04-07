@@ -102,9 +102,8 @@ const Login = () => {
     }
   };
 
-  if (localStorage.token && user) {
-    console.log("runnning");
-    return <Redirect to="/" />;
+  if (user) {
+    return <Redirect from="/login" to="/" />;
   } else {
     return (
       <LoginSignupContainer>

@@ -10,9 +10,7 @@ const Home = () => {
   const { user } = useContext(UserContext);
   console.log(user);
 
-  return !user ? (
-    <Redirect to="/login" />
-  ) : (
+  return (
     <Fragment>
       <Navbar />
       <Switch>

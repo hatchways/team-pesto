@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 import axios from "axios";
 
 import UserContext from "./context/UserContext";
@@ -19,6 +19,7 @@ function App() {
   const logout = () => {
     setUser(null);
     remove("token"); // TO DO: agree on a name for this token
+    axios.setHeader("Authorization", null);
   };
 
   // on mount
@@ -50,11 +51,16 @@ function App() {
     >
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
-          <Switch>
-            <Route exact path="/sign-up" component={SignUp} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/" component={Home} />
-          </Switch>
+          {/* {user ? (
+            <> */}
+          <Route exact path="/" component={Home} />
+          {/* </>
+          ) : (
+            <> */}
+          <Route exact path="/sign-up" component={SignUp} />
+          <Route exact path="/login" component={Login} />
+          {/* </>
+          )} */}
         </BrowserRouter>
       </MuiThemeProvider>
     </UserContext.Provider>
