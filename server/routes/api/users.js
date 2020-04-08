@@ -89,6 +89,7 @@ router.post("/login", async (req, res) => {
       id: user.id,
       name: user.name,
       email: user.email,
+      experience: user.experience,
     };
     const token = jwt.sign(payload, passportSecret);
     res.status(200).send({ token });
@@ -99,12 +100,32 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/me", (req, res, next) => {
-  if (!req.user) res.status(401).end();
-  next();
-}, (req, res, next) => {
-  const { id, email, name, experience, image } = req.user;
-  res.json({ id, email, name, experience, image });
+router.get(
+  "/me",
+  (req, res, next) => {
+    if (!req.user) res.status(401).end();
+    next();
+  },
+  (req, res, next) => {
+    const { id, email, name, experience, image } = req.user;
+    res.json({ id, email, name, experience, image });
+  }
+);
+
+router.put("/experience", async (req, res) => {
+  const { userId, experience } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: userId });
+    user.experience = experience;
+    user.save();
+
+    res.status(200).end();
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error(err);
+    res.status(500).end();
+  }
 });
 
 module.exports = router;

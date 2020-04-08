@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
-const Request = require('./Request');
-
 const { Schema } = mongoose;
 
 const hashPassword = async (password) => {
@@ -21,7 +19,9 @@ const userSchema = new Schema({
   email: { type: String, required: true },
   name: { type: String, required: true },
   password: { type: String, required: true },
-  requests: [Request],
+  experience: { type: Array },
+  balance: { type: Number, default: 3 },
+  image: { type: String },
 });
 
 // hash password before saving
