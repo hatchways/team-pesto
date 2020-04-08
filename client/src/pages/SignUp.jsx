@@ -1,14 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
-import {
-  makeStyles,
-  TextField,
-  FormHelperText,
-} from "@material-ui/core";
+import { makeStyles, TextField, FormHelperText } from "@material-ui/core";
 import LoginSignupContainer from "components/LoginSignupContainer";
 import GridTemplateContainer from "components/GridTemplateContainer";
-import SubmitButton from 'components/SubmitButton';
+import SubmitButton from "components/SubmitButton";
 import Onboarding from "./Onboarding";
 import { store } from "utils/storage";
 
@@ -109,7 +105,7 @@ const SignUp = () => {
   };
 
   return nextPage ? (
-    <Onboarding />
+    <Redirect from="/sign-up" exact to="/experience" />
   ) : (
     <LoginSignupContainer>
       <GridTemplateContainer>
@@ -169,9 +165,7 @@ const SignUp = () => {
             </FormHelperText>
           )}
 
-          <SubmitButton className={classes.button}>
-            Continue
-          </SubmitButton>
+          <SubmitButton className={classes.button}>Continue</SubmitButton>
 
           <div>
             <strong>

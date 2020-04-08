@@ -8,7 +8,7 @@ import theme from "themes/theme";
 import SignUp from "pages/SignUp";
 import Login from "pages/Login";
 import { remove } from "utils/storage";
-
+import Onboarding from "pages/Onboarding";
 import Home from "pages/Home";
 
 import "./App.css";
@@ -45,6 +45,7 @@ function App() {
         <BrowserRouter>
           <Route exact path="/sign-up" component={SignUp} />
           <Route exact path="/" component={SignUp} />
+          <Route exact path="/experience" component={Onboarding} />
           <Route exact path="/login" component={Login} />
         </BrowserRouter>
       </MuiThemeProvider>
