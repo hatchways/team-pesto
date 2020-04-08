@@ -55,7 +55,7 @@ router.post("/signup", async (req, res) => {
       email: newUser.email,
     };
     const token = jwt.sign(payload, passportSecret);
-    res.status(201).send({ token });
+    res.status(201).send({ token, user: payload });
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error(err);
@@ -93,7 +93,7 @@ router.post("/login", async (req, res) => {
       experience: user.experience,
     };
     const token = jwt.sign(payload, passportSecret);
-    res.status(200).send({ token });
+    res.status(200).send({ token, user: payload });
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error(err);
@@ -114,20 +114,36 @@ router.get(
   }
 );
 
-router.put("/experience", async (req, res) => {
-  const { userId, experience } = req.body;
+router.post(
+  "/experience",
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    if (!req.user) res.status(401).end();
+    next();
+  },
+  async (req, res) => {
+    const { id } = req.user;
+    const { experience } = req.body;
 
-  try {
-    const user = await User.findOne({ _id: userId });
-    user.experience = experience;
-    user.save();
+    console.log("REQBODY: ", "\n", req.body);
 
-    res.status(200).end();
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error(err);
-    res.status(500).end();
+    console.log("ID: ", "\n", id, "\n", "EXPERIENCE: ", "\n", experience);
+
+    try {
+      const user = await User.findOne({ _id: id });
+
+      console.log("USER: ", "\n", user);
+
+      user.experience = experience;
+      user.save();
+
+      res.status(200).end();
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(err);
+      res.status(500).end();
+    }
   }
-});
+);
 
 module.exports = router;

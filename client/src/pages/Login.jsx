@@ -89,21 +89,17 @@ const Login = () => {
       });
 
       store(data.token);
-
-      const AuthStr = localStorage.token;
-      const response = await axios.get("/api/users/me", {
-        headers: { Authorization: "Bearer " + AuthStr },
-      });
-
-      setUser(response.data);
+      setUser(data.user);
     } catch (err) {
       console.error(err);
       setError(err.response.data.response);
     }
   };
 
-  if (user) {
-    return <Redirect from="/login" to="/" />;
+  if (user && user.experience.length === 0) {
+    return <Redirect from="/login" exact to="/experience" />;
+  } else if (user && user.experience.length > 0) {
+    return <Redirect from="/login" exact to="/" />;
   } else {
     return (
       <LoginSignupContainer>
