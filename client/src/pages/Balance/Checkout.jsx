@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import {
   Button,
@@ -35,13 +36,6 @@ const CARD_ELEMENT_OPTIONS = {
     },
   },
 };
-
-
-const CardField = ({ onChange }) => (
-  <div className="FormRow">
-    <CardElement options={CARD_ELEMENT_OPTIONS} onChange={onChange} />
-  </div>
-);
 
 const Field = ({
   label,
@@ -100,37 +94,53 @@ const Checkout = ({
   const [cardComplete, setCardComplete] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [billingDetails, setBillingDetails] = useState({ name: "" });
+  const [paymentSuccessful, setPaymentSuccessful] = useState(false);
 
   const handleSubmit = async event => {
     event.preventDefault();
 
-    if (!stripe || !elements) return;     // Stripe.js has not yet loaded.
+    // Stripe.js has not yet loaded.
+    if (!stripe || !elements) return;
+    if (!billingDetails.name) {
+      document.getElementById("name").focus();
+      setError({ message: "Please enter your name" });
+      return;
+    }
+    if (error || !cardComplete ) {
+      elements.getElement("card").focus();
+      setError({ message: "Invalid card number" });
+      return;
+    }
+    
+    setProcessing(true);
 
     const requestPaymentIntent = await axios.post(`/api/users/${user.id}/purchase`, { refillAmount });
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
+
+    const payload = await stripe.createPaymentMethod({
       type: "card",
       card: elements.getElement(CardElement),
       billing_details: billingDetails,
     });
 
-    // if (error) {
-    //   console.log('ERR:', error)
-    //   return;
-    // }
-    // console.log('PAYMENT METHOD:', paymentMethod)
-
     const confirm = await stripe.confirmCardPayment(
       `${requestPaymentIntent.data.clientSecret}`,
       {
-        payment_method: paymentMethod.id
+        payment_method: payload.paymentMethod.id
       }
     );
 
-    // console.log('CONFIRM:', confirm)
-    
+    if (confirm.paymentIntent.status === "succeeded") {
+      setProcessing(false);
+      setPaymentSuccessful(true);
+      // TO DO: axios put request to back end to increase user's credits
+      // TO DO: increase front end user object's credits
+    } else if (confirm.error) {
+      setProcessing(false);
+      setError(confirm.error);
+    }
   };
 
-  return (
+  return !paymentSuccessful ? (
     <Grid container direction="column" alignItems="center">
       <Grid
         item
@@ -143,26 +153,20 @@ const Checkout = ({
           <Grid container direction="column" spacing={2}>
             <Grid item>
               <fieldset className="FormGroup">
-                <Field
-                  label="Name"
-                  id="name"
-                  type="text"
-                  placeholder="Enter your name"
-                  required
-                  autoComplete="name"
-                  value={billingDetails.name}
-                  onChange={e => {
-                    setBillingDetails({ ...billingDetails, name: e.target.value });
-                  }}
-                />
+                <div className="FormRow">
+                  <input
+                    className="FormRowInput"
+                    id="name"
+                    type="text"
+                    placeholder="Name on credit card"
+                    required
+                    autoComplete="name"
+                    value={billingDetails.name}
+                    onChange={e => setBillingDetails({ ...billingDetails, name: e.target.value })}
+                  />
+                </div>
               </fieldset>
               <fieldset className="FormGroup">
-                {/* <CardField
-                  onChange={e => {
-                    setError(e.error);
-                    setCardComplete(e.complete);
-                  }}
-                /> */}
                 <div className="FormRow">
                   <CardElement options={CARD_ELEMENT_OPTIONS} onChange={e => {
                     setError(e.error);
@@ -189,7 +193,7 @@ const Checkout = ({
                   color="primary"
                   variant="contained"
                   onClick={handleSubmit}
-                  // disabled={processing}
+                  disabled={processing}
                 >
                   { error ? "Try again" : processing ? "Processing..." : `Pay $${refillAmount * 10}` }
                 </Button>
@@ -199,10 +203,43 @@ const Checkout = ({
         </form>
       </Grid>
     </Grid>
+  ) : (
+    <Grid container direction="column" spacing={6}>
+      <Grid item xs={12}>
+        <Typography className={classes.text}>Payment Complete</Typography>
+      </Grid>
+      <Grid container item direction="row" xs={12} justify="center">
+        <Grid item xs={6}>
+          <Button
+            className={classes.button}
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              setPaymentSuccessful(false);
+              setCheckoutPage(false);
+            }}
+          >
+            View Balance
+          </Button>
+        </Grid>
+        <Grid item xs={6}>
+          <Link to="/code-upload" className={classes.link}>
+            <Button
+              className={classes.button}
+              color="primary"
+              variant="contained"
+              onClick={() => setPaymentSuccessful(false)}
+            >
+              Upload Code
+            </Button>
+          </Link>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 
-// To use Element components, we need to wrap the component in an Elements provider
+// to use Element components, we need to wrap the component in an Elements provider
 const WrappedCheckout = ({
   refillAmount,
   setCheckoutPage,
@@ -214,5 +251,4 @@ const WrappedCheckout = ({
   )
 };
 
-// export default Checkout;
 export default WrappedCheckout;
