@@ -11,8 +11,6 @@ const reviewSchema = new Schema({
   title: String,
   date: { type: Date, default: Date.now },
   language: { type: String, required: true },
-  code: { type: String, required: true },
-  comments: String,
   status: { type: String, default: 'pending' },
   messages: [Message],
 });
