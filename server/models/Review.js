@@ -2,11 +2,12 @@ const mongoose = require('mongoose');
 
 const Message = require('./Message');
 
-const { Schema } = mongoose;
+const { Schema, ObjectId } = mongoose;
 
 const reviewSchema = new Schema({
-  requestorId: { type: mongoose.ObjectId, required: true },
-  reviewerId: mongoose.ObjectId,
+  requesterId: { type: ObjectId, required: true },
+  reviewerId: ObjectId,
+  declinedIds: [ObjectId],
   title: String,
   date: { type: Date, default: Date.now },
   language: { type: String, required: true },

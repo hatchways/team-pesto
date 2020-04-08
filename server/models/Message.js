@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
-const { Schema } = mongoose;
+const { Schema, ObjectId } = mongoose;
 
 const messageSchema = new Schema({
-  authorId: { type: mongoose.ObjectId, required: true },
+  authorId: { type: ObjectId, required: true },
   date: { type: Date, default: Date.now },
   code: String,
   comments: String,
