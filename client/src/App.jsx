@@ -75,6 +75,7 @@ function App() {
               // TODO create experience route in seperate PR
             }
             <Route exact path="/login" component={Login} />
+            <Redirect from="/" exact to="sign-up" />
           </Switch>
         </BrowserRouter>
       </MuiThemeProvider>

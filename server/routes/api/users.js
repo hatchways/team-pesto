@@ -137,6 +137,8 @@ router.post(
       user.experience = experience;
       user.save();
 
+      console.log("USER2: ", "\n", user);
+
       res.status(200).end();
     } catch (err) {
       // eslint-disable-next-line no-console
