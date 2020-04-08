@@ -8,6 +8,7 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox";
 
 import useStyles from "./Balance.css";
+import UserContext from "context/UserContext";
 
 const ChooseAmount = ({
   refillAmount,

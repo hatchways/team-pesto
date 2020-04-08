@@ -43,9 +43,10 @@ function App() {
     >
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
-          <Route exact path="/sign-up" component={SignUp} />
+          <Route path="/" component={Home} />
+          {/* <Route exact path="/sign-up" component={SignUp} />
           <Route exact path="/" component={SignUp} />
-          <Route exact path="/login" component={Login} />
+          <Route exact path="/login" component={Login} /> */}
         </BrowserRouter>
       </MuiThemeProvider>
     </UserContext.Provider>
