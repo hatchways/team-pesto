@@ -9,7 +9,7 @@ import SignUp from "pages/SignUp";
 import Login from "pages/Login";
 import Balance from "pages/Balance";
 import { remove } from "utils/storage";
-
+import Onboarding from "pages/Onboarding";
 import Home from "pages/Home";
 
 import "./App.css";
@@ -41,7 +41,7 @@ function App() {
     } catch (err) {
       console.error(err);
     }
-  }, []);
+  }, [user]);
 
   return (
     <UserContext.Provider
@@ -71,17 +71,19 @@ function App() {
             {/* Routes placed here are available after logging in and not having experience */}
             {user && user.experience.length === 0 && (
               <Switch>
-                {
-                  // TODO create experience route in seperate PR
-                }
+                <Route exact path="/experience" component={Onboarding} />
                 <Redirect exact to="/experience" />
               </Switch>
             )}
 
-            {/* Routes placed here are available to all visitors */}
-            <Route exact path="/sign-up" component={SignUp} />
-            <Route exact path="/login" component={Login} />
-            <Redirect from="/" exact to="/login" />
+            {/* Routes placed here are available if loggedout */}
+            {!user && (
+              <Switch>
+                <Route exact path="/sign-up" component={SignUp} />
+                <Route exact path="/login" component={Login} />
+                <Redirect from="/" exact to="/login" />
+              </Switch>
+            )}
 
           </Switch>
         </BrowserRouter>
