@@ -125,19 +125,8 @@ router.post(
     const { id } = req.user;
     const { experience } = req.body;
 
-    console.log("REQBODY: ", "\n", req.body);
-
-    console.log("ID: ", "\n", id, "\n", "EXPERIENCE: ", "\n", experience);
-
     try {
-      const user = await User.findOne({ _id: id });
-
-      console.log("USER: ", "\n", user);
-
-      user.experience = experience;
-      user.save();
-
-      console.log("USER2: ", "\n", user);
+      await User.update({ _id: id }, { $set: { experience: experience } });
 
       res.status(200).end();
     } catch (err) {
