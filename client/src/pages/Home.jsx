@@ -10,12 +10,7 @@ const Home = () => {
   return (
     <Fragment>
       <Navbar />
-      {/* <Switch></Switch> */}
-
-      <Switch>
-        <Route path="/balance" component={Balance} />
-      </Switch>
-
+      <Switch></Switch>
     </Fragment>
   );
 };
