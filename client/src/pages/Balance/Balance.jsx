@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import MainContainer from "components/MainContainer";
 import GridTemplateContainer from "components/GridTemplateContainer";
+import Navbar from "components/Navbar";
 
 import ChooseAmount from "./ChooseAmount";
 import Checkout from "./Checkout";
@@ -11,19 +12,20 @@ const Balance = () => {
   return (
     <MainContainer>
       <GridTemplateContainer>
-          {!checkoutPage ? (
-            <ChooseAmount
-              refillAmount={refillAmount}
-              setRefillAmount={setRefillAmount}
-              setCheckoutPage={setCheckoutPage}
-            />
-          ) : (
-            <Checkout
-              refillAmount={refillAmount}
-              setRefillAmount={setRefillAmount}
-              setCheckoutPage={setCheckoutPage}
-            />
-          )}
+        <Navbar />
+        {!checkoutPage ? (
+          <ChooseAmount
+            refillAmount={refillAmount}
+            setRefillAmount={setRefillAmount}
+            setCheckoutPage={setCheckoutPage}
+          />
+        ) : (
+          <Checkout
+            refillAmount={refillAmount}
+            setRefillAmount={setRefillAmount}
+            setCheckoutPage={setCheckoutPage}
+          />
+        )}
       </GridTemplateContainer>
     </MainContainer>
   );
