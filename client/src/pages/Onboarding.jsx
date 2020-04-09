@@ -1,10 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { makeStyles, Button, FormHelperText } from "@material-ui/core";
 import DynamicSelect from "pages/DynamicSelect";
 import GridTemplateContainer from "components/GridTemplateContainer";
 import LoginSignupContainer from "components/LoginSignupContainer";
-import UserContext from "context/UserContext";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -53,8 +52,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Onboarding = () => {
   const classes = useStyles();
-
-  const { user } = useContext(UserContext);
 
   const [languageList, setLanguageList] = useState([
     { language: "", level: "" },
