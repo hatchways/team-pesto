@@ -17,9 +17,8 @@ exports.connect = async () => {
 
 // drop database, close mongoose connection, stop mongod
 exports.close = async () => {
-  await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
-  await mongod.close();
+  await mongod.stop();
 };
 
 // clear database collections
