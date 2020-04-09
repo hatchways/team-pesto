@@ -14,7 +14,7 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-// import { Alert } from '@material-ui/lab';
+import { Alert } from '@material-ui/lab';
 import { loadStripe } from "@stripe/stripe-js";
 
 import useStyles from "./Balance.css";
@@ -91,6 +91,7 @@ const Checkout = ({
     if (confirm.paymentIntent.status === "succeeded") {
       setProcessing(false);
       setPaymentSuccessful(true);
+      setSuccessSnackbar({ open: true, message: "Payment successful!" });
       user.balance += refillAmount;
       setRefillAmount(1);
       await axios.put(`/api/users/${user.id}/add-credits`, { refillAmount });
@@ -100,112 +101,122 @@ const Checkout = ({
     }
   };
 
-  return !paymentSuccessful ? (
+  return (
     <>
-      <Grid container direction="column" alignItems="center">
-        <Grid
-          item
-          container
-          xs={12}
-          direction="column"
-          className={classes.stripePayment}
-        >
-          <form className="Form" onSubmit={handleSubmit}>
-            <Grid container direction="column" spacing={2}>
-              <Grid item>
-                <fieldset className="FormGroup">
-                  <div className="FormRow">
-                    <input
-                      className="FormRowInput"
-                      id="name"
-                      type="text"
-                      placeholder="Name on credit card"
-                      required
-                      autoComplete="name"
-                      value={billingDetails.name}
-                      onChange={e => setBillingDetails({ ...billingDetails, name: e.target.value })}
-                    />
-                  </div>
-                </fieldset>
-                <fieldset className="FormGroup">
-                  <div className="FormRow">
-                    <CardElement options={CARD_ELEMENT_OPTIONS} onChange={e => {
-                      setCardComplete(e.complete);
-                    }} />
-                  </div>
-                </fieldset>
-              </Grid>
-              <Grid container item direction="row">
-                <Grid item xs={6}>
-                  <Button
-                    className={classes.button}
-                    color="primary"
-                    variant="contained"
-                    onClick={() => setCheckoutPage(false)}
-                  >
-                    Edit cart
-                  </Button>
+      {!paymentSuccessful ? (
+        <Grid container direction="column" alignItems="center">
+          <Grid
+            item
+            container
+            xs={12}
+            direction="column"
+            className={classes.stripePayment}
+          >
+            <form className="Form" onSubmit={handleSubmit}>
+              <Grid container direction="column" spacing={2}>
+                <Grid item>
+                  <fieldset className="FormGroup">
+                    <div className="FormRow">
+                      <input
+                        className="FormRowInput"
+                        id="name"
+                        type="text"
+                        placeholder="Name on credit card"
+                        required
+                        autoComplete="name"
+                        value={billingDetails.name}
+                        onChange={e => setBillingDetails({ ...billingDetails, name: e.target.value })}
+                      />
+                    </div>
+                  </fieldset>
+                  <fieldset className="FormGroup">
+                    <div className="FormRow">
+                      <CardElement options={CARD_ELEMENT_OPTIONS} onChange={e => {
+                        setCardComplete(e.complete);
+                      }} />
+                    </div>
+                  </fieldset>
                 </Grid>
-                <Grid item xs={6}>
-                  <Button
-                    className={classes.button}
-                    color="primary"
-                    variant="contained"
-                    onClick={handleSubmit}
-                    disabled={processing}
-                  >
-                    { errorSnackbar.open ? "Try again" : processing ? "Processing..." : `Pay $${refillAmount * 10}` }
-                  </Button>
+                <Grid container item direction="row">
+                  <Grid item xs={6}>
+                    <Button
+                      className={classes.button}
+                      color="primary"
+                      variant="contained"
+                      onClick={() => setCheckoutPage(false)}
+                    >
+                      Edit cart
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button
+                      className={classes.button}
+                      color="primary"
+                      variant="contained"
+                      onClick={handleSubmit}
+                      disabled={processing}
+                    >
+                      { errorSnackbar.open ? "Try again" : processing ? "Processing..." : `Pay $${refillAmount * 10}` }
+                    </Button>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          </form>
+            </form>
+          </Grid>
         </Grid>
-      </Grid>
+      ) : (
+        <Grid container direction="column" spacing={6}>
+          <Grid item xs={12}>
+            <Typography className={classes.text}>Payment Complete</Typography>
+          </Grid>
+          <Grid container item direction="row" xs={12} justify="center">
+            <Grid item xs={6}>
+              <Button
+                className={classes.button}
+                color="primary"
+                variant="contained"
+                onClick={() => {
+                  setPaymentSuccessful(false);
+                  setCheckoutPage(false);
+                }}
+              >
+                View Balance
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Link to="/code-upload" className={classes.link}>
+                <Button
+                  className={classes.button}
+                  color="primary"
+                  variant="contained"
+                  onClick={() => setPaymentSuccessful(false)}
+                >
+                  Upload Code
+                </Button>
+              </Link>
+            </Grid>
+          </Grid>
+        </Grid>
+      )}
       <Portal>
         <Snackbar
           open={errorSnackbar.open}
           autoHideDuration={5000}
           onClose={() => setErrorSnackbar({ open: false, message: errorSnackbar.message })}
         >
-          <p>TEST</p>
-          {/* <Alert variant='filled' severity='error'>{errorSnackbar.message}</Alert> */}
+          <Alert variant="filled" severity="error">{errorSnackbar.message}</Alert>
+        </Snackbar>
+      </Portal>
+      <Portal>
+        <Snackbar
+          open={successSnackbar.open}
+          autoHideDuration={5000}
+          onClose={() => setSuccessSnackbar({ open: false, message: "" })}
+        >
+          <Alert variant="filled" severity="success">{successSnackbar.message}</Alert>
         </Snackbar>
       </Portal>
     </>
-  ) : (
-    <Grid container direction="column" spacing={6}>
-      <Grid item xs={12}>
-        <Typography className={classes.text}>Payment Complete</Typography>
-      </Grid>
-      <Grid container item direction="row" xs={12} justify="center">
-        <Grid item xs={6}>
-          <Button
-            className={classes.button}
-            color="primary"
-            variant="contained"
-            onClick={() => {
-              setPaymentSuccessful(false);
-              setCheckoutPage(false);
-            }}
-          >
-            View Balance
-          </Button>
-        </Grid>
-        <Grid item xs={6}>
-          <Link to="/code-upload" className={classes.link}>
-            <Button
-              className={classes.button}
-              color="primary"
-              variant="contained"
-              onClick={() => setPaymentSuccessful(false)}
-            >
-              Upload Code
-            </Button>
-          </Link>
-        </Grid>
-      </Grid>
-    </Grid>
   );
 };
 
