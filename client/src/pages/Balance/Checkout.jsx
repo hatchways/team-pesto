@@ -5,9 +5,7 @@ import {
   Button,
   Grid,
   Typography,
-  TextField,
 } from "@material-ui/core";
-
 import {
   Elements,
   CardElement,
@@ -37,33 +35,6 @@ const CARD_ELEMENT_OPTIONS = {
   },
 };
 
-const Field = ({
-  label,
-  id,
-  type,
-  placeholder,
-  required,
-  autoComplete,
-  value,
-  onChange
-}) => (
-  <div className="FormRow">
-    <label htmlFor={id} className="FormRowLabel">
-      {label}
-    </label>
-    <input
-      className="FormRowInput"
-      id={id}
-      type={type}
-      placeholder={placeholder}
-      required={required}
-      autoComplete={autoComplete}
-      value={value}
-      onChange={onChange}
-    />
-  </div>
-);
-
 const ErrorMessage = ({ children }) => (
   <div className="ErrorMessage" role="alert">
     <svg width="16" height="16" viewBox="0 0 17 17">
@@ -84,6 +55,7 @@ const stripePromise = loadStripe("pk_test_Y2tTju8cgfUZW4vozmYVG26J00yEwRHw7v");
 
 const Checkout = ({
   refillAmount,
+  setRefillAmount,
   setCheckoutPage,
 }) => {
   const classes = useStyles();
@@ -132,8 +104,9 @@ const Checkout = ({
     if (confirm.paymentIntent.status === "succeeded") {
       setProcessing(false);
       setPaymentSuccessful(true);
-      // TO DO: axios put request to back end to increase user's credits
-      // TO DO: increase front end user object's credits
+      user.balance += refillAmount;
+      setRefillAmount(1);
+      await axios.put(`/api/users/${user.id}/add-credits`, { refillAmount });
     } else if (confirm.error) {
       setProcessing(false);
       setError(confirm.error);
@@ -242,11 +215,16 @@ const Checkout = ({
 // to use Element components, we need to wrap the component in an Elements provider
 const WrappedCheckout = ({
   refillAmount,
+  setRefillAmount,
   setCheckoutPage,
 }) => {
   return (
     <Elements stripe={stripePromise}>
-      <Checkout refillAmount={refillAmount} setCheckoutPage={setCheckoutPage} />
+      <Checkout
+        refillAmount={refillAmount}
+        setRefillAmount={setRefillAmount}
+        setCheckoutPage={setCheckoutPage}
+      />
     </Elements>
   )
 };

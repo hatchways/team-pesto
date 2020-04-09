@@ -20,6 +20,7 @@ const Balance = () => {
           ) : (
             <Checkout
               refillAmount={refillAmount}
+              setRefillAmount={setRefillAmount}
               setCheckoutPage={setCheckoutPage}
             />
           )}
