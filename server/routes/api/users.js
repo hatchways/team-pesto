@@ -112,8 +112,8 @@ router.get(
     next();
   },
   (req, res) => {
-    const { id, email, name, experience, image } = req.user;
-    res.json({ id, email, name, experience, image });
+    const { id, email, name, experience, balance, image } = req.user;
+    res.json({ id, email, name, experience, balance, image });
   }
 );
 
@@ -157,9 +157,7 @@ router.post("/purchase", async (req, res) => {
 router.put("/:id/add-credits", async (req, res) => {
   try {
     const { refillAmount } = req.body;
-    const user = await User.findById(+req.params.id);
-    user.credits += Number(refillAmount);
-    user.save();
+    await User.findByIdAndUpdate(req.params.id, { $inc: { balance: refillAmount } });
     res.status(200).send({ success: true, message: "Successfully added credits" });
   } catch (err) {
     console.error(error);

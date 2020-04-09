@@ -31,7 +31,6 @@ function App() {
         const { data } = await axios.get("/api/users/me", {
           headers: { Authorization: "Bearer " + AuthStr },
         });
-
         setUser(data);
       }
 
