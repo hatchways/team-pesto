@@ -53,6 +53,7 @@ router.post("/signup", async (req, res) => {
       id: newUser.id,
       name: newUser.name,
       email: newUser.email,
+      experience: newUser.experience,
     };
     const token = jwt.sign(payload, passportSecret);
     res.status(201).send({ token, user: payload });

@@ -1,15 +1,10 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
-import {
-  makeStyles,
-  TextField,
-  FormHelperText,
-} from "@material-ui/core";
+import { makeStyles, TextField, FormHelperText } from "@material-ui/core";
 import LoginSignupContainer from "components/LoginSignupContainer";
 import GridTemplateContainer from "components/GridTemplateContainer";
-import SubmitButton from 'components/SubmitButton';
-import Onboarding from "./Onboarding";
+import SubmitButton from "components/SubmitButton";
 import UserContext from "context/UserContext";
 import { store } from "utils/storage";
 
@@ -98,13 +93,7 @@ const SignUp = () => {
         });
 
         store(data.token);
-
-        const AuthStr = localStorage.token;
-        const response = await axios.get("/api/users/me", {
-          headers: { Authorization: "Bearer " + AuthStr },
-        });
-
-        setUser(response.data);
+        setUser(data.user);
 
         if (user) {
           setNextPage(true);
@@ -119,7 +108,7 @@ const SignUp = () => {
   };
 
   return nextPage ? (
-    <Onboarding />
+    <Redirect from="/sign-up" exact to="/experience" />
   ) : (
     <LoginSignupContainer>
       <GridTemplateContainer>
@@ -179,9 +168,7 @@ const SignUp = () => {
             </FormHelperText>
           )}
 
-          <SubmitButton className={classes.button}>
-            Continue
-          </SubmitButton>
+          <SubmitButton className={classes.button}>Continue</SubmitButton>
 
           <div>
             <strong>
