@@ -41,15 +41,15 @@ const useStyles = makeStyles((theme) => ({
   },
   subtract: {
     color: "#F44335",
-    cursor: "pointer"
+    cursor: "pointer",
   },
   disabled: {
     color: "#AAAAAA",
-    cursor: "pointer"
+    cursor: "pointer",
   },
   add: {
     color: `${theme.palette.primary.main}`,
-    cursor: "pointer"
+    cursor: "pointer",
   },
   counter: {
     padding: "0px 20px 0px 20px",

@@ -1,15 +1,11 @@
 import React, { useState, useContext } from "react";
 import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
-import {
-  makeStyles,
-  Button,
-  TextField,
-  FormHelperText,
-} from "@material-ui/core";
+import { makeStyles, TextField, FormHelperText } from "@material-ui/core";
 import LoginSignupContainer from "components/LoginSignupContainer";
 import GridTemplateContainer from "components/GridTemplateContainer";
 import UserContext from "context/UserContext";
+import SubmitButton from "components/SubmitButton";
 import { store } from "utils/storage";
 
 // TODO Figure out where to move useStyles to avoid duplicate code
@@ -30,11 +26,6 @@ const useStyles = makeStyles((theme) => ({
   button: {
     marginTop: 30,
     marginBottom: 60,
-    borderRadius: 20,
-    color: "#FFFFFF",
-    backgroundColor: `${theme.palette.secondary.main}`,
-    width: "15ch",
-    padding: 10,
   },
   textfield: {
     "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
@@ -136,13 +127,7 @@ const Login = () => {
               </FormHelperText>
             )}
 
-            <Button
-              type="submit"
-              variant="contained"
-              className={classes.button}
-            >
-              Login
-            </Button>
+            <SubmitButton className={classes.button}>Login</SubmitButton>
 
             <div>
               <strong>
