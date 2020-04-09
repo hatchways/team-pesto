@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
 import axios from "axios";
 import { makeStyles, Button, FormHelperText } from "@material-ui/core";
 import DynamicSelect from "pages/DynamicSelect";
 import GridTemplateContainer from "components/GridTemplateContainer";
 import LoginSignupContainer from "components/LoginSignupContainer";
-import UserContext from "context/UserContext";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -54,8 +54,6 @@ const useStyles = makeStyles((theme) => ({
 const Onboarding = () => {
   const classes = useStyles();
 
-  const { user } = useContext(UserContext);
-
   const [languageList, setLanguageList] = useState([
     { language: "", level: "" },
   ]);
@@ -67,6 +65,7 @@ const Onboarding = () => {
   });
 
   const [selecOneError, setSelectOneError] = useState(false);
+  const [nextPage, setNextPage] = useState(false);
 
   const addLanguage = () => {
     setLanguageList([...languageList, { language: "", level: "" }]);
@@ -108,12 +107,16 @@ const Onboarding = () => {
       setSelectOneError(false);
       setError(false);
       try {
-        const { data } = axios.put("/api/users/experience", {
-          userId: user["_id"],
-          experience: languageList,
-        });
+        const AuthStr = localStorage.token;
+        await axios.post(
+          "/api/users/experience",
+          {
+            experience: languageList,
+          },
+          { headers: { Authorization: "Bearer " + AuthStr } }
+        );
 
-        // TODO add redirect to homepage
+        setNextPage(true);
       } catch (err) {
         console.error(err);
       }
@@ -123,7 +126,9 @@ const Onboarding = () => {
   const options = ["JavaScript", "Python", "Java", "C++", "Ruby"];
   const levels = ["Beginner", "Intermediate", "Advanced"];
 
-  return (
+  return nextPage ? (
+    <Redirect from="/experience" exact to="/" />
+  ) : (
     <LoginSignupContainer>
       <GridTemplateContainer>
         <form onSubmit={submit} className={classes.form}>

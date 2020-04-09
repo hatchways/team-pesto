@@ -1,21 +1,13 @@
-import React, { Fragment, useContext } from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
-import UserContext from "context/UserContext";
+import React, { Fragment } from "react";
+import { Switch } from "react-router-dom";
 
 import Navbar from "components/Navbar";
 
-import Balance from "pages/Balance/index.js";
-
 const Home = () => {
-  const { user } = useContext(UserContext);
-  return user ? (
-    <Redirect to="/login"/>
-  ) : (
+  return (
     <Fragment>
       <Navbar />
-      <Switch>
-        <Route path="/balance" component={Balance} />
-      </Switch>
+      <Switch></Switch>
     </Fragment>
   );
 };

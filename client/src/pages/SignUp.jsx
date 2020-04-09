@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 import { makeStyles, TextField, FormHelperText } from "@material-ui/core";
 import LoginSignupContainer from "components/LoginSignupContainer";
 import GridTemplateContainer from "components/GridTemplateContainer";
 import SubmitButton from "components/SubmitButton";
-import Onboarding from "./Onboarding";
+import UserContext from "context/UserContext";
 import { store } from "utils/storage";
 
 // TODO Figure out where to move useStyles to avoid duplicate code
@@ -54,6 +54,8 @@ const SignUp = () => {
   const [error, setError] = useState("");
   const [nextPage, setNextPage] = useState(false);
 
+  const { user, setUser } = useContext(UserContext);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -91,8 +93,9 @@ const SignUp = () => {
         });
 
         store(data.token);
+        setUser(data.user);
 
-        if (localStorage.token) {
+        if (user) {
           setNextPage(true);
         }
       } catch (err) {
