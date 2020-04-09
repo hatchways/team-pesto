@@ -8,7 +8,7 @@ import Balance from "pages/Balance/index.js";
 
 const Home = () => {
   const { user } = useContext(UserContext);
-  return user && false ? (
+  return user ? (
     <Redirect to="/login"/>
   ) : (
     <Fragment>
