@@ -54,6 +54,7 @@ function App() {
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
           <Switch>
+
             {/* Routes placed here are only available after logging in and having experience */}
             {user && user.experience.length > 0 && (
               <Switch>
