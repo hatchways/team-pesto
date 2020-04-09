@@ -1,6 +1,6 @@
-const passport = require('passport');
+const passport = require("passport");
 
-const strategy = 'jwt';
+const strategy = "jwt";
 const options = {
   session: false,
 };

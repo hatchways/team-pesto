@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const { Schema, ObjectId } = mongoose;
 
@@ -9,5 +9,5 @@ const messageSchema = new Schema({
   comments: String,
 });
 
-const Message = mongoose.model('message', messageSchema);
+const Message = mongoose.model("message", messageSchema);
 module.exports = Message;
