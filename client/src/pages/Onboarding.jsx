@@ -108,8 +108,7 @@ const Onboarding = () => {
       setSelectOneError(false);
       setError(false);
       try {
-        const { data } = axios.put("/api/users/experience", {
-          userId: user["_id"],
+        const { data } = await axios.put("/api/users/experience", {
           experience: languageList,
         });
 
