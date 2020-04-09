@@ -54,33 +54,37 @@ function App() {
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
           <Switch>
+
+            <Route path="/" component={Home} />
+
             {/* Routes placed here are only available after logging in and having experience */}
-            {user && user.experience.length > 0 && (
+            {/* {user && user.experience.length > 0 && (
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/balance" component={Balance} />
-                {/* TODO: Future routes
+                {/x* TODO: Future routes
                  <Route exact path="/reviews" component={Reviews} />
                 <Route exact path="/upload" component={Upload} />
-                <Route exact path="/balance" component={Balance} /> */}
+                <Route exact path="/balance" component={Balance} /> *x/}
                 <Redirect exact to="/" />
               </Switch>
-            )}
+            )} */}
 
             {/* Routes placed here are available after logging in and not having experience */}
-            {user && user.experience.length === 0 && (
+            {/* {user && user.experience.length === 0 && (
               <Switch>
                 {
                   // TODO create experience route in seperate PR
                 }
                 <Redirect exact to="/experience" />
               </Switch>
-            )}
+            )} */}
 
             {/* Routes placed here are available to all visitors */}
-            <Route exact path="/sign-up" component={SignUp} />
+            {/* <Route exact path="/sign-up" component={SignUp} />
             <Route exact path="/login" component={Login} />
-            <Redirect from="/" exact to="/login" />
+            <Redirect from="/" exact to="/login" /> */}
+
           </Switch>
         </BrowserRouter>
       </MuiThemeProvider>
