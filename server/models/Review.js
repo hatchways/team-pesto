@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const Message = require('./Message');
+const Message = require("./Message");
 
 const { Schema, ObjectId } = mongoose;
 
@@ -11,9 +11,9 @@ const reviewSchema = new Schema({
   title: String,
   date: { type: Date, default: Date.now },
   language: { type: String, required: true },
-  status: { type: String, default: 'pending' },
-  messages: [Message],
+  status: { type: String, default: "pending" },
+  messages: [Message.schema],
 });
 
-const Review = mongoose.model('review', reviewSchema);
+const Review = mongoose.model("review", reviewSchema);
 module.exports = Review;
