@@ -48,7 +48,7 @@ router.post("/requests", authenticate, async (req, res) => {
 
     // update user balance
     const requester = await User.findById(req.user.id);
-    requester.balance += REQUIRED_CREDITS;
+    requester.balance -= REQUIRED_CREDITS;
 
     // save new and updated documents to database
     await Promise.all([message.save(), review.save(), requester.save()]);
