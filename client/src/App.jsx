@@ -9,11 +9,10 @@ import SignUp from "pages/SignUp";
 import Login from "pages/Login";
 import Balance from "pages/Balance";
 import { remove } from "utils/storage";
-
+import Onboarding from "pages/Onboarding";
 import Home from "pages/Home";
 
 import "./App.css";
-import Onboarding from "pages/Onboarding";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -26,21 +25,20 @@ function App() {
     delete axios.defaults.headers.common["Authorization"];
   };
 
+  const prevRedirect = useRef();
   // on mount
-  const prevRedirectRef = useRef();
   useEffect(() => {
-    prevRedirectRef.current = redirect;
+    prevRedirect.current = redirect;
     try {
       const AuthStr = localStorage.token;
       async function getUserData() {
         const { data } = await axios.get("/api/users/me", {
           headers: { Authorization: "Bearer " + AuthStr },
         });
-
         setUser(data);
       }
 
-      if (localStorage.token && redirect !== prevRedirectRef.current) {
+      if (localStorage.token && redirect === prevRedirect.current) {
         getUserData();
       }
     } catch (err) {
@@ -76,38 +74,19 @@ function App() {
             {user && user.experience.length === 0 && (
               <Switch>
                 {
-                  // TODO create experience route in seperate PR
+                  // TODO add experience route in seperate PR
                 }
-                <Route
-                  exact
-                  path="/experience"
-                  render={(props) => (
-                    <Onboarding
-                      {...props}
-                      setRedirect={setRedirect}
-                      redirect={redirect}
-                    />
-                  )}
-                />
-
-                <Redirect exact to="/experience" />
               </Switch>
             )}
 
-            {/* Routes placed here are available to all visitors */}
-            <Route
-              exact
-              path="/sign-up"
-              render={(props) => (
-                <SignUp
-                  {...props}
-                  setRedirect={setRedirect}
-                  redirect={redirect}
-                />
-              )}
-            />
-            <Route exact path="/login" component={Login} />
-            <Redirect from="/" exact to="/login" />
+            {/* Routes placed here are available if loggedout */}
+            {!user && (
+              <Switch>
+                <Route exact path="/sign-up" component={SignUp} />
+                <Route exact path="/login" component={Login} />
+                <Redirect from="/" exact to="/login" />
+              </Switch>
+            )}
           </Switch>
         </BrowserRouter>
       </MuiThemeProvider>
