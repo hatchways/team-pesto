@@ -1,14 +1,10 @@
 import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import {
-  makeStyles,
-  TextField,
-  FormHelperText,
-} from "@material-ui/core";
+import { makeStyles, TextField, FormHelperText } from "@material-ui/core";
 import LoginSignupContainer from "components/LoginSignupContainer";
 import GridTemplateContainer from "components/GridTemplateContainer";
-import SubmitButton from 'components/SubmitButton';
+import SubmitButton from "components/SubmitButton";
 import Onboarding from "./Onboarding";
 import UserContext from "context/UserContext";
 import { store } from "utils/storage";
@@ -50,14 +46,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignUp = () => {
+const SignUp = (props) => {
   const classes = useStyles();
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmedPass, setConfirmedPass] = useState("");
   const [error, setError] = useState("");
-  const [nextPage, setNextPage] = useState(false);
 
   const { user, setUser } = useContext(UserContext);
 
@@ -98,16 +93,10 @@ const SignUp = () => {
         });
 
         store(data.token);
-
-        const AuthStr = localStorage.token;
-        const response = await axios.get("/api/users/me", {
-          headers: { Authorization: "Bearer " + AuthStr },
-        });
-
-        setUser(response.data);
+        setUser(data.user);
 
         if (user) {
-          setNextPage(true);
+          props.setRedirect(!props.redirect);
         }
       } catch (err) {
         console.error(err);
@@ -118,9 +107,7 @@ const SignUp = () => {
     }
   };
 
-  return nextPage ? (
-    <Onboarding />
-  ) : (
+  return (
     <LoginSignupContainer>
       <GridTemplateContainer>
         <form onSubmit={submit} className={classes.form}>
@@ -179,9 +166,7 @@ const SignUp = () => {
             </FormHelperText>
           )}
 
-          <SubmitButton className={classes.button}>
-            Continue
-          </SubmitButton>
+          <SubmitButton className={classes.button}>Continue</SubmitButton>
 
           <div>
             <strong>

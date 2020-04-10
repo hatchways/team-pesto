@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Onboarding = () => {
+const Onboarding = (props) => {
   const classes = useStyles();
 
   const [languageList, setLanguageList] = useState([
@@ -105,11 +105,15 @@ const Onboarding = () => {
       setSelectOneError(false);
       setError(false);
       try {
-        const { data } = await axios.put("/api/users/experience", {
-          experience: languageList,
-        });
+        await axios.post(
+          "/api/users/experience",
+          {
+            experience: languageList,
+          },
+          { headers: { Authorization: "Bearer " + localStorage.token } }
+        );
 
-        // TODO add redirect to homepage
+        props.setRedirect(!props.redirect);
       } catch (err) {
         console.error(err);
       }

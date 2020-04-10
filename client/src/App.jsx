@@ -13,6 +13,7 @@ import { remove } from "utils/storage";
 import Home from "pages/Home";
 
 import "./App.css";
+import Onboarding from "pages/Onboarding";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -77,11 +78,34 @@ function App() {
                 {
                   // TODO create experience route in seperate PR
                 }
+                <Route
+                  exact
+                  path="/experience"
+                  render={(props) => (
+                    <Onboarding
+                      {...props}
+                      setRedirect={setRedirect}
+                      redirect={redirect}
+                    />
+                  )}
+                />
+
+                <Redirect exact to="/experience" />
               </Switch>
             )}
 
             {/* Routes placed here are available to all visitors */}
-            <Route exact path="/sign-up" component={SignUp} />
+            <Route
+              exact
+              path="/sign-up"
+              render={(props) => (
+                <SignUp
+                  {...props}
+                  setRedirect={setRedirect}
+                  redirect={redirect}
+                />
+              )}
+            />
             <Route exact path="/login" component={Login} />
             <Redirect from="/" exact to="/login" />
           </Switch>
