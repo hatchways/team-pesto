@@ -127,7 +127,7 @@ router.post(
     const { experience } = req.body;
 
     try {
-      await User.update({ _id: id }, { $set: { experience: experience } });
+      await User.update({ _id: id }, { $set: { experience } });
 
       res.status(200).end();
     } catch (err) {
