@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { Link, Redirect } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { makeStyles, TextField, FormHelperText } from "@material-ui/core";
 import LoginSignupContainer from "components/LoginSignupContainer";
 import GridTemplateContainer from "components/GridTemplateContainer";
 import SubmitButton from "components/SubmitButton";
 import Onboarding from "./Onboarding";
+import UserContext from "context/UserContext";
 import { store } from "utils/storage";
 
 // TODO Figure out where to move useStyles to avoid duplicate code
@@ -45,14 +46,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignUp = () => {
+const SignUp = (props) => {
   const classes = useStyles();
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmedPass, setConfirmedPass] = useState("");
   const [error, setError] = useState("");
-  const [nextPage, setNextPage] = useState(false);
+
+  const { user, setUser } = useContext(UserContext);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -91,9 +93,10 @@ const SignUp = () => {
         });
 
         store(data.token);
+        setUser(data.user);
 
-        if (localStorage.token) {
-          setNextPage(true);
+        if (user) {
+          props.setRedirect(!props.redirect);
         }
       } catch (err) {
         console.error(err);
@@ -104,9 +107,7 @@ const SignUp = () => {
     }
   };
 
-  return nextPage ? (
-    <Redirect from="/sign-up" exact to="/experience" />
-  ) : (
+  return (
     <LoginSignupContainer>
       <GridTemplateContainer>
         <form onSubmit={submit} className={classes.form}>

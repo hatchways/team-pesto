@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const passport = require("passport");
 
 const User = require("../../models/User");
 const { passportSecret } = require("../../config/keys");
@@ -52,9 +53,10 @@ router.post("/signup", async (req, res) => {
       id: newUser.id,
       name: newUser.name,
       email: newUser.email,
+      experience: newUser.experience,
     };
     const token = jwt.sign(payload, passportSecret);
-    res.status(201).send({ token });
+    res.status(201).send({ token, user: payload });
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error(err);
@@ -92,7 +94,7 @@ router.post("/login", async (req, res) => {
       experience: user.experience,
     };
     const token = jwt.sign(payload, passportSecret);
-    res.status(200).send({ token });
+    res.status(200).send({ token, user: payload });
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error(err);
@@ -102,30 +104,38 @@ router.post("/login", async (req, res) => {
 
 router.get(
   "/me",
+  passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
     if (!req.user) res.status(401).end();
     next();
   },
-  (req, res, next) => {
+  (req, res) => {
     const { id, email, name, experience, image } = req.user;
     res.json({ id, email, name, experience, image });
   }
 );
 
-router.put("/experience", async (req, res) => {
-  const { userId, experience } = req.body;
+router.post(
+  "/experience",
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    if (!req.user) res.status(401).end();
+    next();
+  },
+  async (req, res) => {
+    const { id } = req.user;
+    const { experience } = req.body;
 
-  try {
-    const user = await User.findOne({ _id: userId });
-    user.experience = experience;
-    user.save();
+    try {
+      await User.update({ _id: id }, { $set: { experience } });
 
-    res.status(200).end();
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error(err);
-    res.status(500).end();
+      res.status(200).end();
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(err);
+      res.status(500).end();
+    }
   }
-});
+);
 
 module.exports = router;
