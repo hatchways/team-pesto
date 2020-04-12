@@ -64,7 +64,6 @@ const Onboarding = (props) => {
   });
 
   const [selecOneError, setSelectOneError] = useState(false);
-  const [nextPage, setNextPage] = useState(false);
 
   const addLanguage = () => {
     setLanguageList([...languageList, { language: "", level: "" }]);
@@ -124,9 +123,7 @@ const Onboarding = (props) => {
   const options = ["JavaScript", "Python", "Java", "C++", "Ruby"];
   const levels = ["Beginner", "Intermediate", "Advanced"];
 
-  return nextPage ? (
-    <Redirect from="/experience" exact to="/" />
-  ) : (
+  return nextPage (
     <LoginSignupContainer>
       <GridTemplateContainer>
         <form onSubmit={submit} className={classes.form}>
