@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import axios from "axios";
@@ -16,15 +16,19 @@ import "./App.css";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [redirect, setRedirect] = useState(false);
 
   const logout = () => {
     setUser(null);
+    setRedirect(!redirect);
     remove("token"); // TO DO: agree on a name for this token
     delete axios.defaults.headers.common["Authorization"];
   };
 
+  const prevRedirect = useRef();
   // on mount
   useEffect(() => {
+    prevRedirect.current = redirect;
     try {
       const AuthStr = localStorage.token;
       async function getUserData() {
@@ -34,13 +38,13 @@ function App() {
         setUser(data);
       }
 
-      if (localStorage.token) {
+      if (localStorage.token && redirect === prevRedirect.current) {
         getUserData();
       }
     } catch (err) {
       console.error(err);
     }
-  }, [user]);
+  }, [redirect]);
 
   return (
     <UserContext.Provider
@@ -70,8 +74,9 @@ function App() {
             {/* Routes placed here are available after logging in and not having experience */}
             {user && user.experience.length === 0 && (
               <Switch>
-                <Route exact path="/experience" component={Onboarding} />
-                <Redirect exact to="/experience" />
+                {
+                  // TODO add experience route in seperate PR
+                }
               </Switch>
             )}
 
