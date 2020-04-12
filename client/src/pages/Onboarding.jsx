@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
 import axios from "axios";
 import { makeStyles, Button, FormHelperText } from "@material-ui/core";
 import DynamicSelect from "pages/DynamicSelect";
@@ -51,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Onboarding = () => {
+const Onboarding = (props) => {
   const classes = useStyles();
 
   const [languageList, setLanguageList] = useState([
@@ -107,16 +106,15 @@ const Onboarding = () => {
       setSelectOneError(false);
       setError(false);
       try {
-        const AuthStr = localStorage.token;
         await axios.post(
           "/api/users/experience",
           {
             experience: languageList,
           },
-          { headers: { Authorization: "Bearer " + AuthStr } }
+          { headers: { Authorization: "Bearer " + localStorage.token } }
         );
 
-        setNextPage(true);
+        props.setRedirect(!props.redirect);
       } catch (err) {
         console.error(err);
       }
