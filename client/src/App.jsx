@@ -73,9 +73,18 @@ function App() {
             {/* Routes placed here are available after logging in and not having experience */}
             {user && user.experience.length === 0 && (
               <Switch>
-                {
-                  // TODO add experience route in seperate PR
-                }
+                <Route
+                  exact
+                  path="/experience"
+                  render={(props) => (
+                    <Onboarding
+                      {...props}
+                      setRedirect={setRedirect}
+                      redirect={redirect}
+                    />
+                  )}
+                />
+                <Redirect exact to="/experience" />
               </Switch>
             )}
 
