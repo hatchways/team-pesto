@@ -3,7 +3,7 @@ import { Button } from '@material-ui/core';
 
 import useStyles from './SubmitButton.css';
 
-const SubmitButton = ({ children, onClick, className }) => {
+const SubmitButton = ({ children, onClick, className, disabled }) => {
   const classes = useStyles();
 
   return (
@@ -12,6 +12,7 @@ const SubmitButton = ({ children, onClick, className }) => {
       variant='contained'
       className={`${classes.button} ${className}`}
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
     </Button>

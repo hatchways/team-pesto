@@ -123,7 +123,7 @@ const Onboarding = (props) => {
   const options = ["JavaScript", "Python", "Java", "C++", "Ruby"];
   const levels = ["Beginner", "Intermediate", "Advanced"];
 
-  return (
+  return nextPage (
     <LoginSignupContainer>
       <GridTemplateContainer>
         <form onSubmit={submit} className={classes.form}>

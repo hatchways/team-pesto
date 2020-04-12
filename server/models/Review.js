@@ -12,7 +12,7 @@ const reviewSchema = new Schema({
   date: { type: Date, default: Date.now },
   language: { type: String, required: true },
   status: { type: String, default: "pending" },
-  messages: [Message],
+  messages: [Message.schema],
 });
 
 const Review = mongoose.model("review", reviewSchema);

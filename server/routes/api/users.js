@@ -5,9 +5,11 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 
 const User = require("../../models/User");
-const { passportSecret } = require("../../config/keys");
+const { passportSecret, stripeSecretKey } = require("../../config/keys");
 const validateEmail = require("../../validation/email");
 const validatePassword = require("../../validation/password");
+
+const stripe = require("stripe")(stripeSecretKey);
 
 const router = express.Router();
 
@@ -110,8 +112,8 @@ router.get(
     next();
   },
   (req, res) => {
-    const { id, email, name, experience, image } = req.user;
-    res.json({ id, email, name, experience, image });
+    const { id, email, name, experience, balance, image } = req.user;
+    res.json({ id, email, name, experience, balance, image });
   }
 );
 
@@ -137,5 +139,30 @@ router.post(
     }
   }
 );
+
+router.post("/purchase", async (req, res) => {
+  const { refillAmount } = req.body;
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: refillAmount * 100,
+      currency: "usd"
+    });
+    res.status(200).send({ clientSecret: paymentIntent.client_secret });
+  } catch (error) {
+    console.error(error);
+    res.status(400);
+  }
+});
+
+router.put("/:id/add-credits", async (req, res) => {
+  try {
+    const { refillAmount } = req.body;
+    await User.findByIdAndUpdate(req.params.id, { $inc: { balance: refillAmount } });
+    res.status(200).send({ success: true, message: "Successfully added credits" });
+  } catch (err) {
+    console.error(error);
+    res.status(400);
+  }
+});
 
 module.exports = router;
