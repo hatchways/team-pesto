@@ -62,7 +62,7 @@ router.post("/requests", authenticate, async (req, res) => {
 });
 
 router.get(
-  "/myreviews",
+  "/myrequests",
   authenticate,
   (req, res, next) => {
     if (!req.user) res.status(401).end();
