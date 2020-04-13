@@ -183,7 +183,7 @@ const Checkout = ({
         <Snackbar
           open={snackbar.open}
           autoHideDuration={5000}
-          onClose={() => setSnackbar({ open: false, severity: "", message: "" })}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
         >
           <Alert variant="filled" severity={snackbar.severity}>{snackbar.message}</Alert>
         </Snackbar>
