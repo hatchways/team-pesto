@@ -9,11 +9,11 @@ const REQUIRED_CREDITS = 1;
 
 router.post("/requests", authenticate, async (req, res) => {
   const { title, language, code, comments } = req.body;
-    const requester = req.user;
+  const requester = req.user;
 
   // check for required fields
   if (!language || !code) {
-    res.status(400).send({ response: "Missing input." });
+    res.status(400).send({ response: "Invalid input." });
     return;
   }
 
@@ -54,7 +54,7 @@ router.post("/requests", authenticate, async (req, res) => {
   ]);
 
   // if all documents saved successfully
-  if (results.every(r => r.status === 'fulfilled')) {
+  if (results.every((r) => r.status === "fulfilled")) {
     res.sendStatus(201);
     return;
   }

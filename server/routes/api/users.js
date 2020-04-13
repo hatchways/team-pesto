@@ -106,7 +106,7 @@ router.get(
     if (!req.user) res.status(401).end();
     next();
   },
-  (req, res, next) => {
+  (req, res) => {
     const { id, email, name, experience, image } = req.user;
     res.json({ id, email, name, experience, image });
   }
