@@ -10,8 +10,10 @@ const hashPassword = async (password) => {
 };
 
 async function hashHook(next) {
-  const hash = await hashPassword(this.password);
-  this.password = hash;
+  if (this.isNew) {
+    const hash = await hashPassword(this.password);
+    this.password = hash;
+    }
   next();
 }
 
