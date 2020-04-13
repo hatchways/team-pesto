@@ -13,6 +13,8 @@ const stripe = require("stripe")(stripeSecretKey);
 
 const router = express.Router();
 
+const price = 100;    // the USD price (in cents) of 1 credit
+
 const validateSignupInputs = (body) => {
   const { name, email, password } = body;
   let isValid = true;
@@ -144,10 +146,13 @@ router.post("/purchase", async (req, res) => {
   const { refillAmount } = req.body;
   try {
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: refillAmount * 100,
+      amount: refillAmount * price,
       currency: "usd"
     });
-    res.status(200).send({ clientSecret: paymentIntent.client_secret });
+    res.status(200).send({
+      paymentIntentId: paymentIntent.id,
+      clientSecret: paymentIntent.client_secret,
+    });
   } catch (error) {
     console.error(error);
     res.status(400);
@@ -156,7 +161,9 @@ router.post("/purchase", async (req, res) => {
 
 router.put("/:id/add-credits", async (req, res) => {
   try {
-    const { refillAmount } = req.body;
+    const { paymentIntentId } = req.body;
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    const refillAmount = paymentIntent.amount / price;
     await User.findByIdAndUpdate(req.params.id, { $inc: { balance: refillAmount } });
     res.status(200).send({ success: true, message: "Successfully added credits" });
   } catch (err) {
