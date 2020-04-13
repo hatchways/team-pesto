@@ -1,25 +1,22 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Paper } from "@material-ui/core";
+import { Paper, Card } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import Navbar from "components/Navbar";
 
+import formatDate from "utils/formatDate";
+
 const useStyles = makeStyles((theme) => ({
-  root: {
-    background: `${theme.palette.secondary.light}`,
-    height: "100vh",
-    width: "100vw",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+  card: {
+    width: "80%",
+    margin: "10px",
   },
   paper: {
-    padding: "2rem",
-    marginTop: "64px",
+    padding: "64px 2rem 2rem 2rem",
     width: "20vw",
     height: "100vh",
     display: "flex",
-    justifyContent: "center",
+    flexDirection: "column",
     alignItems: "center",
     boxShadow: "0px 20px 50px 1px #BBBBBB",
   },
@@ -50,11 +47,13 @@ const Reviews = () => {
       <Navbar />
       <Paper className={classes.paper}>
         <h2>Requests ({requests.length})</h2>
-        <ul>
-          {requests.map((request) => (
-            <li key={request.id}>{request.title}</li>
-          ))}
-        </ul>
+        {requests.map((request) => (
+          <Card key={request["_id"]} className={classes.card}>
+            {request.title}
+            <br />
+            {formatDate(request.date)}
+          </Card>
+        ))}
       </Paper>
     </div>
   );
