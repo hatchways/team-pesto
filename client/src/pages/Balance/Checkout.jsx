@@ -75,6 +75,8 @@ const Checkout = ({
 
     const requestPaymentIntent = await axios.post(`/api/users/purchase`, { refillAmount });
 
+    const { paymentIntentId, clientSecret } = requestPaymentIntent.data;
+
     const payload = await stripe.createPaymentMethod({
       type: "card",
       card: elements.getElement(CardElement),
@@ -82,7 +84,7 @@ const Checkout = ({
     });
 
     const confirm = await stripe.confirmCardPayment(
-      `${requestPaymentIntent.data.clientSecret}`,
+      `${clientSecret}`,
       {
         payment_method: payload.paymentMethod.id
       }
@@ -94,7 +96,7 @@ const Checkout = ({
       setSuccessSnackbar({ open: true, message: "Payment successful!" });
       user.balance += refillAmount;
       setRefillAmount(1);
-      await axios.put(`/api/users/${user.id}/add-credits`, { refillAmount });
+      await axios.put(`/api/users/${user.id}/add-credits`, { paymentIntentId });
     } else if (confirm.error) {
       setProcessing(false);
       setErrorSnackbar({ open: true, message: confirm.error })
