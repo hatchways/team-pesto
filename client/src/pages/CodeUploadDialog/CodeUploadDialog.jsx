@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useTheme } from '@material-ui/core/styles';
-import { 
+import React, { useState } from "react";
+import { useTheme } from "@material-ui/core/styles";
+import {
   Dialog,
   Box,
   IconButton,
@@ -11,50 +11,56 @@ import {
   CircularProgress,
   Portal,
   Snackbar,
-} from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import CloseIcon from '@material-ui/icons/Close';
-import axios from 'axios';
+} from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+import CloseIcon from "@material-ui/icons/Close";
+import axios from "axios";
 
-import useStyles from './CodeUploadDialog.css';
-import CodeEditor from 'components/CodeEditor';
-import SubmitButton from 'components/SubmitButton';
+import useStyles from "./CodeUploadDialog.css";
+import CodeEditor from "components/CodeEditor";
+import SubmitButton from "components/SubmitButton";
 
 const CodeUploadDialog = ({ open, onClose }) => {
   const theme = useTheme();
   const classes = useStyles();
 
   const languages = {
-    python: 'Python',
-    java: 'Java',
-    cpp: 'C++',
-    javascript: 'JavaScript',
-    ruby: 'Ruby',
+    python: "Python",
+    java: "Java",
+    cpp: "C++",
+    javascript: "JavaScript",
+    ruby: "Ruby",
   };
   const defaultLanguage = Object.keys(languages)[0];
 
-  const [ title, setTitle ] = useState('');
-  const [ language, setLanguage ] = useState(defaultLanguage);
-  const [ codeSnippet, setCodeSnippet ] = useState('');
-  const [ comments, setComments ] = useState('');
-  const [ errorSnackbar, setErrorSnackbar ] = useState({ open: false, message: '' });
-  const [ successSnackbar, setSuccessSnackbar ] = useState({ open: false, message: '' });
-  const [ loading, setLoading ] = useState(false);
+  const [title, setTitle] = useState("");
+  const [language, setLanguage] = useState(defaultLanguage);
+  const [codeSnippet, setCodeSnippet] = useState("");
+  const [comments, setComments] = useState("");
+  const [errorSnackbar, setErrorSnackbar] = useState({
+    open: false,
+    message: "",
+  });
+  const [successSnackbar, setSuccessSnackbar] = useState({
+    open: false,
+    message: "",
+  });
+  const [loading, setLoading] = useState(false);
 
-  const handleFormChange = event => {
+  const handleFormChange = (event) => {
     const { name, value } = event.target;
 
     switch (name) {
-      case 'title':
+      case "title":
         setTitle(value);
         break;
-      case 'language':
+      case "language":
         setLanguage(value);
         break;
-      case 'code-snippet':
+      case "code-snippet":
         setCodeSnippet(value);
         break;
-      case 'comments':
+      case "comments":
         setComments(value);
         break;
       default:
@@ -63,16 +69,16 @@ const CodeUploadDialog = ({ open, onClose }) => {
 
   const submitDisabled = !language || !codeSnippet;
 
-  const handleCodeSnippetChange = value => {
+  const handleCodeSnippetChange = (value) => {
     setCodeSnippet(value);
   };
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (submitDisabled) return;
 
-    const apiEndpoint = '/api/reviews/requests';
+    const apiEndpoint = "/api/reviews/requests";
     setLoading(true);
     try {
       await axios.post(
@@ -82,9 +88,10 @@ const CodeUploadDialog = ({ open, onClose }) => {
           language,
           code: codeSnippet,
           comments,
-        },      
+        },
+        { headers: { Authorization: "Bearer " + localStorage.token } }
       );
-      setSuccessSnackbar({ open: true, message: 'Submitted code for review!' });
+      setSuccessSnackbar({ open: true, message: "Submitted code for review!" });
       onClose();
     } catch (err) {
       const message = err.response.data.response || err.response.data;
@@ -108,57 +115,55 @@ const CodeUploadDialog = ({ open, onClose }) => {
   };
 
   const renderLanguageChoices = () => {
-    return Object.keys(languages).map(k => (
+    return Object.keys(languages).map((k) => (
       <MenuItem key={k} value={k}>
         {languages[k]}
       </MenuItem>
     ));
-  };  
+  };
 
   return (
     <>
       <Dialog
         fullWidth
-        maxWidth='md'
+        maxWidth="md"
         open={open}
         onClose={onClose}
-        fullScreen={useMediaQuery(theme.breakpoints.down('xs'))}
+        fullScreen={useMediaQuery(theme.breakpoints.down("xs"))}
       >
         <Box
-          display={{ xs: 'block', sm: 'none', }}
-          position='fixed'
+          display={{ xs: "block", sm: "none" }}
+          position="fixed"
           top={1}
           right={1}
         >
-          <IconButton aria-label='close' onClick={onClose}>
+          <IconButton aria-label="close" onClick={onClose}>
             <CloseIcon />
           </IconButton>
         </Box>
 
         <form className={classes.form} onSubmit={handleSubmit}>
           <Box
-            display='flex'
-            flexDirection='column'
-            alignItems='center'
-            width='80%'
-            mx='auto'
-            py={4}          
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            width="80%"
+            mx="auto"
+            py={4}
           >
             <Box mb={6}>
-              <h2 className={classes.header}>
-                Request a code review
-              </h2>
+              <h2 className={classes.header}>Request a code review</h2>
             </Box>
 
-            <Box mb={3} width='100%'>
+            <Box mb={3} width="100%">
               <Grid container spacing={3}>
                 <Grid item xs={12} md={8}>
                   <TextField
-                    name='title'
-                    variant='outlined'
-                    label='Title'
+                    name="title"
+                    variant="outlined"
+                    label="Title"
                     InputLabelProps={{ shrink: true }}
-                    color='primary'
+                    color="primary"
                     fullWidth
                     value={title}
                     onChange={handleFormChange}
@@ -167,10 +172,10 @@ const CodeUploadDialog = ({ open, onClose }) => {
 
                 <Grid item xs={12} md={4}>
                   <TextField
-                    name='language'
+                    name="language"
                     select
-                    variant='outlined'
-                    label='Language'
+                    variant="outlined"
+                    label="Language"
                     InputLabelProps={{ shrink: true }}
                     fullWidth
                     value={language}
@@ -184,16 +189,16 @@ const CodeUploadDialog = ({ open, onClose }) => {
 
             <CodeEditor
               language={language}
-              theme='dark'
+              theme="dark"
               value={codeSnippet}
               onChange={handleCodeSnippetChange}
             />
 
-            <Box my={3} width='100%'>
+            <Box my={3} width="100%">
               <TextField
-                name='comments'
-                variant='outlined'
-                label='Additional Comments'
+                name="comments"
+                variant="outlined"
+                label="Additional Comments"
                 InputLabelProps={{ shrink: true }}
                 fullWidth
                 multiline
@@ -205,11 +210,11 @@ const CodeUploadDialog = ({ open, onClose }) => {
 
             <Box mt={3} mb={2}>
               <SubmitButton disabled={submitDisabled || loading}>
-                {
-                  loading
-                  ? <CircularProgress color='white' size='22px' />
-                  : 'Submit'
-                }
+                {loading ? (
+                  <CircularProgress color="white" size="22px" />
+                ) : (
+                  "Submit"
+                )}
               </SubmitButton>
             </Box>
           </Box>
@@ -222,7 +227,9 @@ const CodeUploadDialog = ({ open, onClose }) => {
           autoHideDuration={5000}
           onClose={handleErrorSnackbarClose}
         >
-          <Alert variant='filled' severity='error'>{errorSnackbar.message}</Alert>
+          <Alert variant="filled" severity="error">
+            {errorSnackbar.message}
+          </Alert>
         </Snackbar>
       </Portal>
 
@@ -232,7 +239,9 @@ const CodeUploadDialog = ({ open, onClose }) => {
           autoHideDuration={5000}
           onClose={handleSuccessSnackbarClose}
         >
-          <Alert variant='filled' severity='success'>{successSnackbar.message}</Alert>
+          <Alert variant="filled" severity="success">
+            {successSnackbar.message}
+          </Alert>
         </Snackbar>
       </Portal>
     </>

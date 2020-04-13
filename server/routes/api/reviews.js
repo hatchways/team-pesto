@@ -61,4 +61,24 @@ router.post("/requests", authenticate, async (req, res) => {
   }
 });
 
+router.get(
+  "/myreviews",
+  authenticate,
+  (req, res, next) => {
+    if (!req.user) res.status(401).end();
+    next();
+  },
+
+  async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      const reviews = await Review.find({ requesterId: userId });
+      res.send({ reviews });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+);
+
 module.exports = router;
