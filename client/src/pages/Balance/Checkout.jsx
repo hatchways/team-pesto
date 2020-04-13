@@ -7,6 +7,7 @@ import {
   Typography,
   Portal,
   Snackbar,
+  TextField,
 } from "@material-ui/core";
 import {
   Elements,
@@ -19,6 +20,8 @@ import { loadStripe } from "@stripe/stripe-js";
 
 import useStyles from "./Balance.css";
 import UserContext from "context/UserContext";
+
+import GridTemplateContainer from "components/GridTemplateContainer";
 
 const CARD_ELEMENT_OPTIONS = {
   style: {
@@ -49,8 +52,7 @@ const Checkout = ({
   const { user } = useContext(UserContext);
   const stripe = useStripe();
   const elements = useElements();
-  const [errorSnackbar, setErrorSnackbar] = useState({ open: false, message: '' });
-  const [successSnackbar, setSuccessSnackbar] = useState({ open: false, message: '' });
+  const [snackbar, setSnackbar] = useState({ open: false, severity: "", message: "" });
   const [cardComplete, setCardComplete] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [billingDetails, setBillingDetails] = useState({ name: "" });
@@ -62,12 +64,12 @@ const Checkout = ({
     if (!stripe || !elements) return;     // Stripe.js has not yet loaded.
     if (!billingDetails.name) {
       document.getElementById("name").focus();
-      setErrorSnackbar({ open: true, message: "Please enter your name" })
+      setSnackbar({ open: true, severity: "error", message: "Please enter your name" });
       return;
     }
-    if (errorSnackbar.open || !cardComplete) {
+    if (!cardComplete || snackbar.open && snackbar.severity === "error") {
       elements.getElement("card").focus();
-      setErrorSnackbar({ open: true, message: "Invalid card number" })
+      setSnackbar({ open: true, severity: "error", message: "Invalid card number" });
       return;
     }
     
@@ -91,129 +93,99 @@ const Checkout = ({
     if (confirm.paymentIntent.status === "succeeded") {
       setProcessing(false);
       setPaymentSuccessful(true);
-      setSuccessSnackbar({ open: true, message: "Payment successful!" });
+      setSnackbar({ open: true, severity: "success", message: "Payment successful!" });
       user.balance += refillAmount;
       setRefillAmount(1);
       await axios.put(`/api/users/${user.id}/add-credits`, { refillAmount });
     } else if (confirm.error) {
       setProcessing(false);
-      setErrorSnackbar({ open: true, message: confirm.error })
+      setSnackbar({ open: true, severity: "error", message: confirm.error });
     }
   };
 
   return (
     <>
       {!paymentSuccessful ? (
-        <Grid container direction="column" alignItems="center">
-          <Grid
-            item
-            container
-            xs={12}
-            direction="column"
-            className={classes.stripePayment}
-          >
-            <form className="Form" onSubmit={handleSubmit}>
-              <Grid container direction="column" spacing={2}>
-                <Grid item>
-                  <fieldset className="FormGroup">
-                    <div className="FormRow">
-                      <input
-                        className="FormRowInput"
-                        id="name"
-                        type="text"
-                        placeholder="Name on credit card"
-                        required
-                        autoComplete="name"
-                        value={billingDetails.name}
-                        onChange={e => setBillingDetails({ ...billingDetails, name: e.target.value })}
-                      />
-                    </div>
-                  </fieldset>
-                  <fieldset className="FormGroup">
-                    <div className="FormRow">
-                      <CardElement options={CARD_ELEMENT_OPTIONS} onChange={e => {
-                        setCardComplete(e.complete);
-                      }} />
-                    </div>
-                  </fieldset>
-                </Grid>
-                <Grid container item direction="row">
-                  <Grid item xs={6}>
-                    <Button
-                      className={classes.button}
-                      color="primary"
-                      variant="contained"
-                      onClick={() => setCheckoutPage(false)}
-                    >
-                      Edit cart
-                    </Button>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Button
-                      className={classes.button}
-                      color="primary"
-                      variant="contained"
-                      onClick={handleSubmit}
-                      disabled={processing}
-                    >
-                      { errorSnackbar.open ? "Try again" : processing ? "Processing..." : `Pay $${refillAmount * 10}` }
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </form>
-          </Grid>
-        </Grid>
-      ) : (
-        <Grid container direction="column" spacing={6}>
-          <Grid item xs={12}>
-            <Typography className={classes.text}>Payment Complete</Typography>
-          </Grid>
-          <Grid container item direction="row" xs={12} justify="center">
-            <Grid item xs={6}>
+        <GridTemplateContainer>
+          <form className={classes.form} onSubmit={handleSubmit}>
+            
+            <Typography className={classes.h1}>Checkout</Typography>
+            
+            <TextField
+              label="Name"
+              className="FormRowInput"
+              id="name"
+              type="text"
+              placeholder="Name on credit card"
+              required
+              autoComplete="name"
+              value={billingDetails.name}
+              onChange={e => setBillingDetails({ ...billingDetails, name: e.target.value })}
+            />
+            
+            <div className={classes.stripe}>
+              <CardElement options={CARD_ELEMENT_OPTIONS} onChange={e => {
+                setCardComplete(e.complete);
+              }} />
+            </div>
+
+            <div className={classes.buttonSet}>
               <Button
                 className={classes.button}
                 color="primary"
                 variant="contained"
-                onClick={() => {
-                  setPaymentSuccessful(false);
-                  setCheckoutPage(false);
-                }}
+                onClick={() => setCheckoutPage(false)}
               >
-                View Balance
+                Edit cart
               </Button>
-            </Grid>
-            <Grid item xs={6}>
-              <Link to="/code-upload" className={classes.link}>
-                <Button
-                  className={classes.button}
-                  color="primary"
-                  variant="contained"
-                  onClick={() => setPaymentSuccessful(false)}
-                >
-                  Upload Code
-                </Button>
-              </Link>
-            </Grid>
-          </Grid>
-        </Grid>
+              <Button
+                className={classes.button}
+                color="secondary"
+                variant="contained"
+                onClick={handleSubmit}
+                disabled={processing}
+              >
+                { snackbar.open && snackbar.severity === "error" ? "Try again" : processing ? "Processing..." : `Pay $${refillAmount * 10}` }
+              </Button>
+            </div>
+            
+          </form>
+        </GridTemplateContainer>
+      ) : (
+        <GridTemplateContainer>
+        <form className={classes.form}>
+          <Typography className={classes.h1}>Payment successful!</Typography>
+          <Button
+            className={classes.button}
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              setPaymentSuccessful(false);
+              setCheckoutPage(false);
+            }}
+          >
+            View Balance
+          </Button>
+          <Link to="/code-upload" className={classes.buttonLink}>
+            <Button
+              className={classes.button}
+              color="primary"
+              variant="contained"
+              onClick={() => setPaymentSuccessful(false)}
+            >
+              Upload Code
+            </Button>
+          </Link>
+        </form>
+        </GridTemplateContainer>
       )}
       <Portal>
         <Snackbar
-          open={errorSnackbar.open}
+          open={snackbar.open}
           autoHideDuration={5000}
-          onClose={() => setErrorSnackbar({ open: false, message: errorSnackbar.message })}
+          onClose={() => setSnackbar({ open: false, severity: "", message: "" })}
         >
-          <Alert variant="filled" severity="error">{errorSnackbar.message}</Alert>
-        </Snackbar>
-      </Portal>
-      <Portal>
-        <Snackbar
-          open={successSnackbar.open}
-          autoHideDuration={5000}
-          onClose={() => setSuccessSnackbar({ open: false, message: "" })}
-        >
-          <Alert variant="filled" severity="success">{successSnackbar.message}</Alert>
+          <Alert variant="filled" severity={snackbar.severity}>{snackbar.message}</Alert>
         </Snackbar>
       </Portal>
     </>
