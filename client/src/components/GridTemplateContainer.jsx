@@ -8,7 +8,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function GridTemplateContainer(props) {
-  const classes = useStyles(props);
+  const classes = useStyles();
   return (
     <Grid container spacing={2} className={classes.grid}>
       <Grid item xs={12}>
