@@ -94,6 +94,8 @@ router.post("/login", async (req, res) => {
       name: user.name,
       email: user.email,
       experience: user.experience,
+      balance: user.balance,
+      image: user.image,
     };
     const token = jwt.sign(payload, passportSecret);
     res.status(200).send({ token, user: payload });
