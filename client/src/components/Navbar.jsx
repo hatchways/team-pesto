@@ -1,10 +1,18 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import { AppBar, Toolbar, Button, Menu, MenuItem, Avatar, Badge } from "@material-ui/core";
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Menu,
+  MenuItem,
+  Avatar,
+  Badge,
+} from "@material-ui/core";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import UserContext from "context/UserContext";
-import CodeUploadDialog from 'pages/CodeUploadDialog';
+import CodeUploadDialog from "pages/CodeUploadDialog";
 
 // TO DO: import styles from centralized location
 
@@ -63,7 +71,7 @@ const Navbar = () => {
     setUploadDialogOpen(!uploadDialogOpen);
   };
 
-  const handleMenu = e => {
+  const handleMenu = (e) => {
     setAnchorEl(e.currentTarget);
   };
 
@@ -73,7 +81,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    setAnchorEl(null)
+    setAnchorEl(null);
   };
 
   return (
@@ -85,11 +93,15 @@ const Navbar = () => {
 
         <Toolbar className={classes.toolbar}>
           <Button className={classes.clickable}>
-            <Link className={classes.link} to="/reviews">Reviews</Link>
+            <Link className={classes.link} to="/requests">
+              Requests
+            </Link>
           </Button>
 
           <Button className={classes.clickable}>
-            <Link className={classes.link} to="/balance">Balance</Link>
+            <Link className={classes.link} to="/balance">
+              Balance
+            </Link>
           </Button>
 
           <Button className={classes.clickable}>
@@ -105,19 +117,15 @@ const Navbar = () => {
             onClick={handleUploadDialog}
           >
             Upload Code
-          </Button>          
+          </Button>
 
           <Button className={classes.profileButton} onClick={handleMenu}>
-            <Avatar src={user && user.image}/>
+            <Avatar src={user && user.image} />
             <div className={classes.link}>Profile</div>
             <div className={classes.triangle} />
           </Button>
 
-          <Menu
-            anchorEl={anchorEl}
-            open={!!anchorEl}
-            onClose={handleClose}
-          >
+          <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
             <MenuItem>
               <Link to="/profile">Go to Profile</Link>
             </MenuItem>
@@ -126,11 +134,8 @@ const Navbar = () => {
           </Menu>
         </Toolbar>
       </Toolbar>
-      
-      <CodeUploadDialog
-        open={uploadDialogOpen}
-        onClose={handleUploadDialog}
-      />
+
+      <CodeUploadDialog open={uploadDialogOpen} onClose={handleUploadDialog} />
     </AppBar>
   );
 };
