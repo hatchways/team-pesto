@@ -11,7 +11,7 @@ const usersRouter = require("./routes/api/users");
 const reviewsRouter = require("./routes/api/reviews");
 
 // connect to MongoDB
-require("./mongoose-setup");
+require("./config/mongoose");
 
 const { json, urlencoded } = express;
 
