@@ -11,6 +11,7 @@ import Balance from "pages/Balance";
 import { remove } from "utils/storage";
 import Onboarding from "pages/Onboarding";
 import Home from "pages/Home";
+import socket from "utils/socket";
 
 import "./App.css";
 
