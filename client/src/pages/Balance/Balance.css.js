@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   button: {
     marginTop: 15,
-    marginBottom: 60,
+    marginBottom: 15,
     borderRadius: 20,
     color: "#FFFFFF",
     backgroundColor: `${theme.palette.secondary.main}`,
@@ -53,6 +53,27 @@ const useStyles = makeStyles((theme) => ({
   },
   counter: {
     padding: "0px 20px 0px 20px",
+  },
+  form: {
+    "& .MuiTextField-root": {
+      margin: theme.spacing(1),
+      width: "40ch",
+    },
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
+  stripe: {
+    width: "100%",
+  },
+  buttonSet: {
+    width: "75%",
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  buttonLink: {
+    textDecoration: "none",
   },
 }));
 

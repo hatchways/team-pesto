@@ -2,13 +2,18 @@ require("dotenv").config();
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const passport = require("passport");
 
 const User = require("../../models/User");
-const { passportSecret } = require("../../config/keys");
+const { passportSecret, stripeSecretKey } = require("../../config/keys");
 const validateEmail = require("../../validation/email");
 const validatePassword = require("../../validation/password");
 
+const stripe = require("stripe")(stripeSecretKey);
+
 const router = express.Router();
+
+const price = 100;    // the USD price (in cents) of 1 credit
 
 const validateSignupInputs = (body) => {
   const { name, email, password } = body;
@@ -52,9 +57,10 @@ router.post("/signup", async (req, res) => {
       id: newUser.id,
       name: newUser.name,
       email: newUser.email,
+      experience: newUser.experience,
     };
     const token = jwt.sign(payload, passportSecret);
-    res.status(201).send({ token });
+    res.status(201).send({ token, user: payload });
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error(err);
@@ -90,9 +96,11 @@ router.post("/login", async (req, res) => {
       name: user.name,
       email: user.email,
       experience: user.experience,
+      balance: user.balance,
+      image: user.image,
     };
     const token = jwt.sign(payload, passportSecret);
-    res.status(200).send({ token });
+    res.status(200).send({ token, user: payload });
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error(err);
@@ -102,29 +110,72 @@ router.post("/login", async (req, res) => {
 
 router.get(
   "/me",
+  passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
     if (!req.user) res.status(401).end();
     next();
   },
   (req, res) => {
+<<<<<<< HEAD
     const { id, email, name, experience, image } = req.user;
     res.json({ id, email, name, experience, image });
+=======
+    const { id, email, name, experience, balance, image } = req.user;
+    res.json({ id, email, name, experience, balance, image });
+>>>>>>> 7b3ea33b9b0e8d54b542d3246c1e4bf648f4565e
   }
 );
 
-router.put("/experience", async (req, res) => {
-  const { userId, experience } = req.body;
+router.post(
+  "/experience",
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    if (!req.user) res.status(401).end();
+    next();
+  },
+  async (req, res) => {
+    const { id } = req.user;
+    const { experience } = req.body;
 
+    try {
+      await User.update({ _id: id }, { $set: { experience } });
+
+      res.status(200).end();
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(err);
+      res.status(500).end();
+    }
+  }
+);
+
+router.post("/purchase", async (req, res) => {
+  const { refillAmount } = req.body;
   try {
-    const user = await User.findOne({ _id: userId });
-    user.experience = experience;
-    user.save();
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: refillAmount * price,
+      currency: "usd"
+    });
+    res.status(200).send({
+      paymentIntentId: paymentIntent.id,
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(400);
+  }
+});
 
-    res.status(200).end();
+router.put("/:id/add-credits", async (req, res) => {
+  try {
+    const { paymentIntentId } = req.body;
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    const refillAmount = paymentIntent.amount / price;
+    await User.findByIdAndUpdate(req.params.id, { $inc: { balance: refillAmount } });
+    res.status(200).send({ success: true, message: "Successfully added credits" });
   } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error(err);
-    res.status(500).end();
+    console.error(error);
+    res.status(400);
   }
 });
 
