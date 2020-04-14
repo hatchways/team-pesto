@@ -10,8 +10,9 @@ const useStyles = makeStyles((theme) => ({
   card: {
     width: "80%",
     margin: "10px",
+    padding: "30px",
   },
-  paper: {
+  sideBar: {
     padding: "64px 2rem 2rem 2rem",
     width: "20vw",
     height: "100vh",
@@ -19,6 +20,13 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     boxShadow: "0px 20px 50px 1px #BBBBBB",
+  },
+  title: {
+    fontWeight: "bold",
+    fontSize: "20px",
+  },
+  date: {
+    color: `${theme.palette.secondary.lightGray}`,
   },
 }));
 
@@ -45,13 +53,13 @@ const Reviews = () => {
   return (
     <div>
       <Navbar />
-      <Paper className={classes.paper}>
+      <Paper className={classes.sideBar}>
         <h2>Requests ({requests.length})</h2>
         {requests.map((request) => (
           <Card key={request["_id"]} className={classes.card}>
-            {request.title}
+            <div className={classes.title}>{request.title}</div>
             <br />
-            {formatDate(request.date)}
+            <div className={classes.date}>{formatDate(request.date)}</div>
           </Card>
         ))}
       </Paper>

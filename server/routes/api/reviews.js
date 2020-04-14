@@ -73,8 +73,33 @@ router.get(
     try {
       const userId = req.user.id;
 
-      const reviews = await Review.find({ requesterId: userId });
-      res.send({ reviews });
+      const usersRequests = await Review.find({ requesterId: userId });
+      res.send({ usersRequests });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+);
+
+router.get(
+  "/myrequests/:id",
+  authenticate,
+  (req, res, next) => {
+    if (!req.user) res.status(401).end();
+    next();
+  },
+
+  async (req, res) => {
+    const requestId = req.params.id;
+
+    try {
+      const userId = req.user.id;
+
+      const singleRequest = await Review.find({
+        _id: { $in: [requestId] },
+        requesterId: { $in: [userId] },
+      });
+      res.send({ singleRequest });
     } catch (err) {
       console.error(err);
     }
