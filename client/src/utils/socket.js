@@ -4,8 +4,10 @@ class Socket {
   constructor() {
     // this.socket = io();
     this.socket = io("localhost:3001");  // not sure why this has to be 3001
+    this.socket.on("test", () => {
+      console.log("TEST!!!");
+    })
   }
 }
 
-const socket = new Socket();
-export default socket;
+export default new Socket();

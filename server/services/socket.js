@@ -7,6 +7,7 @@ class Socket {
   start() {
     this.io.on("connection", socket => {
       console.log(`A new client ${socket.id} has connected to server!`);
+      this.io.sockets.in(socket.id).emit("test");
     });
   }
 }
