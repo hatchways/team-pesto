@@ -19,6 +19,7 @@ import axios from 'axios';
 import useStyles from './CodeUploadDialog.css';
 import CodeEditor from 'components/CodeEditor';
 import SubmitButton from 'components/SubmitButton';
+import { getToken } from 'utils/storage';
 
 const CodeUploadDialog = ({ open, onClose }) => {
   const theme = useTheme();
@@ -82,7 +83,10 @@ const CodeUploadDialog = ({ open, onClose }) => {
           language,
           code: codeSnippet,
           comments,
-        },      
+        },
+        {
+          headers: { 'Authorization': `Bearer ${getToken()}`, },
+        },
       );
       setSuccessSnackbar({ open: true, message: 'Submitted code for review!' });
       onClose();
@@ -207,7 +211,7 @@ const CodeUploadDialog = ({ open, onClose }) => {
               <SubmitButton disabled={submitDisabled || loading}>
                 {
                   loading
-                  ? <CircularProgress color='white' size='22px' />
+                  ? <CircularProgress size='22px' />
                   : 'Submit'
                 }
               </SubmitButton>
