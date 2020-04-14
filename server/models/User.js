@@ -13,7 +13,7 @@ async function hashHook(next) {
   if (this.isNew) {
     const hash = await hashPassword(this.password);
     this.password = hash;
-    }
+  }
   next();
 }
 

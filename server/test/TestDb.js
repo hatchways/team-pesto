@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 
-const options = {
+const mongoMemOptions = {
   binary: {
-    version: '3.4.4',
+    version: "3.4.4",
   },
 };
 
-const mongod = new MongoMemoryServer(options);
+const mongod = new MongoMemoryServer(mongoMemOptions);
 
 // connect to in-memory database
 exports.connect = async () => {
