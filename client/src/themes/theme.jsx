@@ -7,6 +7,11 @@ const theme = createMuiTheme({
     h1: {
       // could customize the h1 variant as well
     },
+    h3: {
+      margin: 0,
+      fontWeight: "bold",
+      fontSize: "1.4rem",
+    },
   },
   palette: {
     primary: {
