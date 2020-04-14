@@ -116,13 +116,8 @@ router.get(
     next();
   },
   (req, res) => {
-<<<<<<< HEAD
-    const { id, email, name, experience, image } = req.user;
-    res.json({ id, email, name, experience, image });
-=======
     const { id, email, name, experience, balance, image } = req.user;
     res.json({ id, email, name, experience, balance, image });
->>>>>>> 7b3ea33b9b0e8d54b542d3246c1e4bf648f4565e
   }
 );
 
