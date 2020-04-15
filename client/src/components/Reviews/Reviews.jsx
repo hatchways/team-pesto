@@ -3,26 +3,27 @@ import { Paper, Card, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import Navbar from "components/Navbar";
+import SingleView from "components/Reviews/SingleView";
 
 import formatDate from "utils/formatDate";
 
 const useStyles = makeStyles((theme) => ({
   MainWrapper: {
     display: "grid",
-    gridTemplateColumns: "20vw 1fr",
     gridTemplateRows: "64px 1fr",
-    gridTemplateAreas: "'nav nav' 'sidebar content'",
     backgroundColor: `${theme.palette.secondary.light}`,
   },
-  nav: {
-    gridArea: "nav",
+  contentWrapper: {
+    display: "grid",
+    gridTemplateColumns: "20vw 1fr",
+    gridRowStart: 2,
+    height: "calc(100vh - 64px)",
   },
   sideBar: {
-    padding: "2rem",
-    height: "calc(100vh - 64px)",
+    padding: "3rem",
     boxShadow: "0px 20px 50px 1px #BBBBBB",
-    gridArea: "sidebar",
-    gridRowStart: 2,
+    position: "relative",
+    overflow: "auto",
   },
   title: {
     margin: 0,
@@ -40,14 +41,16 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     padding: "20px",
-    marginBottom: "10px",
+    borderRadius: "4px",
+    border: `1px solid ${theme.palette.secondary.lightGray}`,
+    boxShadow: "none",
+    marginBottom: "20px",
     "&:hover": {
       cursor: "pointer",
     },
   },
-  singleView: {
-    gridArea: "content",
-    margin: "50px;",
+  singleViewWrapper: {
+    overflow: "auto",
   },
 }));
 
@@ -88,36 +91,40 @@ const Reviews = () => {
   return (
     <div className={classes.MainWrapper}>
       <Navbar className={classes.nav} />
-      <Paper className={classes.sideBar}>
-        <Typography variant="h3">
-          Requests <span className={classes.quantity}>({requests.length})</span>
-        </Typography>
 
-        <div className={classes.cardWrapper}>
-          {requests.map((request) => (
-            <Card
-              key={request["_id"]}
-              className={classes.card}
-              onClick={getSingleRequest}
-              data-id={request["_id"]}
-            >
-              <div className={classes.title}>{request.title}</div>
-              <br />
-              <div className={classes.date}>{formatDate(request.date)}</div>
-            </Card>
-          ))}
-        </div>
-      </Paper>
+      <div className={classes.contentWrapper}>
+        <Paper className={classes.sideBar}>
+          <Typography variant="h3">
+            Requests{" "}
+            <span className={classes.quantity}>({requests.length})</span>
+          </Typography>
 
-      {singleRequestView && (
-        <Paper className={classes.singleView}>
-          {
-            <Typography className={classes} variant="h3">
-              {singleRequestView.title}
-            </Typography>
-          }
+          <div className={classes.cardWrapper}>
+            {requests.map((request) => (
+              <Card
+                key={request["_id"]}
+                className={classes.card}
+                onClick={getSingleRequest}
+                data-id={request["_id"]}
+              >
+                <Typography className={classes.title}>
+                  {request.title}
+                </Typography>
+                <br />
+                <Typography className={classes.date}>
+                  {formatDate(request.date)}
+                </Typography>
+              </Card>
+            ))}
+          </div>
         </Paper>
-      )}
+
+        <div className={classes.singleViewWrapper}>
+          {singleRequestView && (
+            <SingleView singleRequestView={singleRequestView} />
+          )}
+        </div>
+      </div>
     </div>
   );
 };
