@@ -1,49 +1,10 @@
 import React, { useEffect, useContext } from "react";
-import Prism from "prismjs";
 import { Paper, Typography, Avatar } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 import UserContext from "context/UserContext";
 import formatDate from "utils/formatDate";
-import "utils/prism.css";
-import theme from "themes/theme";
+import CodeEditor from "components/CodeEditor";
 
-const useStyles = makeStyles((theme) => ({
-  singleView: {
-    margin: "50px;",
-    position: "relative",
-    overflow: "auto",
-  },
-  header: {
-    padding: "40px",
-    borderBottom: `1px solid ${theme.palette.secondary.lightGray}`,
-  },
-  title: {
-    margin: 0,
-    fontWeight: "bold",
-    fontSize: "20px",
-  },
-  date: {
-    color: `${theme.palette.secondary.lightGray}`,
-    fontSize: "12px",
-  },
-  syntaxWrapper: {
-    padding: "3rem",
-  },
-  syntax: {
-    maxHeight: "400px",
-    overflow: "auto",
-  },
-  authorHeader: {
-    display: "flex",
-    margin: "3rem 0 1rem 0",
-  },
-  authorAvatar: {
-    marginRight: "1rem",
-  },
-  authorComment: {
-    paddingLeft: "55px",
-  },
-}));
+import useStyles from "./SingleView.css";
 
 const SingleView = (props) => {
   const classes = useStyles();
@@ -51,10 +12,6 @@ const SingleView = (props) => {
 
   const { user } = useContext(UserContext);
   const { title, date, messages, language } = props.singleRequestView;
-
-  useEffect(() => {
-    Prism.highlightAll();
-  }, [props]);
 
   return (
     <Paper className={classes.singleView}>
@@ -68,11 +25,11 @@ const SingleView = (props) => {
         {messages.map((message) => (
           <div key={message["_id"]}>
             <div className={classes.syntax}>
-              <pre style={{ backgroundColor: "#f5f6f9" }}>
-                <code
-                  className={`language-${language}`}
-                >{`${message.code}`}</code>
-              </pre>
+              <CodeEditor
+                language={language}
+                value={message.code}
+                readOnly={true}
+              />
             </div>
 
             <div className={classes.author}>
@@ -82,11 +39,13 @@ const SingleView = (props) => {
                 </div>
                 <div>
                   <Typography variant="h5">John Doe</Typography>
-                  <Typography>Senior Developer</Typography>
+                  <Typography className={classes.date}>
+                    {formatDate(message.date)}
+                  </Typography>
                 </div>
               </div>
               <div className={classes.authorComment}>
-                <Typography>Some comment from the author...</Typography>
+                <Typography>{message.comments}</Typography>
               </div>
             </div>
           </div>
