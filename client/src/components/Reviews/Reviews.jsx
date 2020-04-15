@@ -28,10 +28,11 @@ const useStyles = makeStyles((theme) => ({
   title: {
     margin: 0,
     fontWeight: "bold",
-    fontSize: "20px",
+    fontSize: "18px",
   },
   date: {
     color: `${theme.palette.secondary.lightGray}`,
+    fontSize: "12px",
   },
   quantity: {
     color: `${theme.palette.primary.main}`,
@@ -110,7 +111,6 @@ const Reviews = () => {
                 <Typography className={classes.title}>
                   {request.title}
                 </Typography>
-                <br />
                 <Typography className={classes.date}>
                   {formatDate(request.date)}
                 </Typography>
