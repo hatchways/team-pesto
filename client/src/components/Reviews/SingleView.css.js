@@ -36,10 +36,6 @@ const useStyles = makeStyles((theme) => ({
   authorComment: {
     paddingLeft: "55px",
   },
-  date: {
-    color: `${theme.palette.secondary.lightGray}`,
-    fontSize: "12px",
-  },
 }));
 
 export default useStyles;

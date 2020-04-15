@@ -12,7 +12,6 @@ import { remove } from "utils/storage";
 import Onboarding from "pages/Onboarding";
 import Reviews from "components/Reviews";
 import Home from "pages/Home";
-import SingleView from "components/Reviews/SingleView";
 
 import "./App.css";
 

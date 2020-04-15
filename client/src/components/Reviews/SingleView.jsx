@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import { Paper, Typography, Avatar } from "@material-ui/core";
 import UserContext from "context/UserContext";
 import formatDate from "utils/formatDate";
@@ -8,7 +8,6 @@ import useStyles from "./SingleView.css";
 
 const SingleView = (props) => {
   const classes = useStyles();
-  console.log(props.singleRequestView);
 
   const { user } = useContext(UserContext);
   const { title, date, messages, language } = props.singleRequestView;
