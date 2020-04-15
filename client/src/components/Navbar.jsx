@@ -80,9 +80,9 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    socket.connect();
+    socket.connect(user.id);
   }, []);
-  
+
   return (
     <AppBar>
       <Toolbar>

@@ -1,11 +1,9 @@
 import io from "socket.io-client";
 
 class Socket {
-  connect() {
+  connect(userId) {
     this.socket = io("localhost:3001");
-    this.socket.on("test", () => {
-      console.log("TEST!!!");
-    })
+    this.socket.emit("store-user-id", { userId })
   }
 }
 
