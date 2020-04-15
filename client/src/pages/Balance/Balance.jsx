@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import MainContainer from "components/MainContainer";
 import GridTemplateContainer from "components/GridTemplateContainer";
-import Navbar from "components/Navbar";
 
 import ChooseAmount from "./ChooseAmount";
 import Checkout from "./Checkout";
@@ -12,7 +11,6 @@ const Balance = () => {
   return (
     <MainContainer>
       <GridTemplateContainer>
-        <Navbar />
         {!checkoutPage ? (
           <ChooseAmount
             refillAmount={refillAmount}

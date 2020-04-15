@@ -5,13 +5,13 @@ import axios from "axios";
 
 import UserContext from "./context/UserContext";
 import theme from "themes/theme";
+import Navbar from "components/Navbar";
 import SignUp from "pages/SignUp";
 import Login from "pages/Login";
 import Balance from "pages/Balance";
 import { remove } from "utils/storage";
 import Onboarding from "pages/Onboarding";
-import Home from "pages/Home";
-import socket from "utils/socket";
+import Profile from "pages/Profile";
 
 import "./App.css";
 
@@ -61,15 +61,18 @@ function App() {
 
             {/* Routes placed here are only available after logging in and having experience */}
             {user && user.experience.length > 0 && (
-              <Switch>
-                <Route exact path="/" component={Home} />
-                <Route exact path="/balance" component={Balance} />
-                {/* TODO: Future routes
-                 <Route exact path="/reviews" component={Reviews} />
-                <Route exact path="/upload" component={Upload} />
-                <Route exact path="/balance" component={Balance} /> */}
-                <Redirect exact to="/" />
-              </Switch>
+              <>
+                <Navbar />
+                <Switch>
+                  <Route exact path="/" component={Profile} />
+                  <Route exact path="/balance" component={Balance} />
+                  {/* TODO: Future routes
+                  <Route exact path="/reviews" component={Reviews} />
+                  <Route exact path="/upload" component={Upload} />
+                  <Route exact path="/balance" component={Balance} /> */}
+                  <Redirect exact to="/" />
+                </Switch>
+              </>
             )}
 
             {/* Routes placed here are available after logging in and not having experience */}
