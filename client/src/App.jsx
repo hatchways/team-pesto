@@ -12,6 +12,7 @@ import { remove } from "utils/storage";
 import Onboarding from "pages/Onboarding";
 import Reviews from "components/Reviews";
 import Home from "pages/Home";
+import SingleView from "components/Reviews/SingleView";
 
 import "./App.css";
 
@@ -63,6 +64,7 @@ function App() {
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/balance" component={Balance} />
+                <Route exact path="/requests/:id" component={Reviews} />
                 <Route exact path="/requests" component={Reviews} />
                 {/* TODO: Future routes
                  <Route exact path="/reviews" component={Reviews} />

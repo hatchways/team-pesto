@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 import { Paper, Card, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
@@ -43,11 +44,11 @@ const useStyles = makeStyles((theme) => ({
   card: {
     padding: "20px",
     borderRadius: "4px",
-    border: `1px solid ${theme.palette.secondary.lightGray}`,
     boxShadow: "none",
     marginBottom: "20px",
     "&:hover": {
       cursor: "pointer",
+      borderColor: `${theme.palette.secondary.main}`,
     },
   },
   singleViewWrapper: {
@@ -59,6 +60,7 @@ const Reviews = () => {
   const classes = useStyles();
   const [requests, setRequests] = useState([]);
   const [singleRequestView, setSingleRequestView] = useState(requests[0]);
+  const [redirectId, setRedirectId] = useState("");
 
   useEffect(() => {
     try {
@@ -67,6 +69,7 @@ const Reviews = () => {
         const { data } = await axios.get("/api/reviews/myrequests", {
           headers: { Authorization: "Bearer " + AuthStr },
         });
+        data.usersRequests.sort((a, b) => new Date(b.date) - new Date(a.date));
         setRequests(data.usersRequests);
       };
 
@@ -78,15 +81,21 @@ const Reviews = () => {
 
   const getSingleRequest = async (ev) => {
     const id = ev.currentTarget.dataset.id;
+
     try {
       const AuthStr = localStorage.token;
       const { data } = await axios.get(`/api/reviews/myrequests/${id}`, {
         headers: { Authorization: "Bearer " + AuthStr },
       });
       setSingleRequestView(data.singleRequest[0]);
+      setRedirectId(id);
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const borderColor = (id) => {
+    return redirectId === id ? { borderColor: "#43DDC1" } : null;
   };
 
   return (
@@ -107,6 +116,8 @@ const Reviews = () => {
                 className={classes.card}
                 onClick={getSingleRequest}
                 data-id={request["_id"]}
+                variant="outlined"
+                style={borderColor(request["_id"])}
               >
                 <Typography className={classes.title}>
                   {request.title}
@@ -120,8 +131,11 @@ const Reviews = () => {
         </Paper>
 
         <div className={classes.singleViewWrapper}>
-          {singleRequestView && (
-            <SingleView singleRequestView={singleRequestView} />
+          {singleRequestView && redirectId && (
+            <>
+              <Redirect to={`/requests/${redirectId}`} />
+              <SingleView singleRequestView={singleRequestView} />
+            </>
           )}
         </div>
       </div>
