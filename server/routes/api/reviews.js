@@ -61,7 +61,7 @@ router.post("/requests", authenticate, async (req, res) => {
   }
 });
 
-router.get("/myrequests", authenticate, async (req, res) => {
+router.get("/requests", authenticate, async (req, res) => {
   try {
     const userId = req.user.id;
 
@@ -72,7 +72,7 @@ router.get("/myrequests", authenticate, async (req, res) => {
   }
 });
 
-router.get("/myrequests/:id", authenticate, async (req, res) => {
+router.get("/requests/:id", authenticate, async (req, res) => {
   const requestId = req.params.id;
 
   try {

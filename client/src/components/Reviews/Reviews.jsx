@@ -66,7 +66,7 @@ const Reviews = () => {
     try {
       const AuthStr = localStorage.token;
       const callRequests = async () => {
-        const { data } = await axios.get("/api/reviews/myrequests", {
+        const { data } = await axios.get("/api/reviews/requests", {
           headers: { Authorization: "Bearer " + AuthStr },
         });
         data.usersRequests.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -84,7 +84,7 @@ const Reviews = () => {
 
     try {
       const AuthStr = localStorage.token;
-      const { data } = await axios.get(`/api/reviews/myrequests/${id}`, {
+      const { data } = await axios.get(`/api/reviews/requests/${id}`, {
         headers: { Authorization: "Bearer " + AuthStr },
       });
       setSingleRequestView(data.singleRequest[0]);
