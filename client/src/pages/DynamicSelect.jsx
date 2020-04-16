@@ -82,10 +82,10 @@ const DynamicSelect = ({
           className={classes.select}
         >
           {// eslint-disable-next-line
-          options.map((option) => {
+          Object.keys(options).map((key) => {
             return (
-              <MenuItem key={option} value={option}>
-                {option}
+              <MenuItem key={key} value={key}>
+                {options[key]}
               </MenuItem>
             );
           })}
@@ -102,9 +102,9 @@ const DynamicSelect = ({
           onChange={handleChange}
           label="Level"
         >
-          {levels.map((level) => (
-            <MenuItem key={level} value={level}>
-              {level}
+          {Object.keys(levels).map((key) => (
+            <MenuItem key={key} value={parseInt(key)}>
+              {levels[key]}
             </MenuItem>
           ))}
         </Select>
