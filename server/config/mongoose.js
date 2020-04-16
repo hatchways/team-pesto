@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const { mongoUri } = require("./config/keys");
+const { mongoUri } = require("./keys");
 
 const options = {
   useNewUrlParser: true,

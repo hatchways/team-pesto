@@ -12,7 +12,7 @@ const reviewsRouter = require("./routes/api/reviews");
 const notificationsRouter = require("./routes/api/notifications");
 
 // connect to MongoDB
-require("./mongoose-setup");
+require("./config/mongoose");
 
 const { json, urlencoded } = express;
 

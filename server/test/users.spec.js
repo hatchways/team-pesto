@@ -1,24 +1,20 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const express = require("express");
 
 const usersRouter = require("../routes/api/users");
 const User = require("../models/User");
-const testDb = require("./TestDb");
+const TestApp = require("./TestApp");
+const TestDb = require("./TestDb");
 
 const should = chai.should();
 chai.use(chaiHttp);
 
-const { json } = express;
-const app = express();
-app.use(json());
+const app = TestApp();
 app.use("/api/users", usersRouter);
-
-testDb.connect();
 
 describe("POST /api/users/signup", () => {
   before(async () => {
-    await testDb.clear();
+    await TestDb.connect();
   });
 
   it("should return status code 400 if missing name", (done) => {
@@ -114,11 +110,15 @@ describe("POST /api/users/signup", () => {
         });
     });
   });
+
+  after(async () => {
+    await TestDb.close();
+  });
 });
 
 describe("POST /api/users/login", () => {
   before(async () => {
-    await testDb.clear();
+    await TestDb.connect();
 
     const users = [
       new User({
@@ -222,5 +222,9 @@ describe("POST /api/users/login", () => {
 
         done();
       });
+  });
+
+  after(async () => {
+    await TestDb.close();
   });
 });
