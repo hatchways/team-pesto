@@ -66,7 +66,12 @@ router.get("/requests", authenticate, async (req, res) => {
     const userId = req.user.id;
 
     const usersRequests = await Review.find({ requesterId: userId });
-    res.send({ usersRequests });
+
+    const filteredRequests = usersRequests.map((request) =>
+      request.filteredSchema()
+    );
+
+    res.send({ usersRequests: filteredRequests });
   } catch (err) {
     console.error(err);
   }
@@ -82,6 +87,9 @@ router.get("/requests/:id", authenticate, async (req, res) => {
       _id: { $in: [requestId] },
       requesterId: { $in: [userId] },
     });
+
+    singleRequest[0].filteredSchema();
+
     res.send({ singleRequest });
   } catch (err) {
     console.error(err);
