@@ -118,14 +118,11 @@ router.get("/me", authenticate, (req, res) => {
 router.post("/experience", authenticate, async (req, res) => {
   const { id } = req.user;
   const { experience } = req.body;
-
   if (!validateExperience(experience)) {
     res.status(400).send({ response: "Invalid input." });
   }
-
   try {
     await User.updateOne({ _id: id }, { $set: { experience } });
-
     res.status(200).end();
   } catch (err) {
     // eslint-disable-next-line no-console
