@@ -1,13 +1,13 @@
-const Review = require('../../models/Review');
-const User = require('../../models/User');
+const Review = require("../../models/Review");
+const User = require("../../models/User");
 
 const matchQueueProcessor = async (job) => {
   const { reviewId } = job.data;
   const review = await Review.findById(reviewId);
 
   // end job if review document is missing or no longer pending
-  if (!review) return 'missing';
-  if (review.status !== 'pending') return review.status;
+  if (!review) return "missing";
+  if (review.status !== "pending") return review.status;
 
   // add current requested reviewer if exists to declined list
   if (review.reviewerId) {
@@ -18,12 +18,9 @@ const matchQueueProcessor = async (job) => {
   // find requester's proficiency level in review's language
   const requester = await User.findById(review.requesterId);
   let requesterLevel = 0;
-  for (const exp of requester.experience) {
-    if (exp.language === review.language) {
-      requesterLevel = exp.level;
-      break;
-    }
-  }
+  requester.experience.forEach((exp) => {
+    if (exp.language === review.language) requesterLevel = exp.level;
+  });
 
   // query for possible reviewers
   let reviewerPool = await User.find({
@@ -51,7 +48,8 @@ const matchQueueProcessor = async (job) => {
 
   // select random reviewer from pool and assign to review
   if (reviewerPool.length >= 1) {
-    const reviewer = reviewerPool[Math.floor(Math.random() * reviewerPool.length)];
+    const reviewer =
+      reviewerPool[Math.floor(Math.random() * reviewerPool.length)];
     review.reviewerId = reviewer.id;
   }
   // update document even if no match

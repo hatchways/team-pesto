@@ -1,19 +1,19 @@
-const Queue = require('bull');
+const Queue = require("bull");
 
-const { redisUri } = require('../../config/keys');
-const matchQueueProcessor  = require('./matchQueueProcessor');
+const { redisUri } = require("../../config/keys");
+const matchQueueProcessor = require("./matchQueueProcessor");
 
-const REQUEST_TIMEOUT = 86400000  // 24 hours
+const REQUEST_TIMEOUT = 86400000; // 24 hours
 
-const matchQueue = new Queue('match review with reviewer', redisUri);
+const matchQueue = new Queue("match review with reviewer", redisUri);
 
 matchQueue.process(matchQueueProcessor);
 
-matchQueue.on('completed', async (job, result) => {
+matchQueue.on("completed", async (job, result) => {
   const reviewStatus = result;
 
   // if review still pending, requeue review
-  if (reviewStatus === 'pending') {
+  if (reviewStatus === "pending") {
     await matchQueue.add(job.data, { delay: REQUEST_TIMEOUT });
   }
 
