@@ -1,5 +1,8 @@
 const socketIo = require("socket.io");
 
+const jwt = require("jsonwebtoken");
+const { passportSecret } = require("../config/keys");
+
 class Socket {
   constructor() {
     this.usersByUserId = {};
@@ -12,8 +15,9 @@ class Socket {
       console.log(`A new client ${socket.id} has connected to server!`);
 
       // update user objects to map user id and socket ids
-      socket.on("store-user-id", data => {
-        const { userId } = data;
+      socket.on("store-user-id", async data => {
+        const { token } = data;
+        const userId = jwt.verify(token, passportSecret).id;
         this.usersByUserId[userId] = socket.id;
         this.usersBySocketId[socket.id] = userId;
       });

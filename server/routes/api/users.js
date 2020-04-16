@@ -131,10 +131,8 @@ router.post(
   async (req, res) => {
     const { id } = req.user;
     const { experience } = req.body;
-
     try {
       await User.update({ _id: id }, { $set: { experience } });
-
       res.status(200).end();
     } catch (err) {
       // eslint-disable-next-line no-console
