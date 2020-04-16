@@ -19,13 +19,6 @@ function App() {
   const [user, setUser] = useState(null);
   const [redirect, setRedirect] = useState(false);
 
-  const logout = () => {
-    setUser(null);
-    setRedirect(!redirect);
-    remove("token"); // TO DO: agree on a name for this token
-    delete axios.defaults.headers.common["Authorization"];
-  };
-
   const prevRedirect = useRef();
   // on mount
   useEffect(() => {
@@ -52,7 +45,13 @@ function App() {
       value={{
         user,
         setUser,
-        logout,
+        logout: ({ socket }) => {
+          setUser(null);
+          setRedirect(!redirect);
+          remove("token"); // TO DO: agree on a name for this token
+          delete axios.defaults.headers.common["Authorization"];
+          socket.emit("force-disconnect");
+        },
       }}
     >
       <MuiThemeProvider theme={theme}>

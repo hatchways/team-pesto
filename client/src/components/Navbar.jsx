@@ -75,12 +75,12 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    logout();
+    logout(socket);
     setAnchorEl(null)
   };
 
   useEffect(() => {
-    socket.connect(user.id);
+    socket.connect(localStorage.token);
   }, []);
 
   return (
