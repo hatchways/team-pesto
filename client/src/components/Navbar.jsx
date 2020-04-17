@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -13,6 +13,8 @@ import {
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import UserContext from "context/UserContext";
 import CodeUploadDialog from "pages/CodeUploadDialog";
+
+import socket from "utils/socket";
 
 // TO DO: import styles from centralized location
 
@@ -80,15 +82,21 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    logout();
+    logout(socket);
     setAnchorEl(null);
   };
+
+  useEffect(() => {
+    socket.connect(localStorage.token);
+  }, []);
 
   return (
     <AppBar>
       <Toolbar>
         <Toolbar className={classes.logo}>
-          <img src="logo.png" />
+          <Link to="/">
+            <img src="logo.png" />
+          </Link>
         </Toolbar>
 
         <Toolbar className={classes.toolbar}>
