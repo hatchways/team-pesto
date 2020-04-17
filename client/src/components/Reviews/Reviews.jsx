@@ -100,8 +100,6 @@ const Reviews = () => {
 
   return (
     <div className={classes.MainWrapper}>
-      <Navbar className={classes.nav} />
-
       <div className={classes.contentWrapper}>
         <Paper className={classes.sideBar}>
           <Typography variant="h3">
