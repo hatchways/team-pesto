@@ -120,8 +120,19 @@ const Onboarding = (props) => {
     }
   };
 
-  const options = ["JavaScript", "Python", "Java", "C++", "Ruby"];
-  const levels = ["Beginner", "Intermediate", "Advanced"];
+  const options = {
+    javascript: 'JavaScript',
+    python: 'Python',
+    java: 'Java',
+    cpp: 'C++',
+    ruby: 'Ruby',
+  };
+
+  const levels = {
+    0: 'Beginner',
+    1: 'Intermediate',
+    2: 'Advanced',
+  };
 
   return (
     <LoginSignupContainer>
