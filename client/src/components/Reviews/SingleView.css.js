@@ -9,6 +9,8 @@ const useStyles = makeStyles((theme) => ({
   header: {
     padding: "40px",
     borderBottom: `1px solid ${theme.palette.secondary.lightGray}`,
+    display: "flex",
+    justifyContent: "space-between",
   },
   title: {
     margin: 0,
@@ -18,6 +20,11 @@ const useStyles = makeStyles((theme) => ({
   date: {
     color: `${theme.palette.secondary.lightGray}`,
     fontSize: "12px",
+  },
+  editIcon: {
+    "&:hover": {
+      cursor: "pointer",
+    },
   },
   syntaxWrapper: {
     padding: "3rem",

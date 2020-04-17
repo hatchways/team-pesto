@@ -1,53 +1,37 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 import { Paper, Typography, Avatar } from "@material-ui/core";
-import UserContext from "context/UserContext";
+import EditIcon from "@material-ui/icons/Edit";
 import formatDate from "utils/formatDate";
-import CodeEditor from "components/CodeEditor";
+import Messages from "components/Reviews/Messages";
 
 import useStyles from "./SingleView.css";
 
 const SingleView = (props) => {
   const classes = useStyles();
-
-  const { user } = useContext(UserContext);
   const { title, date, messages, language } = props.singleRequestView;
 
+  const [editMode, setEditMode] = useState(false);
+
+  const editMessage = () => {
+    setEditMode(!editMode);
+  };
   return (
     <Paper className={classes.singleView}>
       <div className={classes.header}>
-        <Typography className={classes.title} variant="h3">
-          {title}
-        </Typography>
-        <Typography className={classes.date}>{formatDate(date)}</Typography>
+        <div>
+          <Typography className={classes.title} variant="h3">
+            {title}
+          </Typography>
+          <Typography className={classes.date}>{formatDate(date)}</Typography>
+        </div>
+
+        {editMode ? <Typography>You are now in edit mode.</Typography> : null}
+
+        <EditIcon className={classes.editIcon} onClick={editMessage} />
       </div>
       <div className={classes.syntaxWrapper}>
         {messages.map((message) => (
-          <div key={message["_id"]}>
-            <div className={classes.syntax}>
-              <CodeEditor
-                language={language}
-                value={message.code}
-                readOnly={true}
-              />
-            </div>
-
-            <div className={classes.author}>
-              <div className={classes.authorHeader}>
-                <div className={classes.authorAvatar}>
-                  <Avatar src={user && user.image} />
-                </div>
-                <div>
-                  <Typography variant="h5">John Doe</Typography>
-                  <Typography className={classes.date}>
-                    {formatDate(message.date)}
-                  </Typography>
-                </div>
-              </div>
-              <div className={classes.authorComment}>
-                <Typography>{message.comments}</Typography>
-              </div>
-            </div>
-          </div>
+          <Messages message={message} language={language} editMode={editMode} />
         ))}
       </div>
     </Paper>

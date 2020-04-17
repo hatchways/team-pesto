@@ -99,9 +99,38 @@ router.get("/requests/:id", authenticate, async (req, res) => {
       requesterId: { $in: [userId] },
     });
 
-    singleRequest[0].filteredSchema();
+    if (singleRequest[0]) {
+      singleRequest[0].filteredSchema();
+    } else {
+      return res.status(400);
+    }
 
     res.send({ singleRequest });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+router.put("/:id", authenticate, async (req, res) => {
+  const requestId = req.params.id;
+  const updatedCode = req.body;
+  const updatedComments = req.body.comments;
+
+  try {
+    const userId = req.user.id;
+
+    const singleRequest = await Review.find({
+      _id: requestId,
+    });
+
+    if (singleRequest[0]) {
+      console.log(updatedCode);
+      console.log(updatedComments);
+      // console.log(singleRequest[0].messages);
+    } else {
+      return res.sendStatus(400);
+    }
+    return res.sendStatus(200);
   } catch (err) {
     console.error(err);
   }
