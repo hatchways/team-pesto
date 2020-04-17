@@ -3,6 +3,7 @@ const { Router } = require("express");
 const authenticate = require("../../middlewares/authenticate");
 const Review = require("../../models/Review");
 const Message = require("../../models/Message");
+const MatchQueue = require("../../services/MatchQueue");
 
 const router = Router();
 const REQUIRED_CREDITS = 1;
@@ -55,6 +56,8 @@ router.post("/requests", authenticate, async (req, res) => {
 
   // if all documents saved successfully
   if (results.every((r) => r.status === "fulfilled")) {
+    await MatchQueue.queueReview(review.id);
+
     res.sendStatus(201);
     return;
   }
