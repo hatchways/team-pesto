@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { AppBar, Toolbar, Button, Menu, MenuItem, Avatar, Badge } from "@material-ui/core";
-import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
+import NotificationsIcon from "@material-ui/icons/Notifications";
 import UserContext from "context/UserContext";
 import CodeUploadDialog from 'pages/CodeUploadDialog';
 
@@ -60,7 +60,8 @@ const Navbar = () => {
   const classes = useStyles();
   const { user, logout } = useContext(UserContext);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState({});
+  const [newNotifications, setNewNotifications] = useState(true);
 
   const handleUploadDialog = () => {
     setUploadDialogOpen(!uploadDialogOpen);
@@ -68,15 +69,16 @@ const Navbar = () => {
 
   const handleMenu = e => {
     setAnchorEl(e.currentTarget);
-  };
+    if (e.currentTarget.id === "notifications") setNewNotifications(false);
+  }
 
   const handleClose = () => {
-    setAnchorEl(null);
+    setAnchorEl({});
   };
 
   const handleLogout = () => {
     logout(socket);
-    setAnchorEl(null)
+    setAnchorEl({})
   };
 
   useEffect(() => {
@@ -86,6 +88,7 @@ const Navbar = () => {
   return (
     <AppBar>
       <Toolbar>
+        
         <Toolbar className={classes.logo}>
           <Link to="/">
             <img src="logo.png" />
@@ -101,14 +104,24 @@ const Navbar = () => {
             <Link className={classes.link} to="/balance">Balance</Link>
           </Button>
 
-          <Button className={classes.clickable}>
+          <Button id="notifications" className={classes.clickable} onClick={handleMenu}>
             <Avatar className={classes.notification}>
-              <Badge color="secondary" variant="dot">
-                <NotificationsNoneIcon />
+              <Badge color="secondary" variant="dot" invisible={!newNotifications}>
+                <NotificationsIcon />
               </Badge>
             </Avatar>
           </Button>
 
+          <Menu
+            anchorEl={anchorEl}
+            open={anchorEl.id === "notifications"}
+            onClose={handleClose}
+          >
+            <MenuItem>
+              YO WHAT UP
+            </MenuItem>
+          </Menu>
+          
           <Button
             className={`${classes.clickable} ${classes.button}`}
             onClick={handleUploadDialog}
@@ -116,7 +129,7 @@ const Navbar = () => {
             Upload Code
           </Button>          
 
-          <Button className={classes.profileButton} onClick={handleMenu}>
+          <Button id="profile" className={classes.profileButton} onClick={handleMenu}>
             <Avatar src={user && user.image}/>
             <div className={classes.link}>Profile</div>
             <div className={classes.triangle} />
@@ -124,7 +137,7 @@ const Navbar = () => {
 
           <Menu
             anchorEl={anchorEl}
-            open={!!anchorEl}
+            open={anchorEl.id === "profile"}
             onClose={handleClose}
           >
             <MenuItem>
@@ -135,6 +148,7 @@ const Navbar = () => {
               <Link to="/">Logout</Link>
             </MenuItem>
           </Menu>
+
         </Toolbar>
       </Toolbar>
       
