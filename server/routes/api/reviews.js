@@ -72,4 +72,8 @@ router.post("/requests", authenticate, async (req, res) => {
   res.sendStatus(500);
 });
 
+router.put('/:reviewId/status', authenticate, (req, res) => {
+  res.sendStatus(500);
+});
+
 module.exports = router;
