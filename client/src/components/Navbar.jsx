@@ -8,6 +8,7 @@ import CodeUploadDialog from 'pages/CodeUploadDialog';
 
 import socket from "utils/socket";
 
+import Notifications from "./Notifications";
 
 // TO DO: import styles from centralized location
 
@@ -27,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     textDecoration: "none",
     textTransform: "none",
+    fontWeight: "normal",
   },
   button: {
     color: `${theme.palette.secondary.main}`,
@@ -69,7 +71,6 @@ const Navbar = () => {
 
   const handleMenu = e => {
     setAnchorEl(e.currentTarget);
-    if (e.currentTarget.id === "notifications") setNewNotifications(false);
   }
 
   const handleClose = () => {
@@ -114,12 +115,13 @@ const Navbar = () => {
 
           <Menu
             anchorEl={anchorEl}
+            anchorOrigin={{ vertical: "bottom" }}
             open={anchorEl.id === "notifications"}
             onClose={handleClose}
           >
-            <MenuItem>
-              YO WHAT UP
-            </MenuItem>
+            <Notifications
+              setNewNotifications={setNewNotifications}
+            />
           </Menu>
           
           <Button
@@ -137,16 +139,18 @@ const Navbar = () => {
 
           <Menu
             anchorEl={anchorEl}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
             open={anchorEl.id === "profile"}
             onClose={handleClose}
           >
-            <MenuItem>
-              <Link to="/profile">Go to Profile</Link>
-            </MenuItem>
-
-            <MenuItem onClick={handleLogout}>
-              <Link to="/">Logout</Link>
-            </MenuItem>
+            <>
+              <MenuItem>
+                <Link to="/profile">Go to Profile</Link>
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>
+                <Link to="/">Logout</Link>
+              </MenuItem>
+            </>
           </Menu>
 
         </Toolbar>
