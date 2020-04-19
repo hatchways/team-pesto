@@ -6,7 +6,7 @@ const { Schema, ObjectId } = mongoose;
 
 const reviewSchema = new Schema({
   requesterId: { type: ObjectId, required: true },
-  reviewerId: ObjectId,
+  reviewerId: { type: ObjectId, default: null },
   declinedIds: [ObjectId],
   title: String,
   date: { type: Date, default: Date.now },
