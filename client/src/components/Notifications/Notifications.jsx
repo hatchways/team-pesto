@@ -70,14 +70,14 @@ const initialState = {
   ]
 }
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "getNotifications":
-      return { ...state, notifications: action.payload};
-    case "newNotification":
-      return { ...state, notifications: [action.payload, ...state.notifications]};
-  }
-}
+// const reducer = (state, action) => {
+//   switch (action.type) {
+//     case "getNotifications":
+//       return { ...state, notifications: action.payload};
+//     case "newNotification":
+//       return { ...state, notifications: [action.payload, ...state.notifications]};
+//   }
+// }
 
 const parseDate = date => {
   const ref = {
@@ -111,15 +111,14 @@ const parseDate = date => {
   }
 };
 
-const Notifications = ({ setNewNotifications }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const [unreadCount, setUnreadCount] = useState(3);              // TO DO: useState(0)
+const Notifications = ({ notifications }) => {
+  // const [state, dispatch] = useReducer(reducer, initialState);
   const { user } = useContext(UserContext);
   const classes = useStyles();
 
   return (
     <>
-      {state.notifications.map((notification, i) => (
+      {notifications.map((notification, i) => (
         <MenuItem
           key={i}
           className={notification.seen ? classes.seenMenuItem : classes.unseenMenuItem}
