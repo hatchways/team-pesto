@@ -112,21 +112,25 @@ router.get("/requests/:id", authenticate, async (req, res) => {
 });
 
 router.put("/:id", authenticate, async (req, res) => {
-  const requestId = req.params.id;
-  const updatedCode = req.body;
-  const updatedComments = req.body.comments;
+  const { requestId, messageId, code, comments } = req.body;
 
   try {
     const userId = req.user.id;
 
     const singleRequest = await Review.find({
-      _id: requestId,
+      _id: { $in: [requestId] },
+      requesterId: { $in: [userId] },
     });
 
     if (singleRequest[0]) {
-      console.log(updatedCode);
-      console.log(updatedComments);
-      // console.log(singleRequest[0].messages);
+      singleRequest[0].messages.map((message) => {
+        if (message["_id"] == messageId) {
+          message.code = code;
+          message.comments = comments;
+        }
+      });
+
+      await singleRequest[0].save();
     } else {
       return res.sendStatus(400);
     }

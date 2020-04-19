@@ -1,21 +1,113 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
 import UserContext from "context/UserContext";
-import { Typography, Avatar } from "@material-ui/core";
+import { Typography, Avatar, Button, TextField } from "@material-ui/core";
+import EditIcon from "@material-ui/icons/Edit";
+import CloseIcon from "@material-ui/icons/Close";
 import CodeEditor from "components/CodeEditor";
 import formatDate from "utils/formatDate";
+import { getToken } from "utils/storage";
 import useStyle from "components/Reviews/SingleView.css";
 
-const Messages = ({ message, language, editMode }) => {
+const Messages = ({ message, language, redirectId }) => {
   const classes = useStyle();
   const { user } = useContext(UserContext);
+  const [editMode, setEditMode] = useState(false);
+  const [messageId, setMessageId] = useState("");
+  const [authorName, setAuthorName] = useState("");
+  const [codeSnippet, setCodeSnippet] = useState("");
+  const [editedCodeSnippet, setEditedCodeSnippet] = useState("");
+  const [comments, setComments] = useState("");
+  const [editedComments, setEditedComments] = useState("");
+
+  useEffect(() => {
+    setMessageId(message["_id"]);
+    setCodeSnippet(message.code);
+    setComments(message.comments);
+    setEditedCodeSnippet(message.code);
+    setEditedComments(message.comments);
+  }, [message.code, message.comments]);
+
+  const editMessage = () => {
+    setEditMode(!editMode);
+  };
+
+  const dontEditMessage = () => {
+    setEditMode(!editMode);
+  };
+
+  const handleFormChange = (event) => {
+    const { name, value } = event.target;
+
+    switch (name) {
+      case "code-snippet":
+        setEditedCodeSnippet(value);
+        break;
+      case "comments":
+        setEditedComments(value);
+        break;
+      default:
+    }
+  };
+
+  const handleCodeSnippetChange = (value) => {
+    setEditedCodeSnippet(value);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const requestId = redirectId;
+    setEditMode(!editMode);
+
+    if (editedCodeSnippet && editedComments) {
+      setCodeSnippet(editedCodeSnippet);
+      setComments(editedComments);
+
+      try {
+        await axios.put(
+          `/api/reviews/${requestId}`,
+          {
+            requestId,
+            messageId: messageId,
+            code: editedCodeSnippet,
+            comments: editedComments,
+          },
+          {
+            headers: { Authorization: `Bearer ${getToken()}` },
+          }
+        );
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    console.log(codeSnippet, "  ", comments);
+  };
 
   return (
-    <div key={message["_id"]}>
+    <form onSubmit={handleSubmit}>
+      <div className={classes.editHeader}>
+        <Button
+          type="submit"
+          onSubmit={handleSubmit}
+          style={editMode ? { display: "block" } : { display: "none" }}
+        >
+          Submit
+        </Button>
+
+        {editMode ? (
+          <CloseIcon className={classes.editIcon} onClick={dontEditMessage} />
+        ) : (
+          <EditIcon className={classes.editIcon} onClick={editMessage} />
+        )}
+      </div>
+
       <div className={classes.syntax}>
         <CodeEditor
           language={language}
-          value={message.code}
+          value={editMode ? editedCodeSnippet : codeSnippet}
           readOnly={!editMode}
+          onChange={handleCodeSnippetChange}
         />
       </div>
 
@@ -32,10 +124,27 @@ const Messages = ({ message, language, editMode }) => {
           </div>
         </div>
         <div className={classes.authorComment}>
-          <Typography>{message.comments}</Typography>
+          <Typography
+            style={editMode ? { display: "none" } : { display: "block" }}
+          >
+            {comments}
+          </Typography>
+
+          <TextField
+            name="comments"
+            variant="outlined"
+            label="Additional Comments"
+            InputLabelProps={{ shrink: true }}
+            fullWidth
+            multiline
+            rows={5}
+            value={editMode ? editedComments : comments}
+            onChange={handleFormChange}
+            style={editMode ? { display: "block" } : { display: "none" }}
+          />
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

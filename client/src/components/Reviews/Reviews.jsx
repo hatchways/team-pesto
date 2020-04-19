@@ -132,7 +132,10 @@ const Reviews = () => {
           {singleRequestView && redirectId && (
             <>
               <Redirect to={`/requests/${redirectId}`} />
-              <SingleView singleRequestView={singleRequestView} />
+              <SingleView
+                singleRequestView={singleRequestView}
+                redirectId={redirectId}
+              />
             </>
           )}
         </div>

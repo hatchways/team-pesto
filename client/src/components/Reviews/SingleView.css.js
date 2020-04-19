@@ -43,6 +43,12 @@ const useStyles = makeStyles((theme) => ({
   authorComment: {
     paddingLeft: "55px",
   },
+  editHeader: {
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginBottom: "10px",
+  },
 }));
 
 export default useStyles;
