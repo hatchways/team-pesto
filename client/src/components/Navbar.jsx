@@ -8,7 +8,7 @@ import CodeUploadDialog from 'pages/CodeUploadDialog';
 
 import socket from "utils/socket";
 
-import Notifications from "./Notifications";
+import Notifications from "./Notifications/Notifications";
 
 // TO DO: import styles from centralized location
 

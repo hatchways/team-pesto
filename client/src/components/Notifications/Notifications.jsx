@@ -5,16 +5,30 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core";
+import axios from "axios";
 
 import UserContext from "context/UserContext";
 
-import theme from "themes/theme";
-
-const useStyles = makeStyles({
-  menuItem: {
+const useStyles = makeStyles((theme) => ({
+  unseenMenuItem: {
     borderBottomStyle: "solid",
     borderWidth: "1px",
     borderColor: "#EEEEEE",
+    backgroundColor: `${theme.palette.secondary.main}`,
+    "&:hover": {
+      cursor: "pointer",
+      backgroundColor: `${theme.palette.secondary.light}`,
+    },
+  },
+  seenMenuItem: {
+    borderBottomStyle: "solid",
+    borderWidth: "1px",
+    borderColor: "#EEEEEE",
+    backgroundColor: "#FFFFFF",
+    "&:hover": {
+      cursor: "pointer",
+      backgroundColor: "EEEEEE",
+    },
   },
   notificationTitle: {
     fontSize: "small",
@@ -23,7 +37,7 @@ const useStyles = makeStyles({
   timestamp: {
     fontSize: "x-small",
   },
-});
+}));
 
 const initialState = {
   // TO DO: REPLACE THIS MOCK DATA WITH `[]`
@@ -108,14 +122,7 @@ const Notifications = ({ setNewNotifications }) => {
       {state.notifications.map((notification, i) => (
         <MenuItem
           key={i}
-          className={classes.menuItem}
-          style={{backgroundColor: notification.seen ? "white" : theme.palette.secondary.main}}
-          onMouseEnter={e =>
-            e.target.style.backgroundColor = theme.palette.secondary.light
-          }
-          onMouseLeave={e =>
-            e.target.style.backgroundColor = notification.seen ? "white" : theme.palette.secondary.main
-          }
+          className={notification.seen ? classes.seenMenuItem : classes.unseenMenuItem}
         >
           <Grid container direction="column">
             <Typography className={classes.notificationTitle}>{notification.title}</Typography>
