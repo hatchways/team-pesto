@@ -5,7 +5,7 @@ import { AppBar, Toolbar, Button, Menu, MenuItem, Avatar, Badge } from "@materia
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import UserContext from "context/UserContext";
 import CodeUploadDialog from 'pages/CodeUploadDialog';
-import axios from "axios";
+// import axios from "axios";
 
 import socket from "utils/socket";
 
@@ -85,37 +85,7 @@ const Navbar = () => {
 
   useEffect(() => {
     socket.connect(localStorage.token);
-
-    // TESTING CODE FOR CREATING A NOTIFICATION
-    // async function createTestNotification() {
-    //   try {
-    //     await axios.post("/api/notifications", {
-    //       recipient: "5e9cab170f8bc650e4b622c8",
-    //       code: 1,
-    //       title: "some title",
-    //     })
-    //   } catch (err) {
-    //     console.error(err);
-    //   }
-    // }
-    // createTestNotification();
-
-    async function getInitialNotifications() {
-      try {
-        const AuthStr = localStorage.token;
-        const { data } = await axios.get("/api/notifications", {
-          headers: { Authorization: "Bearer " + AuthStr },
-        });
-        return data;
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    async function setInitialNotifications() {
-      const data = await getInitialNotifications();
-      setNotifications(data);
-    }
-    setInitialNotifications();
+    socket.fetchNotifications(setNotifications);
   }, []);
 
   console.log(notifications)

@@ -118,17 +118,25 @@ const Notifications = ({ notifications }) => {
 
   return (
     <>
-      {notifications.map((notification, i) => (
-        <MenuItem
-          key={i}
-          className={notification.seen ? classes.seenMenuItem : classes.unseenMenuItem}
-        >
-          <Grid container direction="column">
-            <Typography className={classes.notificationTitle}>{notification.title}</Typography>
-            <Typography className={classes.timestamp}>{parseDate(notification.date)}</Typography>
-          </Grid>
-        </MenuItem>
-      ))}
+      {
+        notifications.length ? notifications.map((notification, i) => (
+          <MenuItem
+            key={i}
+            className={notification.seen ? classes.seenMenuItem : classes.unseenMenuItem}
+          >
+            <Grid container direction="column">
+              <Typography className={classes.notificationTitle}>{notification.title}</Typography>
+              <Typography className={classes.timestamp}>{parseDate(notification.date)}</Typography>
+            </Grid>
+          </MenuItem>
+        )) : (
+          <MenuItem className={classes.seenMenuItem}>
+            <Grid container direction="column">
+              <Typography>No notifications</Typography>
+            </Grid>
+          </MenuItem>
+        )
+      }
     </>
   );
 };

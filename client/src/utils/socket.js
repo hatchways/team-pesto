@@ -1,5 +1,5 @@
 import io from "socket.io-client";
-// import axios from "axios";
+import axios from "axios";
 
 class Socket {
   async connect(token) {
@@ -12,6 +12,18 @@ class Socket {
     this.socket.on("notification", data => {
       console.log(`notification received: ${data}`);  // TO DO: figure out what happens next?
     });
+  }
+
+  async fetchNotifications(setNotifications) {
+    const AuthStr = localStorage.token;
+    try {
+      const { data } = await axios.get("/api/notifications", {
+        headers: { Authorization: "Bearer " + AuthStr },
+      })
+      setNotifications(data);
+    } catch (err) {
+      console.error(err);
+    }
   }
 }
 
