@@ -1,13 +1,10 @@
-import React, { useContext, useState, useReducer } from "react";
+import React from "react";
 import {
   makeStyles,
   MenuItem,
   Grid,
   Typography,
 } from "@material-ui/core";
-import axios from "axios";
-
-import UserContext from "context/UserContext";
 
 const useStyles = makeStyles((theme) => ({
   unseenMenuItem: {
@@ -38,46 +35,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "x-small",
   },
 }));
-
-const initialState = {
-  // TO DO: REPLACE THIS MOCK DATA WITH `[]`
-  notifications: [
-    {
-      title: "You have a new review!",
-      date: Date.now() - 7200000,       // 2 hours ago
-      seen: false,
-    },
-    {
-      title: "You have a new review!",
-      date: Date.now() - 604800000,     // 1 week ago
-      seen: true,
-    },
-    {
-      title: "You have a new review!",
-      date: Date.now() - 1209600000,    // 2 weeks (14 days) ago
-      seen: false,
-    },
-    {
-      title: "You have a new review!",
-      date: Date.now() - 2592000000,    // 1 month (30 days) ago
-      seen: false,
-    },
-    {
-      title: "You have a new review!",
-      date: Date.now() - 12960000000,    // 5 months (150 days) ago
-      seen: true,
-    },
-  ]
-}
-
-// const reducer = (state, action) => {
-//   switch (action.type) {
-//     case "getNotifications":
-//       return { ...state, notifications: action.payload};
-//     case "newNotification":
-//       return { ...state, notifications: [action.payload, ...state.notifications]};
-//   }
-// }
 
 const parseDate = date => {
   const ref = {
@@ -112,8 +69,6 @@ const parseDate = date => {
 };
 
 const Notifications = ({ notifications }) => {
-  // const [state, dispatch] = useReducer(reducer, initialState);
-  const { user } = useContext(UserContext);
   const classes = useStyles();
 
   return (
