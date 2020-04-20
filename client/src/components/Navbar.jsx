@@ -1,13 +1,24 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import { AppBar, Toolbar, Button, Menu, MenuItem, Avatar, Badge } from "@material-ui/core";
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Menu,
+  MenuItem,
+  Avatar,
+  Badge,
+} from "@material-ui/core";
+import NotificationsIcon from "@material-ui/icons/Notifications";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
+
 import UserContext from "context/UserContext";
-import CodeUploadDialog from 'pages/CodeUploadDialog';
+import CodeUploadDialog from "pages/CodeUploadDialog";
 
 import socket from "utils/socket";
 
+import Notifications from "./Notifications/Notifications";
 
 // TO DO: import styles from centralized location
 
@@ -27,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     textDecoration: "none",
     textTransform: "none",
+    fontWeight: "normal",
   },
   button: {
     color: `${theme.palette.secondary.main}`,
@@ -60,28 +72,41 @@ const Navbar = () => {
   const classes = useStyles();
   const { user, logout } = useContext(UserContext);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState({});
+  const [notifications, setNotifications] = useState([]);
+  const [newNotification, setNewNotification] = useState([]);
 
   const handleUploadDialog = () => {
     setUploadDialogOpen(!uploadDialogOpen);
   };
 
-  const handleMenu = e => {
+  const handleMenu = (e) => {
     setAnchorEl(e.currentTarget);
   };
 
   const handleClose = () => {
-    setAnchorEl(null);
+    setAnchorEl({});
   };
 
   const handleLogout = () => {
     logout(socket);
-    setAnchorEl(null)
+    setAnchorEl({});
   };
 
   useEffect(() => {
-    socket.connect(localStorage.token);
+    // initialize socket connection
+    socket.connect(localStorage.token, setNewNotification);
+
+    // fetch all notifications for this user from db
+    (async function () {
+      const data = await socket.fetchNotifications();
+      setNotifications(data);
+    })();
   }, []);
+
+  useEffect(() => {
+    setNotifications([newNotification, ...notifications]);
+  }, [newNotification]);
 
   return (
     <AppBar>
@@ -94,54 +119,82 @@ const Navbar = () => {
 
         <Toolbar className={classes.toolbar}>
           <Button className={classes.clickable}>
-            <Link className={classes.link} to="/reviews">Reviews</Link>
+            <Link className={classes.link} to="/requests">
+              Requests
+            </Link>
           </Button>
 
           <Button className={classes.clickable}>
-            <Link className={classes.link} to="/balance">Balance</Link>
+            <Link className={classes.link} to="/balance">
+              Balance
+            </Link>
           </Button>
 
-          <Button className={classes.clickable}>
+          <Button
+            id="notifications"
+            className={classes.clickable}
+            onClick={handleMenu}
+          >
             <Avatar className={classes.notification}>
-              <Badge color="secondary" variant="dot">
-                <NotificationsNoneIcon />
+              <Badge
+                color="secondary"
+                variant="dot"
+                invisible={notifications.every((n) => n.seen)}
+              >
+                {notifications.length ? (
+                  <NotificationsIcon />
+                ) : (
+                  <NotificationsNoneIcon />
+                )}
               </Badge>
             </Avatar>
           </Button>
+
+          <Menu
+            anchorEl={anchorEl}
+            anchorOrigin={{ vertical: "bottom" }}
+            open={anchorEl.id === "notifications"}
+            onClose={handleClose}
+          >
+            <Notifications notifications={notifications} />
+          </Menu>
 
           <Button
             className={`${classes.clickable} ${classes.button}`}
             onClick={handleUploadDialog}
           >
             Upload Code
-          </Button>          
+          </Button>
 
-          <Button className={classes.profileButton} onClick={handleMenu}>
-            <Avatar src={user && user.image}/>
+          <Button
+            id="profile"
+            className={classes.profileButton}
+            onClick={handleMenu}
+          >
+            <Avatar src={user && user.image} />
             <div className={classes.link}>Profile</div>
             <div className={classes.triangle} />
           </Button>
 
           <Menu
             anchorEl={anchorEl}
-            open={!!anchorEl}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            open={anchorEl.id === "profile"}
             onClose={handleClose}
           >
-            <MenuItem>
-              <Link to="/profile">Go to Profile</Link>
-            </MenuItem>
-
-            <MenuItem onClick={handleLogout}>
-              <Link to="/">Logout</Link>
-            </MenuItem>
+            <>
+              <MenuItem>
+                <Link to="/profile">Go to Profile</Link>
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>
+                <Link to="/">Logout</Link>
+              </MenuItem>
+            </>
           </Menu>
         </Toolbar>
       </Toolbar>
-      
-      <CodeUploadDialog
-        open={uploadDialogOpen}
-        onClose={handleUploadDialog}
-      />
+
+      <CodeUploadDialog open={uploadDialogOpen} onClose={handleUploadDialog} />
     </AppBar>
   );
 };

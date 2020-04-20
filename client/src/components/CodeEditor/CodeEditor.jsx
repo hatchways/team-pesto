@@ -1,5 +1,5 @@
-import React from 'react';
-import AceEditor from 'react-ace';
+import React from "react";
+import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-c_cpp";
@@ -8,29 +8,29 @@ import "ace-builds/src-noconflict/mode-ruby";
 import "ace-builds/src-noconflict/theme-twilight";
 import "ace-builds/src-noconflict/theme-tomorrow";
 
-import useStyles from './CodeEditor.css';
+import useStyles from "./CodeEditor.css";
 
-const CodeEditor = ({ language, theme, value, onChange }) => {
+const CodeEditor = ({ language, theme, value, onChange, readOnly }) => {
   const classes = useStyles();
 
   const modes = {
-    python: 'python',
-    java: 'java',
-    cpp: 'c_cpp',
-    javascript: 'javascript',
-    ruby: 'ruby',
+    python: "python",
+    java: "java",
+    cpp: "c_cpp",
+    javascript: "javascript",
+    ruby: "ruby",
   };
-  const defaultMode = 'python';
+  const defaultMode = "python";
   const mode = modes[language] || defaultMode;
 
   let aceTheme;
   switch (theme) {
-    case 'dark':
-      aceTheme = 'twilight';
+    case "dark":
+      aceTheme = "twilight";
       break;
-    case 'light':
+    case "light":
     default:
-      aceTheme = 'tomorrow';
+      aceTheme = "tomorrow";
       break;
   }
 
@@ -43,9 +43,9 @@ const CodeEditor = ({ language, theme, value, onChange }) => {
       value={value}
       hightlightActiveLine={true}
       showPrintMargin={false}
-      width='100%'
+      width="100%"
       onChange={onChange}
-      setOptions={{ useWorker: false }}
+      setOptions={{ useWorker: false, readOnly: readOnly }}
     />
   );
 };

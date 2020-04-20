@@ -15,5 +15,18 @@ const reviewSchema = new Schema({
   messages: [Message.schema],
 });
 
+reviewSchema.methods.filteredSchema = function () {
+  return {
+    _id: this._id,
+    requesterId: this.requesterId,
+    reviewerId: this.reviewerId,
+    title: this.title,
+    date: this.date,
+    language: this.language,
+    status: this.status,
+    messages: this.messages,
+  };
+};
+
 const Review = mongoose.model("review", reviewSchema);
 module.exports = Review;
