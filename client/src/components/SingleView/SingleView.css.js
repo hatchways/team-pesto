@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "12px",
   },
   editIcon: {
+    height: "28px",
     "&:hover": {
       cursor: "pointer",
     },
@@ -51,9 +52,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
     alignItems: "center",
     marginBottom: "10px",
-  },
-  editIcon: {
-    height: "28px",
   },
   saveButton: {
     backgroundColor: `${theme.palette.primary.main}`,

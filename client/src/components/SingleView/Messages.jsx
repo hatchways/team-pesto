@@ -195,7 +195,7 @@ const Messages = ({ message, language, redirectId }) => {
           autoHideDuration={5000}
           onClose={handleErrorSnackbarClose}
         >
-          <Alert variant="filled" severity="error">
+          <Alert variant="filled" severity="warning">
             {errorSnackbar.message}
           </Alert>
         </Snackbar>
