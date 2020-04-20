@@ -60,14 +60,14 @@ const matchQueueProcessor = async (job) => {
       reviewId,
       recipient: reviewer,
       counterpart: requester,
-      code: 1,
+      code: 0,
     });
     // send a notification to the requestor
     await createNotification({
       reviewId,
       recipient: requester,
       counterpart: reviewer,
-      code: 2,
+      code: 1,
     });
   }
 

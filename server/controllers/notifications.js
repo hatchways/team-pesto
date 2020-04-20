@@ -1,46 +1,38 @@
 const Notification = require("../models/Notification");
 const Socket = require("../services/socket");
 
-/*
-NOTIFICATION CODES:
-1 - you have been assigned to do a review
-2 - your request has been matched with someone
-3 - your reviewer has accepted your request
-4 - your reviewer has declined your request
-5 - your reviewer has completed your request
-6 - your requestor has made a new post in the thread
-7 - your reviewer has made a new post in the thread
-*/
+const RECEIVED_REVIEW_REQUEST = 1;
+const REQUEST_ACCEPTED = 2;
+const REQUEST_DECLINED = 3;
+const REVIEW_COMPLETED = 4;
+const REQUESTOR_NEW_POST = 5;
+const REVIEWER_NEW_POST = 6;
 
 const createNotification = async data => {
   const { reviewId, recipient, counterpart, code } = data;
   const body = { recipient: recipient.id };
   switch (code) {
-    case 1:
+    case RECEIVED_REVIEW_REQUEST:
       body.title = `${counterpart.name} has requested your review!`;
       body.link = `reviews/${reviewId}`;
       break;
-    case 2:
-      body.title = `Your request has been matched with ${counterpart.name}!`;
-      body.link = `requests/${reviewId}`;
-      break;
-    case 3:
+    case REQUEST_ACCEPTED:
       body.title = `${counterpart.name} has accepted your request!`;
       body.link = `requests/${reviewId}`;
       break;
-    case 4:
+    case REQUEST_DECLINED:
       body.title = `${counterpart.name} has declined your request.`;
       body.link = `requests/${reviewId}`;
       break;
-    case 5:
-      body.title = `${counterpart.name} has completed your request!`;
+    case REVIEW_COMPLETED:
+      body.title = `${counterpart.name} has marked the review complete!`;
       body.link = `requests/${reviewId}`;
       break;
-    case 6:
+    case REQUESTOR_NEW_POST:
       body.title = `${counterpart.name} made a post in your thread!`;
       body.link = `reviews/${reviewId}`;
       break;
-    case 7:
+    case REVIEWER_NEW_POST:
       body.title = `${counterpart.name} made a post in your thread!`;
       body.link = `requests/${reviewId}`;
       break;
