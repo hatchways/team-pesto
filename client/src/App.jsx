@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Switch,
+  Redirect,
+  HashRouter,
+} from "react-router-dom";
 import axios from "axios";
 
 import UserContext from "./context/UserContext";
@@ -58,52 +64,54 @@ function App() {
     >
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
-          <Switch>
-            {/* Routes placed here are only available after logging in and having experience */}
-            {user && user.experience.length > 0 && (
-              <>
-                <Navbar />
-                <Switch>
-                  <Route exact path="/" component={Profile} />
-                  <Route exact path="/balance" component={Balance} />
-                  <Route exact path="/balance" component={Balance} />
-                  <Route exact path="/requests/:id" component={Reviews} />
-                  <Route exact path="/requests/:id" component={SingleView} />
-                  <Route exact path="/requests" component={Reviews} />
-                  {/* TODO: Future routes
+          <HashRouter>
+            <Switch>
+              {/* Routes placed here are only available after logging in and having experience */}
+              {user && user.experience.length > 0 && (
+                <>
+                  <Navbar />
+                  <Switch>
+                    <Route exact path="/" component={Profile} />
+                    <Route exact path="/balance" component={Balance} />
+                    <Route exact path="/balance" component={Balance} />
+                    <Route exact path="/requests/:id" component={Reviews} />
+                    <Route exact path="/requests/:id" component={SingleView} />
+                    <Route exact path="/requests" component={Reviews} />
+                    {/* TODO: Future routes
                   <Route exact path="/upload" component={Upload} />*/}
-                  <Redirect exact to="/" />
+                    <Redirect exact to="/" />
+                  </Switch>
+                </>
+              )}
+
+              {/* Routes placed here are available after logging in and not having experience */}
+              {user && user.experience.length === 0 && (
+                <Switch>
+                  <Route
+                    exact
+                    path="/experience"
+                    render={(props) => (
+                      <Onboarding
+                        {...props}
+                        setRedirect={setRedirect}
+                        redirect={redirect}
+                      />
+                    )}
+                  />
+                  <Redirect exact to="/experience" />
                 </Switch>
-              </>
-            )}
+              )}
 
-            {/* Routes placed here are available after logging in and not having experience */}
-            {user && user.experience.length === 0 && (
-              <Switch>
-                <Route
-                  exact
-                  path="/experience"
-                  render={(props) => (
-                    <Onboarding
-                      {...props}
-                      setRedirect={setRedirect}
-                      redirect={redirect}
-                    />
-                  )}
-                />
-                <Redirect exact to="/experience" />
-              </Switch>
-            )}
-
-            {/* Routes placed here are available if loggedout */}
-            {!user && (
-              <Switch>
-                <Route exact path="/sign-up" component={SignUp} />
-                <Route exact path="/login" component={Login} />
-                <Redirect from="/" exact to="/login" />
-              </Switch>
-            )}
-          </Switch>
+              {/* Routes placed here are available if loggedout */}
+              {!user && (
+                <Switch>
+                  <Route exact path="/sign-up" component={SignUp} />
+                  <Route exact path="/login" component={Login} />
+                  <Redirect from="/" exact to="/login" />
+                </Switch>
+              )}
+            </Switch>
+          </HashRouter>
         </BrowserRouter>
       </MuiThemeProvider>
     </UserContext.Provider>

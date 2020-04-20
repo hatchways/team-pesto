@@ -72,7 +72,8 @@ const Reviews = () => {
         });
         data.usersRequests.sort((a, b) => new Date(b.date) - new Date(a.date));
         setRequests(data.usersRequests);
-        setRedirectId(data.usersRequests[0]["_id"]);
+        // setRedirectId(data.usersRequests[0]["_id"]);
+        history.push(`/requests/${data.usersRequests[0]["_id"]}`);
         setSingleRequestView(data.usersRequests[0]);
       };
 
