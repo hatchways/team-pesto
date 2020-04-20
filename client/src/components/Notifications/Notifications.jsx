@@ -68,9 +68,9 @@ const parseDate = date => {
   }
 };
 
+
 const Notifications = ({ notifications }) => {
   const classes = useStyles();
-
   return (
     <>
       {
