@@ -1,57 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Redirect, Route, Switch, Link } from "react-router-dom";
 import { Paper, Card, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import useStyles from "pages/Requests/Requests.css";
 import axios from "axios";
 import SingleView from "components/SingleView/SingleView";
 
 import formatDate from "utils/formatDate";
-
-const useStyles = makeStyles((theme) => ({
-  MainWrapper: {
-    display: "grid",
-    gridTemplateRows: "64px 1fr",
-    backgroundColor: `${theme.palette.secondary.light}`,
-  },
-  contentWrapper: {
-    display: "grid",
-    gridTemplateColumns: "20vw 1fr",
-    gridRowStart: 2,
-    height: "calc(100vh - 64px)",
-  },
-  sideBar: {
-    padding: "3rem",
-    boxShadow: "0px 20px 50px 1px #BBBBBB",
-    position: "relative",
-    overflow: "auto",
-  },
-  title: {
-    margin: 0,
-    fontWeight: "bold",
-    fontSize: "18px",
-  },
-  date: {
-    color: `${theme.palette.secondary.lightGray}`,
-    fontSize: "12px",
-  },
-  quantity: {
-    color: `${theme.palette.primary.main}`,
-  },
-  cardWrapper: {
-    marginTop: "30px",
-  },
-  link: {},
-  card: {
-    padding: "20px",
-    borderRadius: "4px",
-    boxShadow: "none",
-    marginBottom: "20px",
-    "&:hover": {
-      cursor: "pointer",
-      borderColor: `${theme.palette.secondary.main}`,
-    },
-  },
-}));
 
 const Requests = (props) => {
   const classes = useStyles();
@@ -74,19 +28,6 @@ const Requests = (props) => {
     }
   }, []);
 
-  const getSingleRequest = async (ev, useEffectId) => {
-    const id = ev.currentTarget.dataset.id || useEffectId;
-
-    try {
-      const AuthStr = localStorage.token;
-      const { data } = await axios.get(`/api/reviews/requests/${id}`, {
-        headers: { Authorization: "Bearer " + AuthStr },
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const borderColor = (id) => {
     const requestId = props.match.params.id;
     return requestId === id ? { borderColor: "#43DDC1" } : null;
@@ -107,7 +48,6 @@ const Requests = (props) => {
                 <Card
                   key={request["_id"]}
                   className={classes.card}
-                  onClick={getSingleRequest}
                   data-id={request["_id"]}
                   variant="outlined"
                   style={borderColor(request["_id"])}
