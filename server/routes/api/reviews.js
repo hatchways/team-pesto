@@ -72,8 +72,39 @@ router.post("/requests", authenticate, async (req, res) => {
   res.sendStatus(500);
 });
 
-router.put('/:reviewId/status', authenticate, (req, res) => {
-  res.sendStatus(500);
+router.put('/:reviewId/status', authenticate, async (req, res) => {
+  const review = await Review.findOne({ _id: req.params.reviewId });
+
+  if (!review) {
+    res.sendStatus(404);
+    return;
+  }
+
+  // check if user is the requested reviewer
+  if (req.user.id != review.reviewerId) {
+    res.sendStatus(401);
+    return;
+  }
+
+  if (req.body.status === 'accepted') {
+    review.status = req.body.status;
+    await review.save();
+    // TODO: remove review from matching queue
+    res.sendStatus(200);
+    return;
+  }
+
+  if (req.body.status === 'rejected') {
+    review.declinedIds.push(review.reviewerId);
+    review.reviewerId = null;
+    await review.save();
+    // TODO: promote review in matching queue
+    res.sendStatus(200);
+    return;
+  }
+
+  // send status 400 if request body unrecognized
+  res.sendStatus(400);
 });
 
 module.exports = router;

@@ -16,20 +16,20 @@ const app = TestApp();
 app.use("/api/reviews", reviewsRouter);
 
 
-const testUser1 = new User({
-  name: "Scrooge McDuck",
-  email: "ghost@christmaspast.com",
-  password: "money$",
-  balance: 100,
-});
-const testUser2 = new User({
-  name: "Penny Less",
-  email: "penniless@email.com",
-  password: "password123",
-  balance: 0,
-});
-
 describe("POST /api/reviews/requests", () => {
+  const testUser1 = new User({
+    name: "Scrooge McDuck",
+    email: "ghost@christmaspast.com",
+    password: "money$",
+    balance: 100,
+  });
+  const testUser2 = new User({
+    name: "Penny Less",
+    email: "penniless@email.com",
+    password: "password123",
+    balance: 0,
+  });
+
   before(async () => {
     await TestDb.connect();
 
@@ -173,32 +173,32 @@ describe("POST /api/reviews/requests", () => {
 });
 
 
-const testRequester = new User({
-  name: 'Requester',
-  email: 'requester@email.com',
-  password: 'helppls',
-  experience: [
-    { language: 'python', level: 0 },
-  ],
-});
-const testReviewer = new User({
-  name: 'Reviewer',
-  email: 'reviewer@email.com',
-  password: 'here2help',
-  experience: [
-    { language: 'python', level: 2 },
-  ],
-});
-const randomUser = new User({
-  name: 'Random',
-  email: 'user@email.com',
-  password: 'qwertyuiop',
-  experience: [
-    { language: 'javascript', level: 0 },
-  ],
-});
-
 describe('PUT /api/reviews/:reviewId/status', () => {
+  const testRequester = new User({
+    name: 'Requester',
+    email: 'requester@email.com',
+    password: 'helppls',
+    experience: [
+      { language: 'python', level: 0 },
+    ],
+  });
+  const testReviewer = new User({
+    name: 'Reviewer',
+    email: 'reviewer@email.com',
+    password: 'here2help',
+    experience: [
+      { language: 'python', level: 2 },
+    ],
+  });
+  const randomUser = new User({
+    name: 'Random',
+    email: 'user@email.com',
+    password: 'qwertyuiop',
+    experience: [
+      { language: 'javascript', level: 0 },
+    ],
+  });
+
   before(async () => {
     await TestDb.connect();
 
@@ -210,9 +210,9 @@ describe('PUT /api/reviews/:reviewId/status', () => {
     await Promise.all(saveUsers);
 
     const token = jwt.sign({ id: testRequester.id }, passportSecret);
+    const requester = chai.request(app).keepOpen();
 
-    await chai
-      .request(app)
+    await requester
       .post('/api/reviews/requests')
       .set('Authorization', `Bearer ${token}`)
       .send({
@@ -221,8 +221,7 @@ describe('PUT /api/reviews/:reviewId/status', () => {
         code: `print('good code')`,
         comments: 'check it out',
       });
-    await chai
-      .request(app)
+    await requester
       .post('/api/reviews/requests')
       .set('Authorization', `Bearer ${token}`)
       .send({
@@ -233,7 +232,8 @@ describe('PUT /api/reviews/:reviewId/status', () => {
       });
     
     // wait for review matching
-    await setTimeout(() => {}, 1000);    
+    await setTimeout(() => {}, 1000);
+    requester.close();
   });
 
   it('should return status 200 and change review status to accepted if request accepted', async () => {
@@ -244,14 +244,14 @@ describe('PUT /api/reviews/:reviewId/status', () => {
       .request(app)
       .put(`/api/reviews/${review.id}/status`)
       .set('Authorization', `Bearer ${token}`)
-      .send({ status: 'accept' });
+      .send({ status: 'accepted' });
 
     res.should.have.status(200);
     const updatedReview = await Review.findById(review.id);
     updatedReview.status.should.equal('accepted');
   });
 
-  it('should return status 200 and modify review document accordingly if request declined', () => {
+  it('should return status 200 and modify review document accordingly if request declined', async () => {
     const token = jwt.sign({ id: testReviewer.id }, passportSecret);
     const review = await Review.findOne({ title: 'Reject This' });
 
@@ -259,26 +259,26 @@ describe('PUT /api/reviews/:reviewId/status', () => {
       .request(app)
       .put(`/api/reviews/${review.id}/status`)
       .set('Authorization', `Bearer ${token}`)
-      .send({ status: 'reject' });
+      .send({ status: 'rejected' });
 
     res.should.have.status(200);
     const updatedReview = await Review.findById(review.id);
     updatedReview.status.should.equal('pending');
-    updatedReview.reviewerId.should.not.equal(testReviewer.id);
+    should.not.exist(updatedReview.reviewerId);
     updatedReview.declinedIds.should.include(testReviewer.id);
   });
 
-  it('should return status 401 if user not authorized', () => {
+  it('should return status 401 if user not authorized', async () => {
     const review = await Review.findOne({ title: 'Accept This' });
 
     const res = await chai
       .request(app)
       .put(`/api/reviews/${review.id}/status`)
-      .send({ status: 'accept' });
+      .send({ status: 'accepted' });
     res.should.have.status(401);
   });
 
-  it('should return status 401 if user authorized but is not the requested reviewer', () => {
+  it('should return status 401 if user authorized but is not the requested reviewer', async () => {
     const token = jwt.sign({ id: randomUser.id }, passportSecret);
     const review = await Review.findOne({ title: 'Accept This' });
 
@@ -286,11 +286,11 @@ describe('PUT /api/reviews/:reviewId/status', () => {
       .request(app)
       .put(`/api/reviews/${review.id}/status`)
       .set('Authorization', `Bearer ${token}`)
-      .send({ status: 'accept' });
+      .send({ status: 'accepted' });
     res.should.have.status(401);
   });
 
-  it('should return status 400 if request body is invalid', () => {
+  it('should return status 400 if request body is invalid', async () => {
     const token = jwt.sign({ id: testReviewer.id }, passportSecret);
     const review = await Review.findOne({ title: 'Accept This' });
 

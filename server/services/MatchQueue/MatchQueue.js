@@ -14,7 +14,10 @@ matchQueue.on("completed", async (job, result) => {
 
   // if review still pending, requeue review
   if (reviewStatus === "pending") {
-    await matchQueue.add(job.data, { delay: REQUEST_TIMEOUT });
+    await matchQueue.add(
+      job.data,
+      { jobId: job.data.reviewId, delay: REQUEST_TIMEOUT, }
+    );
   }
 
   // remove completed job from queue
@@ -23,6 +26,6 @@ matchQueue.on("completed", async (job, result) => {
 
 module.exports = {
   queueReview: async (reviewId) => {
-    await matchQueue.add({ reviewId });
+    await matchQueue.add({ reviewId }, { jobId: reviewId });
   },
 };
