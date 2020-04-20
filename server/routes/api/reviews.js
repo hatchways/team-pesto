@@ -123,18 +123,18 @@ router.put("/:id", authenticate, async (req, res) => {
       requesterId: { $in: [userId] },
     });
 
-    if (singleRequest[0]) {
-      singleRequest[0].messages.map((message) => {
-        if (message["_id"] == messageId && message.authorId == authorId) {
-          message.code = code;
-          message.comments = comments;
-        }
-      });
-
-      await singleRequest[0].save();
-    } else {
+    if (!singleRequest[0]) {
       return res.sendStatus(400);
     }
+
+    singleRequest[0].messages.map((message) => {
+      if (message["_id"] == messageId && message.authorId == authorId) {
+        message.code = code;
+        message.comments = comments;
+      }
+    });
+
+    await singleRequest[0].save();
     return res.sendStatus(200);
   } catch (err) {
     console.error(err);

@@ -21,12 +21,9 @@ const Messages = ({ message, language, requestId }) => {
   const classes = useStyle();
   const { user } = useContext(UserContext);
   const [editMode, setEditMode] = useState(false);
-  const [errorSnackbar, setErrorSnackbar] = useState({
+  const [snackbar, setSnackbar] = useState({
     open: false,
-    message: "",
-  });
-  const [successSnackbar, setSuccessSnackbar] = useState({
-    open: false,
+    severity: "",
     message: "",
   });
   const [messageId, setMessageId] = useState("");
@@ -70,20 +67,6 @@ const Messages = ({ message, language, requestId }) => {
     setEditedCodeSnippet(value);
   };
 
-  const handleErrorSnackbarClose = () => {
-    setErrorSnackbar({
-      open: false,
-      message: errorSnackbar.message,
-    });
-  };
-
-  const handleSuccessSnackbarClose = () => {
-    setSuccessSnackbar({
-      open: false,
-      message: successSnackbar.message,
-    });
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -96,8 +79,9 @@ const Messages = ({ message, language, requestId }) => {
     }
 
     if (editedComments === comments && editedCodeSnippet === codeSnippet) {
-      setErrorSnackbar({
+      setSnackbar({
         open: true,
+        severity: "warning",
         message: "You must make a change first!",
       });
     } else {
@@ -116,7 +100,11 @@ const Messages = ({ message, language, requestId }) => {
           }
         );
 
-        setSuccessSnackbar({ open: true, message: "Update successful!" });
+        setSnackbar({
+          open: true,
+          severity: "success",
+          message: "Update successful!",
+        });
       } catch (err) {
         console.error(err);
       }
@@ -206,24 +194,12 @@ const Messages = ({ message, language, requestId }) => {
 
       <Portal>
         <Snackbar
-          open={errorSnackbar.open}
+          open={snackbar.open}
           autoHideDuration={5000}
-          onClose={handleErrorSnackbarClose}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
         >
-          <Alert variant="filled" severity="warning">
-            {errorSnackbar.message}
-          </Alert>
-        </Snackbar>
-      </Portal>
-
-      <Portal>
-        <Snackbar
-          open={successSnackbar.open}
-          autoHideDuration={5000}
-          onClose={handleSuccessSnackbarClose}
-        >
-          <Alert variant="filled" severity="success">
-            {successSnackbar.message}
+          <Alert variant="filled" severity={snackbar.severity}>
+            {snackbar.message}
           </Alert>
         </Snackbar>
       </Portal>
