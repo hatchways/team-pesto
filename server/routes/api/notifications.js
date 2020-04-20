@@ -1,8 +1,6 @@
 const { Router } = require("express");
 
 const authenticate = require("../../middlewares/authenticate");
-const Notification = require("../../models/Notification");
-const Socket = require("../../services/socket");
 const {
   createNotification,
   getNotifications,

@@ -132,7 +132,7 @@ const Notifications = ({ notifications }) => {
         )) : (
           <MenuItem className={classes.seenMenuItem}>
             <Grid container direction="column">
-              <Typography>No notifications</Typography>
+              <Typography>No notifications.</Typography>
             </Grid>
           </MenuItem>
         )

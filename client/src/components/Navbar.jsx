@@ -5,7 +5,7 @@ import { AppBar, Toolbar, Button, Menu, MenuItem, Avatar, Badge } from "@materia
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import UserContext from "context/UserContext";
 import CodeUploadDialog from 'pages/CodeUploadDialog';
-// import axios from "axios";
+import axios from "axios";
 
 import socket from "utils/socket";
 
@@ -65,6 +65,7 @@ const Navbar = () => {
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState({});
   const [notifications, setNotifications] = useState([]);
+  const [newNotification, setNewNotification] = useState([]);
 
   const handleUploadDialog = () => {
     setUploadDialogOpen(!uploadDialogOpen);
@@ -84,11 +85,22 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    socket.connect(localStorage.token);
-    socket.fetchNotifications(setNotifications);
+    // initialize socket connection
+    socket.connect(
+      localStorage.token,
+      setNewNotification,
+    );
+
+    // fetch all notifications for this user from db
+    (async function () {
+      const data = await socket.fetchNotifications();
+      setNotifications(data);
+    })()
   }, []);
 
-  console.log(notifications)
+  useEffect(() => {
+    setNotifications([newNotification, ...notifications]);
+  }, [newNotification]);
 
   return (
     <AppBar>

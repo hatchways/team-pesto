@@ -1,5 +1,8 @@
 const Review = require("../../models/Review");
 const User = require("../../models/User");
+const {
+  createNotification,
+} = require("../../controllers/notifications");
 
 const matchQueueProcessor = async (job) => {
   const { reviewId } = job.data;
@@ -48,10 +51,26 @@ const matchQueueProcessor = async (job) => {
 
   // select random reviewer from pool and assign to review
   if (reviewerPool.length >= 1) {
-    const reviewer =
-      reviewerPool[Math.floor(Math.random() * reviewerPool.length)];
+    const reviewer = reviewerPool[
+      Math.floor(Math.random() * reviewerPool.length)
+    ];
     review.reviewerId = reviewer.id;
+    // send a notification to the assigned reviewer
+    await createNotification({
+      reviewId,
+      recipient: reviewer,
+      counterpart: requester,
+      code: 1,
+    });
+    // send a notification to the requestor
+    await createNotification({
+      reviewId,
+      recipient: requester,
+      counterpart: reviewer,
+      code: 2,
+    });
   }
+
   // update document even if no match
   await review.save();
 
