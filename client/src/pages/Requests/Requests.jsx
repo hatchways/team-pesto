@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Redirect, Route, Switch, Link, useHistory } from "react-router-dom";
+import { Redirect, Route, Switch, Link } from "react-router-dom";
 import { Paper, Card, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
-import Navbar from "components/Navbar";
-import SingleView from "components/Reviews/SingleView";
+import SingleView from "components/SingleView/SingleView";
 
 import formatDate from "utils/formatDate";
 
@@ -41,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
   cardWrapper: {
     marginTop: "30px",
   },
+  link: {},
   card: {
     padding: "20px",
     borderRadius: "4px",
@@ -51,17 +51,11 @@ const useStyles = makeStyles((theme) => ({
       borderColor: `${theme.palette.secondary.main}`,
     },
   },
-  singleViewWrapper: {
-    overflow: "auto",
-  },
 }));
 
-const Reviews = () => {
-  const history = useHistory();
+const Requests = (props) => {
   const classes = useStyles();
   const [requests, setRequests] = useState([]);
-  const [singleRequestView, setSingleRequestView] = useState(requests[0]);
-  const [redirectId, setRedirectId] = useState("");
 
   useEffect(() => {
     try {
@@ -72,9 +66,6 @@ const Reviews = () => {
         });
         data.usersRequests.sort((a, b) => new Date(b.date) - new Date(a.date));
         setRequests(data.usersRequests);
-        // setRedirectId(data.usersRequests[0]["_id"]);
-        history.push(`/requests/${data.usersRequests[0]["_id"]}`);
-        setSingleRequestView(data.usersRequests[0]);
       };
 
       callRequests();
@@ -91,16 +82,14 @@ const Reviews = () => {
       const { data } = await axios.get(`/api/reviews/requests/${id}`, {
         headers: { Authorization: "Bearer " + AuthStr },
       });
-      setSingleRequestView(data.singleRequest[0]);
-      setRedirectId(id);
-      history.push(`/requests/${redirectId}`);
     } catch (err) {
       console.error(err);
     }
   };
 
   const borderColor = (id) => {
-    return redirectId === id ? { borderColor: "#43DDC1" } : null;
+    const requestId = props.match.params.id;
+    return requestId === id ? { borderColor: "#43DDC1" } : null;
   };
 
   return (
@@ -114,33 +103,47 @@ const Reviews = () => {
 
           <div className={classes.cardWrapper}>
             {requests.map((request) => (
-              <Card
-                key={request["_id"]}
-                className={classes.card}
-                onClick={getSingleRequest}
-                data-id={request["_id"]}
-                variant="outlined"
-                style={borderColor(request["_id"])}
-              >
-                <Typography className={classes.title}>
-                  {request.title}
-                </Typography>
-                <Typography className={classes.date}>
-                  {formatDate(request.date)}
-                </Typography>
-              </Card>
+              <Link className={classes.link} to={`/requests/${request["_id"]}`}>
+                <Card
+                  key={request["_id"]}
+                  className={classes.card}
+                  onClick={getSingleRequest}
+                  data-id={request["_id"]}
+                  variant="outlined"
+                  style={borderColor(request["_id"])}
+                >
+                  <Typography className={classes.title}>
+                    {request.title}
+                  </Typography>
+                  <Typography className={classes.date}>
+                    {formatDate(request.date)}
+                  </Typography>
+                </Card>
+              </Link>
             ))}
           </div>
         </Paper>
 
-        <div className={classes.singleViewWrapper}>
-          {singleRequestView && (
-            <SingleView singleRequestView={singleRequestView} />
-          )}
-        </div>
+        <Switch>
+          {requests.map((request) => (
+            <Route
+              exact
+              path={`/requests/${request["_id"]}`}
+              render={() => <SingleView singleRequestView={request} />}
+            />
+          ))}
+          {requests.length > 0 ? (
+            <Route
+              exact
+              path={`/requests`}
+              render={() => <Redirect to={`/requests/${requests[0]["_id"]}`} />}
+            />
+          ) : null}
+          }
+        </Switch>
       </div>
     </div>
   );
 };
 
-export default Reviews;
+export default Requests;
