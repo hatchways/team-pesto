@@ -2,12 +2,13 @@ import React, { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { AppBar, Toolbar, Button, Menu, MenuItem, Avatar, Badge } from "@material-ui/core";
-import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
+import NotificationsIcon from "@material-ui/icons/Notifications";
 import UserContext from "context/UserContext";
 import CodeUploadDialog from 'pages/CodeUploadDialog';
 
 import socket from "utils/socket";
 
+import Notifications from "./Notifications/Notifications";
 
 // TO DO: import styles from centralized location
 
@@ -27,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     textDecoration: "none",
     textTransform: "none",
+    fontWeight: "normal",
   },
   button: {
     color: `${theme.palette.secondary.main}`,
@@ -60,7 +62,8 @@ const Navbar = () => {
   const classes = useStyles();
   const { user, logout } = useContext(UserContext);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState({});
+  const [newNotifications, setNewNotifications] = useState(true);
 
   const handleUploadDialog = () => {
     setUploadDialogOpen(!uploadDialogOpen);
@@ -68,15 +71,15 @@ const Navbar = () => {
 
   const handleMenu = e => {
     setAnchorEl(e.currentTarget);
-  };
+  }
 
   const handleClose = () => {
-    setAnchorEl(null);
+    setAnchorEl({});
   };
 
   const handleLogout = () => {
     logout(socket);
-    setAnchorEl(null)
+    setAnchorEl({})
   };
 
   useEffect(() => {
@@ -86,6 +89,7 @@ const Navbar = () => {
   return (
     <AppBar>
       <Toolbar>
+        
         <Toolbar className={classes.logo}>
           <Link to="/">
             <img src="logo.png" />
@@ -101,14 +105,25 @@ const Navbar = () => {
             <Link className={classes.link} to="/balance">Balance</Link>
           </Button>
 
-          <Button className={classes.clickable}>
+          <Button id="notifications" className={classes.clickable} onClick={handleMenu}>
             <Avatar className={classes.notification}>
-              <Badge color="secondary" variant="dot">
-                <NotificationsNoneIcon />
+              <Badge color="secondary" variant="dot" invisible={!newNotifications}>
+                <NotificationsIcon />
               </Badge>
             </Avatar>
           </Button>
 
+          <Menu
+            anchorEl={anchorEl}
+            anchorOrigin={{ vertical: "bottom" }}
+            open={anchorEl.id === "notifications"}
+            onClose={handleClose}
+          >
+            <Notifications
+              setNewNotifications={setNewNotifications}
+            />
+          </Menu>
+          
           <Button
             className={`${classes.clickable} ${classes.button}`}
             onClick={handleUploadDialog}
@@ -116,7 +131,7 @@ const Navbar = () => {
             Upload Code
           </Button>          
 
-          <Button className={classes.profileButton} onClick={handleMenu}>
+          <Button id="profile" className={classes.profileButton} onClick={handleMenu}>
             <Avatar src={user && user.image}/>
             <div className={classes.link}>Profile</div>
             <div className={classes.triangle} />
@@ -124,17 +139,20 @@ const Navbar = () => {
 
           <Menu
             anchorEl={anchorEl}
-            open={!!anchorEl}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            open={anchorEl.id === "profile"}
             onClose={handleClose}
           >
-            <MenuItem>
-              <Link to="/profile">Go to Profile</Link>
-            </MenuItem>
-
-            <MenuItem onClick={handleLogout}>
-              <Link to="/">Logout</Link>
-            </MenuItem>
+            <>
+              <MenuItem>
+                <Link to="/profile">Go to Profile</Link>
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>
+                <Link to="/">Logout</Link>
+              </MenuItem>
+            </>
           </Menu>
+
         </Toolbar>
       </Toolbar>
       
