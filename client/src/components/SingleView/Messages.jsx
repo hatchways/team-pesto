@@ -17,7 +17,7 @@ import formatDate from "utils/formatDate";
 import { getToken } from "utils/storage";
 import useStyle from "components/SingleView/SingleView.css";
 
-const Messages = ({ message, language, redirectId }) => {
+const Messages = ({ message, language, requestId }) => {
   const classes = useStyle();
   const { user } = useContext(UserContext);
   const [editMode, setEditMode] = useState(false);
@@ -86,7 +86,6 @@ const Messages = ({ message, language, redirectId }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const requestId = redirectId;
 
     if (editedCodeSnippet !== codeSnippet) {
       setCodeSnippet(editedCodeSnippet);
@@ -107,8 +106,8 @@ const Messages = ({ message, language, redirectId }) => {
         await axios.put(
           `/api/reviews/${requestId}`,
           {
-            requestId,
-            messageId: messageId,
+            authorId: message.authorId,
+            messageId,
             code: editedCodeSnippet,
             comments: editedComments,
           },
@@ -139,9 +138,25 @@ const Messages = ({ message, language, redirectId }) => {
           </Button>
 
           {editMode ? (
-            <CloseIcon className={classes.editIcon} onClick={dontEditMessage} />
+            <CloseIcon
+              className={classes.editIcon}
+              onClick={dontEditMessage}
+              style={
+                message.authorId === user.id
+                  ? { display: "block" }
+                  : { display: "none" }
+              }
+            />
           ) : (
-            <EditIcon className={classes.editIcon} onClick={editMessage} />
+            <EditIcon
+              className={classes.editIcon}
+              onClick={editMessage}
+              style={
+                message.authorId === user.id
+                  ? { display: "block" }
+                  : { display: "none" }
+              }
+            />
           )}
         </div>
 

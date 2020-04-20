@@ -5,9 +5,9 @@ import Messages from "components/SingleView/Messages";
 
 import useStyles from "./SingleView.css";
 
-const SingleView = ({ singleRequestView, redirectId }) => {
+const SingleView = ({ singleRequestView }) => {
   const classes = useStyles();
-  const { title, date, messages, language } = singleRequestView;
+  const { title, date, messages, language, _id } = singleRequestView;
 
   return (
     <div className={classes.singleViewWrapper}>
@@ -23,10 +23,10 @@ const SingleView = ({ singleRequestView, redirectId }) => {
         <div className={classes.syntaxWrapper}>
           {messages.map((message) => (
             <Messages
+              requestId={_id}
               key={message["_id"]}
               message={message}
               language={language}
-              redirectId={redirectId}
             />
           ))}
         </div>

@@ -112,7 +112,8 @@ router.get("/requests/:id", authenticate, async (req, res) => {
 });
 
 router.put("/:id", authenticate, async (req, res) => {
-  const { requestId, messageId, code, comments } = req.body;
+  const requestId = req.params.id;
+  const { messageId, code, comments, authorId } = req.body;
 
   try {
     const userId = req.user.id;
@@ -124,7 +125,7 @@ router.put("/:id", authenticate, async (req, res) => {
 
     if (singleRequest[0]) {
       singleRequest[0].messages.map((message) => {
-        if (message["_id"] == messageId) {
+        if (message["_id"] == messageId && message.authorId == authorId) {
           message.code = code;
           message.comments = comments;
         }
