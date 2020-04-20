@@ -1,13 +1,10 @@
-import React, { useContext, useState, useReducer } from "react";
+import React from "react";
 import {
   makeStyles,
   MenuItem,
   Grid,
   Typography,
 } from "@material-ui/core";
-import axios from "axios";
-
-import UserContext from "context/UserContext";
 
 const useStyles = makeStyles((theme) => ({
   unseenMenuItem: {
@@ -38,46 +35,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "x-small",
   },
 }));
-
-const initialState = {
-  // TO DO: REPLACE THIS MOCK DATA WITH `[]`
-  notifications: [
-    {
-      title: "You have a new review!",
-      date: Date.now() - 7200000,       // 2 hours ago
-      seen: false,
-    },
-    {
-      title: "You have a new review!",
-      date: Date.now() - 604800000,     // 1 week ago
-      seen: true,
-    },
-    {
-      title: "You have a new review!",
-      date: Date.now() - 1209600000,    // 2 weeks (14 days) ago
-      seen: false,
-    },
-    {
-      title: "You have a new review!",
-      date: Date.now() - 2592000000,    // 1 month (30 days) ago
-      seen: false,
-    },
-    {
-      title: "You have a new review!",
-      date: Date.now() - 12960000000,    // 5 months (150 days) ago
-      seen: true,
-    },
-  ]
-}
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "getNotifications":
-      return { ...state, notifications: action.payload};
-    case "newNotification":
-      return { ...state, notifications: [action.payload, ...state.notifications]};
-  }
-}
 
 const parseDate = date => {
   const ref = {
@@ -111,25 +68,30 @@ const parseDate = date => {
   }
 };
 
-const Notifications = ({ setNewNotifications }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const [unreadCount, setUnreadCount] = useState(3);              // TO DO: useState(0)
-  const { user } = useContext(UserContext);
-  const classes = useStyles();
 
+const Notifications = ({ notifications }) => {
+  const classes = useStyles();
   return (
     <>
-      {state.notifications.map((notification, i) => (
-        <MenuItem
-          key={i}
-          className={notification.seen ? classes.seenMenuItem : classes.unseenMenuItem}
-        >
-          <Grid container direction="column">
-            <Typography className={classes.notificationTitle}>{notification.title}</Typography>
-            <Typography className={classes.timestamp}>{parseDate(notification.date)}</Typography>
-          </Grid>
-        </MenuItem>
-      ))}
+      {
+        notifications.length ? notifications.map((notification, i) => (
+          <MenuItem
+            key={i}
+            className={notification.seen ? classes.seenMenuItem : classes.unseenMenuItem}
+          >
+            <Grid container direction="column">
+              <Typography className={classes.notificationTitle}>{notification.title}</Typography>
+              <Typography className={classes.timestamp}>{parseDate(notification.date)}</Typography>
+            </Grid>
+          </MenuItem>
+        )) : (
+          <MenuItem className={classes.seenMenuItem}>
+            <Grid container direction="column">
+              <Typography>No notifications.</Typography>
+            </Grid>
+          </MenuItem>
+        )
+      }
     </>
   );
 };

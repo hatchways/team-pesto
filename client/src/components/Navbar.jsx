@@ -11,6 +11,8 @@ import {
   Badge,
 } from "@material-ui/core";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
+
 import UserContext from "context/UserContext";
 import CodeUploadDialog from "pages/CodeUploadDialog";
 
@@ -71,7 +73,8 @@ const Navbar = () => {
   const { user, logout } = useContext(UserContext);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState({});
-  const [newNotifications, setNewNotifications] = useState(true);
+  const [notifications, setNotifications] = useState([]);
+  const [newNotification, setNewNotification] = useState([]);
 
   const handleUploadDialog = () => {
     setUploadDialogOpen(!uploadDialogOpen);
@@ -91,8 +94,19 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    socket.connect(localStorage.token);
+    // initialize socket connection
+    socket.connect(localStorage.token, setNewNotification);
+
+    // fetch all notifications for this user from db
+    (async function () {
+      const data = await socket.fetchNotifications();
+      setNotifications(data);
+    })();
   }, []);
+
+  useEffect(() => {
+    setNotifications([newNotification, ...notifications]);
+  }, [newNotification]);
 
   return (
     <AppBar>
@@ -125,9 +139,13 @@ const Navbar = () => {
               <Badge
                 color="secondary"
                 variant="dot"
-                invisible={!newNotifications}
+                invisible={notifications.every((n) => n.seen)}
               >
-                <NotificationsIcon />
+                {notifications.length ? (
+                  <NotificationsIcon />
+                ) : (
+                  <NotificationsNoneIcon />
+                )}
               </Badge>
             </Avatar>
           </Button>
@@ -138,7 +156,7 @@ const Navbar = () => {
             open={anchorEl.id === "notifications"}
             onClose={handleClose}
           >
-            <Notifications setNewNotifications={setNewNotifications} />
+            <Notifications notifications={notifications} />
           </Menu>
 
           <Button
