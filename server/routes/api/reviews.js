@@ -99,7 +99,11 @@ router.get("/requests/:id", authenticate, async (req, res) => {
       requesterId: { $in: [userId] },
     });
 
-    singleRequest[0].filteredSchema();
+    if (singleRequest[0]) {
+      singleRequest[0].filteredSchema();
+    } else {
+      return res.sendStatus(400);
+    }
 
     res.send({ singleRequest });
   } catch (err) {
