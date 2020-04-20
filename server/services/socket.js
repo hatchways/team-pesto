@@ -42,7 +42,6 @@ class Socket {
     const { recipient } = data;
     const recipientSocketId = this.usersByUserId[recipient];
     this.io.to(recipientSocketId).emit("notification", data);
-    console.log("WHAT IS THE DATA (SERVER)?", data)
   }
 }
 
