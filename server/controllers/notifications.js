@@ -5,7 +5,7 @@ const RECEIVED_REVIEW_REQUEST = 1;
 const REQUEST_ACCEPTED = 2;
 const REQUEST_DECLINED = 3;
 const REVIEW_COMPLETED = 4;
-const REQUESTOR_NEW_POST = 5;
+const REQUESTER_NEW_POST = 5;
 const REVIEWER_NEW_POST = 6;
 
 const createNotification = async data => {
@@ -28,7 +28,7 @@ const createNotification = async data => {
       body.title = `${counterpart.name} has marked the review complete!`;
       body.link = `requests/${reviewId}`;
       break;
-    case REQUESTOR_NEW_POST:
+    case REQUESTER_NEW_POST:
       body.title = `${counterpart.name} made a post in your thread!`;
       body.link = `reviews/${reviewId}`;
       break;

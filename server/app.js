@@ -9,6 +9,7 @@ const configurePassport = require("./config/passport");
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/api/users");
 const reviewsRouter = require("./routes/api/reviews");
+const ratingsRouter = require("./routes/api/ratings");
 const notificationsRouter = require("./routes/api/notifications");
 
 // connect to MongoDB
