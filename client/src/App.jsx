@@ -12,6 +12,7 @@ import Balance from "pages/Balance";
 import { remove } from "utils/storage";
 import Onboarding from "pages/Onboarding";
 import Reviews from "components/Reviews";
+import SingleView from "components/Reviews/SingleView";
 import Profile from "pages/Profile";
 
 import "./App.css";
@@ -67,6 +68,7 @@ function App() {
                   <Route exact path="/balance" component={Balance} />
                   <Route exact path="/balance" component={Balance} />
                   <Route exact path="/requests/:id" component={Reviews} />
+                  <Route exact path="/requests/:id" component={SingleView} />
                   <Route exact path="/requests" component={Reviews} />
                   {/* TODO: Future routes
                   <Route exact path="/upload" component={Upload} />*/}

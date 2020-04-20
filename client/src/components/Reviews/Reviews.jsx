@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, Route, Switch, Link, useHistory } from "react-router-dom";
 import { Paper, Card, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
@@ -57,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Reviews = () => {
+  const history = useHistory();
   const classes = useStyles();
   const [requests, setRequests] = useState([]);
   const [singleRequestView, setSingleRequestView] = useState(requests[0]);
@@ -71,6 +72,8 @@ const Reviews = () => {
         });
         data.usersRequests.sort((a, b) => new Date(b.date) - new Date(a.date));
         setRequests(data.usersRequests);
+        setRedirectId(data.usersRequests[0]["_id"]);
+        setSingleRequestView(data.usersRequests[0]);
       };
 
       callRequests();
@@ -79,8 +82,8 @@ const Reviews = () => {
     }
   }, []);
 
-  const getSingleRequest = async (ev) => {
-    const id = ev.currentTarget.dataset.id;
+  const getSingleRequest = async (ev, useEffectId) => {
+    const id = ev.currentTarget.dataset.id || useEffectId;
 
     try {
       const AuthStr = localStorage.token;
@@ -89,6 +92,7 @@ const Reviews = () => {
       });
       setSingleRequestView(data.singleRequest[0]);
       setRedirectId(id);
+      history.push(`/requests/${redirectId}`);
     } catch (err) {
       console.error(err);
     }
@@ -129,11 +133,8 @@ const Reviews = () => {
         </Paper>
 
         <div className={classes.singleViewWrapper}>
-          {singleRequestView && redirectId && (
-            <>
-              <Redirect to={`/requests/${redirectId}`} />
-              <SingleView singleRequestView={singleRequestView} />
-            </>
+          {singleRequestView && (
+            <SingleView singleRequestView={singleRequestView} />
           )}
         </div>
       </div>
