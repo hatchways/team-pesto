@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    background: `${theme.palette.secondary.light}`,
+    background: `${theme.palette.background.main}`,
     height: "100vh",
     width: "100vw",
     display: "flex",

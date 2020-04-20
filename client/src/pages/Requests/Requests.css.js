@@ -4,7 +4,7 @@ const useStyles = makeStyles((theme) => ({
   MainWrapper: {
     display: "grid",
     gridTemplateRows: "64px 1fr",
-    backgroundColor: `${theme.palette.secondary.light}`,
+    backgroundColor: `${theme.palette.background.main}`,
   },
   contentWrapper: {
     display: "grid",

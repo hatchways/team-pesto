@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import {
   Button,
-  Grid,
   Typography,
+  CircularProgress,
   Portal,
   Snackbar,
   TextField,
@@ -147,7 +147,7 @@ const Checkout = ({
                 onClick={handleSubmit}
                 disabled={processing}
               >
-                { snackbar.open && snackbar.severity === "error" ? "Try again" : processing ? "Processing..." : `Pay $${refillAmount * 10}` }
+                { snackbar.open && snackbar.severity === "error" ? "Try again" : processing ? <CircularProgress size='22px' /> : `Pay $${refillAmount * 10}` }
               </Button>
             </div>
             
