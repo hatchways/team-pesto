@@ -38,8 +38,10 @@ class Socket {
   }
 
   // send notification to specific user (via user's unique room)
-  sendNotification(userId, data) {
-    this.io.to(userId).emit("notification", data);
+  sendNotification(data) {
+    const { recipient } = data;
+    const recipientSocketId = this.usersByUserId[recipient];
+    this.io.to(recipientSocketId).emit("notification", data);
   }
 }
 
