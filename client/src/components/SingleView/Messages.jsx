@@ -15,7 +15,7 @@ import { Alert } from "@material-ui/lab";
 import CodeEditor from "components/CodeEditor";
 import formatDate from "utils/formatDate";
 import { getToken } from "utils/storage";
-import useStyle from "components/Reviews/SingleView.css";
+import useStyle from "components/SingleView/SingleView.css";
 
 const Messages = ({ message, language, redirectId }) => {
   const classes = useStyle();
