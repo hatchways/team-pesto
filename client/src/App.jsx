@@ -11,6 +11,7 @@ import Login from "pages/Login";
 import Balance from "pages/Balance";
 import { remove } from "utils/storage";
 import Onboarding from "pages/Onboarding";
+import Requests from "pages/Requests/Requests";
 import Profile from "pages/Profile";
 
 import "./App.css";
@@ -57,7 +58,6 @@ function App() {
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
           <Switch>
-
             {/* Routes placed here are only available after logging in and having experience */}
             {user && user.experience.length > 0 && (
               <>
@@ -65,10 +65,11 @@ function App() {
                 <Switch>
                   <Route exact path="/" component={Profile} />
                   <Route exact path="/balance" component={Balance} />
+                  <Route exact path="/balance" component={Balance} />
+                  <Route exact path="/requests/:id" component={Requests} />
+                  <Route exact path="/requests" component={Requests} />
                   {/* TODO: Future routes
-                  <Route exact path="/reviews" component={Reviews} />
-                  <Route exact path="/upload" component={Upload} />
-                  <Route exact path="/balance" component={Balance} /> */}
+                  <Route exact path="/upload" component={Upload} />*/}
                   <Redirect exact to="/" />
                 </Switch>
               </>

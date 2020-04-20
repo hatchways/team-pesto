@@ -1,12 +1,20 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import { AppBar, Toolbar, Button, Menu, MenuItem, Avatar, Badge } from "@material-ui/core";
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Menu,
+  MenuItem,
+  Avatar,
+  Badge,
+} from "@material-ui/core";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 
 import UserContext from "context/UserContext";
-import CodeUploadDialog from 'pages/CodeUploadDialog';
+import CodeUploadDialog from "pages/CodeUploadDialog";
 
 import socket from "utils/socket";
 
@@ -72,9 +80,9 @@ const Navbar = () => {
     setUploadDialogOpen(!uploadDialogOpen);
   };
 
-  const handleMenu = e => {
+  const handleMenu = (e) => {
     setAnchorEl(e.currentTarget);
-  }
+  };
 
   const handleClose = () => {
     setAnchorEl({});
@@ -82,21 +90,18 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout(socket);
-    setAnchorEl({})
+    setAnchorEl({});
   };
 
   useEffect(() => {
     // initialize socket connection
-    socket.connect(
-      localStorage.token,
-      setNewNotification,
-    );
+    socket.connect(localStorage.token, setNewNotification);
 
     // fetch all notifications for this user from db
     (async function () {
       const data = await socket.fetchNotifications();
       setNotifications(data);
-    })()
+    })();
   }, []);
 
   useEffect(() => {
@@ -106,7 +111,6 @@ const Navbar = () => {
   return (
     <AppBar>
       <Toolbar>
-        
         <Toolbar className={classes.logo}>
           <Link to="/">
             <img src="logo.png" />
@@ -115,19 +119,31 @@ const Navbar = () => {
 
         <Toolbar className={classes.toolbar}>
           <Button className={classes.clickable}>
-            <Link className={classes.link} to="/reviews">Reviews</Link>
+            <Link className={classes.link} to="/requests">
+              Requests
+            </Link>
           </Button>
 
           <Button className={classes.clickable}>
-            <Link className={classes.link} to="/balance">Balance</Link>
+            <Link className={classes.link} to="/balance">
+              Balance
+            </Link>
           </Button>
 
-          <Button id="notifications" className={classes.clickable} onClick={handleMenu}>
+          <Button
+            id="notifications"
+            className={classes.clickable}
+            onClick={handleMenu}
+          >
             <Avatar className={classes.notification}>
-              <Badge color="secondary" variant="dot" invisible={notifications.every(n => n.seen)}>
+              <Badge
+                color="secondary"
+                variant="dot"
+                invisible={notifications.every((n) => n.seen)}
+              >
                 {notifications.length ? (
                   <NotificationsIcon />
-                ): (
+                ) : (
                   <NotificationsNoneIcon />
                 )}
               </Badge>
@@ -140,20 +156,22 @@ const Navbar = () => {
             open={anchorEl.id === "notifications"}
             onClose={handleClose}
           >
-            <Notifications
-              notifications={notifications}
-            />
+            <Notifications notifications={notifications} />
           </Menu>
-          
+
           <Button
             className={`${classes.clickable} ${classes.button}`}
             onClick={handleUploadDialog}
           >
             Upload Code
-          </Button>          
+          </Button>
 
-          <Button id="profile" className={classes.profileButton} onClick={handleMenu}>
-            <Avatar src={user && user.image}/>
+          <Button
+            id="profile"
+            className={classes.profileButton}
+            onClick={handleMenu}
+          >
+            <Avatar src={user && user.image} />
             <div className={classes.link}>Profile</div>
             <div className={classes.triangle} />
           </Button>
@@ -173,14 +191,10 @@ const Navbar = () => {
               </MenuItem>
             </>
           </Menu>
-
         </Toolbar>
       </Toolbar>
-      
-      <CodeUploadDialog
-        open={uploadDialogOpen}
-        onClose={handleUploadDialog}
-      />
+
+      <CodeUploadDialog open={uploadDialogOpen} onClose={handleUploadDialog} />
     </AppBar>
   );
 };

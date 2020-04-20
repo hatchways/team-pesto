@@ -72,4 +72,43 @@ router.post("/requests", authenticate, async (req, res) => {
   res.sendStatus(500);
 });
 
+router.get("/requests", authenticate, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const usersRequests = await Review.find({ requesterId: userId });
+
+    const filteredRequests = usersRequests.map((request) =>
+      request.filteredSchema()
+    );
+
+    res.send({ usersRequests: filteredRequests });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+router.get("/requests/:id", authenticate, async (req, res) => {
+  const requestId = req.params.id;
+
+  try {
+    const userId = req.user.id;
+
+    const singleRequest = await Review.find({
+      _id: { $in: [requestId] },
+      requesterId: { $in: [userId] },
+    });
+
+    if (singleRequest[0]) {
+      singleRequest[0].filteredSchema();
+    } else {
+      return res.sendStatus(400);
+    }
+
+    res.send({ singleRequest });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 module.exports = router;

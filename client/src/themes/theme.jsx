@@ -2,10 +2,20 @@ import { createMuiTheme } from "@material-ui/core";
 
 const theme = createMuiTheme({
   typography: {
-    fontFamily: '"Roboto"',
+    fontFamily: '"Nunito Sans", "Roboto"',
     fontSize: 12,
     h1: {
       // could customize the h1 variant as well
+    },
+    h3: {
+      margin: 0,
+      fontWeight: "bold",
+      fontSize: "1.4rem",
+    },
+    h5: {
+      margin: 0,
+      fontWeight: "bold",
+      fontSize: "1rem",
     },
   },
   palette: {
@@ -17,6 +27,7 @@ const theme = createMuiTheme({
     secondary: {
       light: "#9DEEDF",
       main: "#43DDC1",
+      lightGray: "#bdbdbd",
     },
     background: {
       main: "#ECF0FA",
