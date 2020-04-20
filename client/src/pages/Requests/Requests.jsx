@@ -4,6 +4,7 @@ import { Paper, Card, Typography } from "@material-ui/core";
 import useStyles from "pages/Requests/Requests.css";
 import axios from "axios";
 import SingleView from "components/SingleView/SingleView";
+import Sidebar from "components/Sidebar";
 
 import formatDate from "utils/formatDate";
 
@@ -36,36 +37,7 @@ const Requests = (props) => {
   return (
     <div className={classes.MainWrapper}>
       <div className={classes.contentWrapper}>
-        <Paper className={classes.sideBar}>
-          <Typography variant="h3">
-            Requests{" "}
-            <span className={classes.quantity}>({requests.length})</span>
-          </Typography>
-
-          <div className={classes.cardWrapper}>
-            {requests.map((request) => (
-              <Link
-                key={request["_id"]}
-                className={classes.link}
-                to={`/requests/${request["_id"]}`}
-              >
-                <Card
-                  className={classes.card}
-                  data-id={request["_id"]}
-                  variant="outlined"
-                  style={borderColor(request["_id"])}
-                >
-                  <Typography className={classes.title}>
-                    {request.title}
-                  </Typography>
-                  <Typography className={classes.date}>
-                    {formatDate(request.date)}
-                  </Typography>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        </Paper>
+        <Sidebar requests={requests} borderColor={borderColor} />
 
         <Switch>
           {requests.map((request) => (
