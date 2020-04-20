@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { AppBar, Toolbar, Button, Menu, MenuItem, Avatar, Badge } from "@material-ui/core";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
+
 import UserContext from "context/UserContext";
 import CodeUploadDialog from 'pages/CodeUploadDialog';
 
@@ -63,7 +65,8 @@ const Navbar = () => {
   const { user, logout } = useContext(UserContext);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState({});
-  const [newNotifications, setNewNotifications] = useState(true);
+  const [notifications, setNotifications] = useState([]);
+  const [newNotification, setNewNotification] = useState([]);
 
   const handleUploadDialog = () => {
     setUploadDialogOpen(!uploadDialogOpen);
@@ -83,8 +86,22 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    socket.connect(localStorage.token);
+    // initialize socket connection
+    socket.connect(
+      localStorage.token,
+      setNewNotification,
+    );
+
+    // fetch all notifications for this user from db
+    (async function () {
+      const data = await socket.fetchNotifications();
+      setNotifications(data);
+    })()
   }, []);
+
+  useEffect(() => {
+    setNotifications([newNotification, ...notifications]);
+  }, [newNotification]);
 
   return (
     <AppBar>
@@ -107,8 +124,12 @@ const Navbar = () => {
 
           <Button id="notifications" className={classes.clickable} onClick={handleMenu}>
             <Avatar className={classes.notification}>
-              <Badge color="secondary" variant="dot" invisible={!newNotifications}>
-                <NotificationsIcon />
+              <Badge color="secondary" variant="dot" invisible={notifications.every(n => n.seen)}>
+                {notifications.length ? (
+                  <NotificationsIcon />
+                ): (
+                  <NotificationsNoneIcon />
+                )}
               </Badge>
             </Avatar>
           </Button>
@@ -120,7 +141,7 @@ const Navbar = () => {
             onClose={handleClose}
           >
             <Notifications
-              setNewNotifications={setNewNotifications}
+              notifications={notifications}
             />
           </Menu>
           

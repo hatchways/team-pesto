@@ -1,8 +1,8 @@
 import io from "socket.io-client";
-// import axios from "axios";
+import axios from "axios";
 
 class Socket {
-  async connect(token) {
+  connect(token, setNewNotification) {
     this.socket = io("localhost:3001");
 
     // emit event with token from localStorage (will be verified in back end with JWT)
@@ -10,8 +10,20 @@ class Socket {
 
     // receive notification from server
     this.socket.on("notification", data => {
-      console.log(`notification received: ${data}`);  // TO DO: figure out what happens next?
+      setNewNotification(data);
     });
+  }
+
+  async fetchNotifications() {
+    const AuthStr = localStorage.token;
+    try {
+      const { data } = await axios.get("/api/notifications", {
+        headers: { Authorization: "Bearer " + AuthStr },
+      })
+      return data;
+    } catch (err) {
+      console.error(err);
+    }
   }
 }
 
