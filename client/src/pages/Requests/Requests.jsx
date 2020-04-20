@@ -44,9 +44,12 @@ const Requests = (props) => {
 
           <div className={classes.cardWrapper}>
             {requests.map((request) => (
-              <Link className={classes.link} to={`/requests/${request["_id"]}`}>
+              <Link
+                key={request["_id"]}
+                className={classes.link}
+                to={`/requests/${request["_id"]}`}
+              >
                 <Card
-                  key={request["_id"]}
                   className={classes.card}
                   data-id={request["_id"]}
                   variant="outlined"
@@ -67,6 +70,7 @@ const Requests = (props) => {
         <Switch>
           {requests.map((request) => (
             <Route
+              key={request["_id"]}
               exact
               path={`/requests/${request["_id"]}`}
               render={() => <SingleView singleRequestView={request} />}
