@@ -102,7 +102,7 @@ router.get("/requests/:id", authenticate, async (req, res) => {
     if (singleRequest[0]) {
       singleRequest[0].filteredSchema();
     } else {
-      return res.status(400);
+      return res.sendStatus(400);
     }
 
     res.send({ singleRequest });

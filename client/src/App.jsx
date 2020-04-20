@@ -11,7 +11,7 @@ import Login from "pages/Login";
 import Balance from "pages/Balance";
 import { remove } from "utils/storage";
 import Onboarding from "pages/Onboarding";
-import Reviews from "components/Reviews";
+import Requests from "pages/Requests/Requests";
 import Profile from "pages/Profile";
 
 import "./App.css";
@@ -66,8 +66,8 @@ function App() {
                   <Route exact path="/" component={Profile} />
                   <Route exact path="/balance" component={Balance} />
                   <Route exact path="/balance" component={Balance} />
-                  <Route exact path="/requests/:id" component={Reviews} />
-                  <Route exact path="/requests" component={Reviews} />
+                  <Route exact path="/requests/:id" component={Requests} />
+                  <Route exact path="/requests" component={Requests} />
                   {/* TODO: Future routes
                   <Route exact path="/upload" component={Upload} />*/}
                   <Redirect exact to="/" />
