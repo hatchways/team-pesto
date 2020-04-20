@@ -89,7 +89,7 @@ router.put('/:reviewId/status', authenticate, async (req, res) => {
   if (req.body.status === 'accepted') {
     review.status = req.body.status;
     await review.save();
-    // TODO: remove review from matching queue
+    await MatchQueue.remove(review.id);
     res.sendStatus(200);
     return;
   }
@@ -98,7 +98,7 @@ router.put('/:reviewId/status', authenticate, async (req, res) => {
     review.declinedIds.push(review.reviewerId);
     review.reviewerId = null;
     await review.save();
-    // TODO: promote review in matching queue
+    await MatchQueue.promote(review.id);
     res.sendStatus(200);
     return;
   }
