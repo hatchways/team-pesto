@@ -19,7 +19,7 @@ router.put('/:reviewId/status', authenticate, async (req, res) => {
 
   // check if user is the requested reviewer
   if (req.user.id != review.reviewerId) {
-    res.sendStatus(401);
+    res.sendStatus(403);
     return;
   }
 

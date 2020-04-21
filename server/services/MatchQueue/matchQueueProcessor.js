@@ -56,7 +56,7 @@ const matchQueueProcessor = async (job) => {
     ];
     review.reviewerId = reviewer.id;
     await review.save();
-
+    
     // send a notification to the assigned reviewer
     await createNotification({
       reviewId,

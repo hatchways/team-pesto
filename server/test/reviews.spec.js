@@ -250,6 +250,7 @@ describe('PUT /api/reviews/:reviewId/status', () => {
     updatedReview.status.should.equal('accepted');
   });
 
+  // test will fail if run while server is running
   it('should return status 200 and modify review document accordingly if request declined', async () => {
     const token = jwt.sign({ id: testReviewer.id }, passportSecret);
     const review = await Review.findOne({ title: 'Reject This' });
@@ -259,7 +260,7 @@ describe('PUT /api/reviews/:reviewId/status', () => {
       .put(`/api/reviews/${review.id}/status`)
       .set('Authorization', `Bearer ${token}`)
       .send({ status: 'rejected' });
-
+      
     res.should.have.status(200);
     const updatedReview = await Review.findById(review.id);
     updatedReview.status.should.equal('pending');
@@ -277,7 +278,7 @@ describe('PUT /api/reviews/:reviewId/status', () => {
     res.should.have.status(401);
   });
 
-  it('should return status 401 if user authorized but is not the requested reviewer', async () => {
+  it('should return status 403 if user authorized but is not the requested reviewer', async () => {
     const token = jwt.sign({ id: randomUser.id }, passportSecret);
     const review = await Review.findOne({ title: 'Accept This' });
 
@@ -286,7 +287,7 @@ describe('PUT /api/reviews/:reviewId/status', () => {
       .put(`/api/reviews/${review.id}/status`)
       .set('Authorization', `Bearer ${token}`)
       .send({ status: 'accepted' });
-    res.should.have.status(401);
+    res.should.have.status(403);
   });
 
   it('should return status 400 if request body is invalid', async () => {
