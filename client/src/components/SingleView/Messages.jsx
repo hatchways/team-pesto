@@ -27,6 +27,7 @@ const Messages = ({ message, language, requestId }) => {
     message: "",
   });
   const [messageId, setMessageId] = useState("");
+  // TODO get author name
   const [authorName, setAuthorName] = useState("");
   const [codeSnippet, setCodeSnippet] = useState("");
   const [editedCodeSnippet, setEditedCodeSnippet] = useState({
