@@ -17,7 +17,7 @@ import formatDate from "utils/formatDate";
 import { getToken } from "utils/storage";
 import useStyle from "components/SingleView/SingleView.css";
 
-const Messages = ({ message, language }) => {
+const Messages = ({ message, language, requestId }) => {
   const classes = useStyle();
   const { user } = useContext(UserContext);
   const [editMode, setEditMode] = useState(false);
@@ -77,7 +77,7 @@ const Messages = ({ message, language }) => {
       try {
         setEditMode(!editMode);
         await axios.put(
-          `/api/reviews/messages/${messageId}`,
+          `/api/reviews/${requestId}/messages/${messageId}`,
           {
             code: codeSnippet,
             comments: comments,

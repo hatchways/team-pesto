@@ -111,34 +111,40 @@ router.get("/requests/:id", authenticate, async (req, res) => {
   }
 });
 
-router.put("/messages/:id", authenticate, async (req, res) => {
-  const messageId = req.params.id;
-  const userId = req.user.id;
-  const { code, comments } = req.body;
+router.put(
+  "/:requestId/messages/:messageId",
+  authenticate,
+  async (req, res) => {
+    const messageId = req.params.messageId;
+    const requestId = req.params.requestId;
+    const userId = req.user.id;
+    const { code, comments } = req.body;
 
-  if (!code || !comments) {
-    return res.sendStatus(400);
-  }
-
-  try {
-    const message = await Message.findById(messageId);
-
-    if (!message) {
-      return res.sendStatus(404);
+    if (!code || !comments) {
+      return res.sendStatus(400);
     }
 
-    if (message["_id"] == messageId && message.authorId == userId) {
-      message.code = code;
-      message.comments = comments;
+    try {
+      const request = await Review.findById(requestId);
+      const message = request.messages.id(messageId);
 
-      await message.save();
-      return res.sendStatus(200);
-    } else {
-      return res.sendStatus(403);
+      if (!message) {
+        return res.sendStatus(404);
+      }
+
+      if (message["_id"] == messageId && message.authorId == userId) {
+        request.messages.id(messageId).code = code;
+        request.messages.id(messageId).comments = comments;
+
+        await request.save();
+        return res.sendStatus(200);
+      } else {
+        return res.sendStatus(403);
+      }
+    } catch (err) {
+      console.error(err);
     }
-  } catch (err) {
-    console.error(err);
   }
-});
+);
 
 module.exports = router;
