@@ -23,6 +23,9 @@ import Notifications from "./Notifications/Notifications";
 // TO DO: import styles from centralized location
 
 const useStyles = makeStyles((theme) => ({
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
   logo: {
     width: "10%",
   },
@@ -109,7 +112,7 @@ const Navbar = () => {
   }, [newNotification]);
 
   return (
-    <AppBar>
+    <AppBar className={classes.appBar}>
       <Toolbar>
         <Toolbar className={classes.logo}>
           <Link to="/">
@@ -121,6 +124,12 @@ const Navbar = () => {
           <Button className={classes.clickable}>
             <Link className={classes.link} to="/requests">
               Requests
+            </Link>
+          </Button>
+
+          <Button className={classes.clickable}>
+            <Link className={classes.link} to="/reviews">
+              Reviews
             </Link>
           </Button>
 
