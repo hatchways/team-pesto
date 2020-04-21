@@ -5,8 +5,8 @@ const Message = require("./Message");
 const { Schema, ObjectId } = mongoose;
 
 const reviewSchema = new Schema({
-  requesterId: { type: ObjectId, required: true },
-  reviewerId: { type: ObjectId, default: null },
+  requesterId: { type: ObjectId, required: true, index: true },
+  reviewerId: { type: ObjectId, default: null, index: true },
   declinedIds: [ObjectId],
   title: String,
   date: { type: Date, default: Date.now },

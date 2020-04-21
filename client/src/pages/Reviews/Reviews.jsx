@@ -15,15 +15,12 @@ const Reviews = () => {
   useEffect(() => {
     try {
       const token = getToken();
-      const callRequests = async () => {
-        const { data } = await axios.get("/api/reviews/requests", {
+      (async () => {
+        const { data } = await axios.get("/api/reviews/", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        data.usersRequests.sort((a, b) => new Date(b.date) - new Date(a.date));
-        setReviews(data.usersRequests);
-      };
-
-      callRequests();
+        setReviews(data.reviews);
+      })();
     } catch (err) {
       console.error(err);
     }

@@ -9,6 +9,27 @@ const router = Router();
 const REQUIRED_CREDITS = 1;
 
 
+router.get('/', authenticate, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const reviews = await Review.find(
+      { reviewerId: userId },
+      null,
+      { sort: { date: -1 } },
+    );
+
+    const filteredReviews = reviews.map((review) =>
+      review.filteredSchema()
+    );
+
+    res.send({ reviews: filteredReviews });
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
 router.put('/:reviewId/status', authenticate, async (req, res) => {
   const review = await Review.findOne({ _id: req.params.reviewId });
 
@@ -48,7 +69,11 @@ router.get("/requests", authenticate, async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const usersRequests = await Review.find({ requesterId: userId });
+    const usersRequests = await Review.find(
+      { requesterId: userId },
+      null,
+      { sort: { date: -1 } },
+    );
 
     const filteredRequests = usersRequests.map((request) =>
       request.filteredSchema()

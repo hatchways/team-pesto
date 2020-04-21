@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Redirect, Route, Switch, Link } from "react-router-dom";
-import { Paper, Card, Typography } from "@material-ui/core";
-import useStyles from "pages/Requests/Requests.css";
+import { Redirect, Route, Switch } from "react-router-dom";
 import axios from "axios";
+
+import useStyles from "pages/Requests/Requests.css";
 import SingleView from "components/SingleView";
 import Sidebar from "components/Sidebar";
-
-import formatDate from "utils/formatDate";
+import { getToken } from 'utils/storage';
 
 const Requests = (props) => {
   const classes = useStyles();
@@ -14,16 +13,13 @@ const Requests = (props) => {
 
   useEffect(() => {
     try {
-      const AuthStr = localStorage.token;
-      const callRequests = async () => {
+      const token = getToken();
+      (async () => {
         const { data } = await axios.get("/api/reviews/requests", {
-          headers: { Authorization: "Bearer " + AuthStr },
+          headers: { Authorization: `Bearer ${token}` },
         });
-        data.usersRequests.sort((a, b) => new Date(b.date) - new Date(a.date));
         setRequests(data.usersRequests);
-      };
-
-      callRequests();
+      })();      
     } catch (err) {
       console.error(err);
     }
