@@ -33,6 +33,7 @@ configurePassport(passport);
 app.use("/", indexRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/reviews", reviewsRouter);
+app.use("/api/ratings", ratingsRouter);
 app.use("/api/notifications", notificationsRouter);
 
 // catch 404 and forward to error handler
