@@ -3,7 +3,7 @@ import { Redirect, Route, Switch, Link } from "react-router-dom";
 import { Paper, Card, Typography } from "@material-ui/core";
 import useStyles from "pages/Requests/Requests.css";
 import axios from "axios";
-import SingleView from "components/SingleView/SingleView";
+import SingleView from "components/SingleView";
 import Sidebar from "components/Sidebar";
 
 import formatDate from "utils/formatDate";

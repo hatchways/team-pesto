@@ -1,11 +1,16 @@
 import { makeStyles } from '@material-ui/core';
 
-const drawerWidth = 300;
+const drawerWidth = 375;
 
 const useStyles = makeStyles((theme) => ({
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+
   reviewSidebarPaper: {
     width: drawerWidth,
-    padding: '3rem',
+    boxSizing: 'border-box',
   },
 
   title: {
@@ -14,6 +19,11 @@ const useStyles = makeStyles((theme) => ({
 
   quantity: {
     color: `${theme.palette.primary.main}`,
+  },
+
+  drawerContainer: {
+    overflow: 'auto',
+    padding: '3rem',
   },
 
   link: {

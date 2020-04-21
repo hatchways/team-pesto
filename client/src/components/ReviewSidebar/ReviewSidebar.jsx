@@ -16,29 +16,31 @@ const ReviewSidebar = ({ reviews }) => {
         elevation: 8,
       }}
     >
-      <Typography variant="h3" className={classes.title}>
-        Reviews <span className={classes.quantity}>({reviews.length})</span>
-      </Typography>
+      <div className={classes.drawerContainer}>
+        <Typography variant="h3" className={classes.title}>
+          Reviews <span className={classes.quantity}>({reviews.length})</span>
+        </Typography>
 
-      {reviews.map((review) => (
-        <Link
-          key={review.id}
-          className={classes.link}
-          to={`/requests/${review.id}`}
-        >
-          <Card
-            className={classes.card}
-            data-id={review.id}
-            variant="outlined"
-            // style={borderColor(review["_id"])}
+        {reviews.map((review) => (
+          <Link
+            key={review.id}
+            className={classes.link}
+            to={`/requests/${review.id}`}
           >
-            <Typography className={classes.reviewTitle}>{review.title}</Typography>
-            <Typography className={classes.date}>
-              {formatDate(review.date)}
-            </Typography>
-          </Card>
-        </Link>
-      ))}
+            <Card
+              className={classes.card}
+              data-id={review.id}
+              variant="outlined"
+              // style={borderColor(review["_id"])}
+            >
+              <Typography className={classes.reviewTitle}>{review.title}</Typography>
+              <Typography className={classes.date}>
+                {formatDate(review.date)}
+              </Typography>
+            </Card>
+          </Link>
+        ))}
+      </div>
     </Drawer>
   );
 };

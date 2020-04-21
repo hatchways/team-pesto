@@ -38,15 +38,16 @@ const useStyles = makeStyles((theme) => ({
     margin: "0 10px 0 10px",
   },
   link: {
-    color: "white",
+    color: 'black',
     textDecoration: "none",
-    textTransform: "none",
+  },
+  linkText: {
+    color: "white",    
     fontWeight: "normal",
+    textTransform: "none",
   },
   button: {
     color: `${theme.palette.secondary.main}`,
-    textDecoration: "none",
-    textTransform: "none",
     borderStyle: "solid",
     borderWidth: "1px",
     borderRadius: 20,
@@ -120,24 +121,24 @@ const Navbar = () => {
           </Link>
         </Toolbar>
 
-        <Toolbar className={classes.toolbar}>
-          <Button className={classes.clickable}>
-            <Link className={classes.link} to="/requests">
-              Requests
-            </Link>
-          </Button>
+        <Toolbar className={classes.toolbar}>          
+          <Link className={classes.link} to="/requests">
+            <Button className={classes.clickable}>
+              <span className={classes.linkText}>Requests</span>
+            </Button>
+          </Link>          
 
-          <Button className={classes.clickable}>
-            <Link className={classes.link} to="/reviews">
-              Reviews
-            </Link>
-          </Button>
+          <Link className={classes.link} to="/reviews">
+            <Button className={classes.clickable}>            
+              <span className={classes.linkText}>Reviews</span>
+            </Button>
+          </Link>
 
-          <Button className={classes.clickable}>
-            <Link className={classes.link} to="/balance">
-              Balance
-            </Link>
-          </Button>
+          <Link className={classes.link} to="/balance">
+            <Button className={classes.clickable}>            
+              <span className={classes.linkText}>Balance</span>
+            </Button>
+          </Link>
 
           <Button
             id="notifications"
@@ -181,7 +182,7 @@ const Navbar = () => {
             onClick={handleMenu}
           >
             <Avatar src={user && user.image} />
-            <div className={classes.link}>Profile</div>
+            <div className={classes.linkText}>Profile</div>
             <div className={classes.triangle} />
           </Button>
 
@@ -193,10 +194,12 @@ const Navbar = () => {
           >
             <>
               <MenuItem>
-                <Link to="/profile">Go to Profile</Link>
+                <Link className={classes.link} to="/profile">
+                  Go to Profile
+                </Link>
               </MenuItem>
               <MenuItem onClick={handleLogout}>
-                <Link to="/">Logout</Link>
+                <Link className={classes.link} to="/">Logout</Link>
               </MenuItem>
             </>
           </Menu>

@@ -2,9 +2,14 @@ import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   reviews: {
+    display: 'flex',
+  },
+
+  threadContainer: {
     backgroundColor: `${theme.palette.background.main}`,
-    height: '100vh',
-    width: '100vw',
+    flexGrow: 1,
+    margin: 'auto',
+    marginTop: 64,
   },
 }));
 
