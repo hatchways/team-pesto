@@ -21,34 +21,34 @@ const Messages = ({ message, language, requestId }) => {
   const classes = useStyle();
   const { user } = useContext(UserContext);
   const [editMode, setEditMode] = useState(false);
-  const [errorSnackbar, setErrorSnackbar] = useState({
+  const [snackbar, setSnackbar] = useState({
     open: false,
-    message: "",
-  });
-  const [successSnackbar, setSuccessSnackbar] = useState({
-    open: false,
+    severity: "",
     message: "",
   });
   const [messageId, setMessageId] = useState("");
+  // TODO get author name
   const [authorName, setAuthorName] = useState("");
   const [codeSnippet, setCodeSnippet] = useState("");
-  const [editedCodeSnippet, setEditedCodeSnippet] = useState("");
+  const [editedCodeSnippet, setEditedCodeSnippet] = useState({
+    state: false,
+    value: "",
+  });
   const [comments, setComments] = useState("");
-  const [editedComments, setEditedComments] = useState("");
+  const [editedComments, setEditedComments] = useState({
+    state: false,
+    value: "",
+  });
 
   useEffect(() => {
     setMessageId(message["_id"]);
     setCodeSnippet(message.code);
     setComments(message.comments);
-    setEditedCodeSnippet(message.code);
-    setEditedComments(message.comments);
+    setEditedCodeSnippet({ value: message.code });
+    setEditedComments({ value: message.comments });
   }, [message.code, message.comments]);
 
-  const editMessage = () => {
-    setEditMode(!editMode);
-  };
-
-  const dontEditMessage = () => {
+  const toggelEditMessage = () => {
     setEditMode(!editMode);
   };
 
@@ -57,66 +57,50 @@ const Messages = ({ message, language, requestId }) => {
 
     switch (name) {
       case "code-snippet":
-        setEditedCodeSnippet(value);
+        setCodeSnippet(value);
+        setEditedCodeSnippet({ state: true, value });
         break;
       case "comments":
-        setEditedComments(value);
+        setComments(value);
+        setEditedComments({ state: true, value });
         break;
       default:
     }
   };
 
   const handleCodeSnippetChange = (value) => {
-    setEditedCodeSnippet(value);
-  };
-
-  const handleErrorSnackbarClose = () => {
-    setErrorSnackbar({
-      open: false,
-      message: errorSnackbar.message,
-    });
-  };
-
-  const handleSuccessSnackbarClose = () => {
-    setSuccessSnackbar({
-      open: false,
-      message: successSnackbar.message,
-    });
+    setCodeSnippet(value);
+    setEditedCodeSnippet({ state: true, value });
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (editedCodeSnippet !== codeSnippet) {
-      setCodeSnippet(editedCodeSnippet);
-    }
-
-    if (editedComments !== comments) {
-      setComments(editedComments);
-    }
-
-    if (editedComments === comments && editedCodeSnippet === codeSnippet) {
-      setErrorSnackbar({
+    if (!editedComments.state && !editedCodeSnippet.state) {
+      setSnackbar({
         open: true,
+        severity: "warning",
         message: "You must make a change first!",
       });
     } else {
       try {
         setEditMode(!editMode);
         await axios.put(
-          `/api/reviews/${requestId}`,
+          `/api/reviews/${requestId}/messages/${messageId}`,
           {
-            authorId: message.authorId,
-            messageId,
-            code: editedCodeSnippet,
-            comments: editedComments,
+            code: codeSnippet,
+            comments: comments,
           },
           {
             headers: { Authorization: `Bearer ${getToken()}` },
           }
         );
 
-        setSuccessSnackbar({ open: true, message: "Update successful!" });
+        setSnackbar({
+          open: true,
+          severity: "success",
+          message: "Update successful!",
+        });
       } catch (err) {
         console.error(err);
       }
@@ -140,7 +124,7 @@ const Messages = ({ message, language, requestId }) => {
           {editMode ? (
             <CloseIcon
               className={classes.editIcon}
-              onClick={dontEditMessage}
+              onClick={toggelEditMessage}
               style={
                 message.authorId === user.id
                   ? { display: "block" }
@@ -150,7 +134,7 @@ const Messages = ({ message, language, requestId }) => {
           ) : (
             <EditIcon
               className={classes.editIcon}
-              onClick={editMessage}
+              onClick={toggelEditMessage}
               style={
                 message.authorId === user.id
                   ? { display: "block" }
@@ -163,7 +147,7 @@ const Messages = ({ message, language, requestId }) => {
         <div className={classes.syntax}>
           <CodeEditor
             language={language}
-            value={editMode ? editedCodeSnippet : codeSnippet}
+            value={!editMode ? codeSnippet : editedCodeSnippet.value}
             readOnly={!editMode}
             onChange={handleCodeSnippetChange}
           />
@@ -196,7 +180,7 @@ const Messages = ({ message, language, requestId }) => {
               fullWidth
               multiline
               rows={5}
-              value={editMode ? editedComments : comments}
+              value={!editMode ? comments : editedComments.value}
               onChange={handleFormChange}
               style={editMode ? { display: "block" } : { display: "none" }}
             />
@@ -206,24 +190,12 @@ const Messages = ({ message, language, requestId }) => {
 
       <Portal>
         <Snackbar
-          open={errorSnackbar.open}
+          open={snackbar.open}
           autoHideDuration={5000}
-          onClose={handleErrorSnackbarClose}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
         >
-          <Alert variant="filled" severity="warning">
-            {errorSnackbar.message}
-          </Alert>
-        </Snackbar>
-      </Portal>
-
-      <Portal>
-        <Snackbar
-          open={successSnackbar.open}
-          autoHideDuration={5000}
-          onClose={handleSuccessSnackbarClose}
-        >
-          <Alert variant="filled" severity="success">
-            {successSnackbar.message}
+          <Alert variant="filled" severity={snackbar.severity}>
+            {snackbar.message}
           </Alert>
         </Snackbar>
       </Portal>
