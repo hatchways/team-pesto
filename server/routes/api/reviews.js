@@ -57,6 +57,7 @@ router.get("/requests", authenticate, async (req, res) => {
     res.send({ usersRequests: filteredRequests });
   } catch (err) {
     console.error(err);
+    res.sendStatus(500);
   }
 });
 
@@ -80,6 +81,7 @@ router.get("/requests/:id", authenticate, async (req, res) => {
     res.send({ singleRequest });
   } catch (err) {
     console.error(err);
+    res.sendStatus(500);
   }
 });
 

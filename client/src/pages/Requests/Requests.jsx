@@ -55,7 +55,6 @@ const Requests = (props) => {
               render={() => <Redirect to={`/requests/${requests[0]["_id"]}`} />}
             />
           ) : null}
-          }
         </Switch>
       </div>
     </div>
