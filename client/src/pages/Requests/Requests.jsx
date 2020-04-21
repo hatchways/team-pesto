@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Redirect, Route, Switch, Link } from "react-router-dom";
-import { Paper, Card, Typography } from "@material-ui/core";
+import { Redirect, Route, Switch } from "react-router-dom";
 import useStyles from "pages/Requests/Requests.css";
 import axios from "axios";
 import SingleView from "components/SingleView/SingleView";
 import Sidebar from "components/Sidebar";
-
-import formatDate from "utils/formatDate";
 
 const Requests = (props) => {
   const classes = useStyles();

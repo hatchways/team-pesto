@@ -1,6 +1,9 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
+  singleViewWrapper: {
+    overflow: "auto",
+  },
   singleView: {
     margin: "50px;",
     position: "relative",
@@ -9,6 +12,8 @@ const useStyles = makeStyles((theme) => ({
   header: {
     padding: "40px",
     borderBottom: `1px solid ${theme.palette.secondary.lightGray}`,
+    display: "flex",
+    justifyContent: "space-between",
   },
   title: {
     margin: 0,
@@ -18,6 +23,12 @@ const useStyles = makeStyles((theme) => ({
   date: {
     color: `${theme.palette.secondary.lightGray}`,
     fontSize: "12px",
+  },
+  editIcon: {
+    height: "28px",
+    "&:hover": {
+      cursor: "pointer",
+    },
   },
   syntaxWrapper: {
     padding: "3rem",
@@ -35,6 +46,19 @@ const useStyles = makeStyles((theme) => ({
   },
   authorComment: {
     paddingLeft: "55px",
+  },
+  editHeader: {
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginBottom: "10px",
+  },
+  saveButton: {
+    backgroundColor: `${theme.palette.primary.main}`,
+    color: "#FFFF",
+    marginRight: "10px",
+    lineHeight: 1,
+    padding: "8px",
   },
 }));
 
