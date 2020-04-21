@@ -17,7 +17,7 @@ import formatDate from "utils/formatDate";
 import { getToken } from "utils/storage";
 import useStyle from "components/SingleView/SingleView.css";
 
-const Messages = ({ message, language, requestId }) => {
+const Messages = ({ message, language }) => {
   const classes = useStyle();
   const { user } = useContext(UserContext);
   const [editMode, setEditMode] = useState(false);
@@ -29,23 +29,17 @@ const Messages = ({ message, language, requestId }) => {
   const [messageId, setMessageId] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [codeSnippet, setCodeSnippet] = useState("");
-  const [editedCodeSnippet, setEditedCodeSnippet] = useState("");
+  const [editedCodeSnippet, setEditedCodeSnippet] = useState(false);
   const [comments, setComments] = useState("");
-  const [editedComments, setEditedComments] = useState("");
+  const [editedComments, setEditedComments] = useState(false);
 
   useEffect(() => {
     setMessageId(message["_id"]);
     setCodeSnippet(message.code);
     setComments(message.comments);
-    setEditedCodeSnippet(message.code);
-    setEditedComments(message.comments);
   }, [message.code, message.comments]);
 
-  const editMessage = () => {
-    setEditMode(!editMode);
-  };
-
-  const dontEditMessage = () => {
+  const toggelEditMessage = () => {
     setEditMode(!editMode);
   };
 
@@ -54,31 +48,26 @@ const Messages = ({ message, language, requestId }) => {
 
     switch (name) {
       case "code-snippet":
-        setEditedCodeSnippet(value);
+        setCodeSnippet(value);
+        setEditedCodeSnippet(true);
         break;
       case "comments":
-        setEditedComments(value);
+        setComments(value);
+        setEditedComments(true);
         break;
       default:
     }
   };
 
   const handleCodeSnippetChange = (value) => {
-    setEditedCodeSnippet(value);
+    setCodeSnippet(value);
+    setEditedCodeSnippet(true);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (editedCodeSnippet !== codeSnippet) {
-      setCodeSnippet(editedCodeSnippet);
-    }
-
-    if (editedComments !== comments) {
-      setComments(editedComments);
-    }
-
-    if (editedComments === comments && editedCodeSnippet === codeSnippet) {
+    if (!editedComments && !editedCodeSnippet) {
       setSnackbar({
         open: true,
         severity: "warning",
@@ -88,12 +77,10 @@ const Messages = ({ message, language, requestId }) => {
       try {
         setEditMode(!editMode);
         await axios.put(
-          `/api/reviews/${requestId}`,
+          `/api/reviews/messages/${messageId}`,
           {
-            authorId: message.authorId,
-            messageId,
-            code: editedCodeSnippet,
-            comments: editedComments,
+            code: codeSnippet,
+            comments: comments,
           },
           {
             headers: { Authorization: `Bearer ${getToken()}` },
@@ -128,7 +115,7 @@ const Messages = ({ message, language, requestId }) => {
           {editMode ? (
             <CloseIcon
               className={classes.editIcon}
-              onClick={dontEditMessage}
+              onClick={toggelEditMessage}
               style={
                 message.authorId === user.id
                   ? { display: "block" }
@@ -138,7 +125,7 @@ const Messages = ({ message, language, requestId }) => {
           ) : (
             <EditIcon
               className={classes.editIcon}
-              onClick={editMessage}
+              onClick={toggelEditMessage}
               style={
                 message.authorId === user.id
                   ? { display: "block" }
@@ -151,7 +138,7 @@ const Messages = ({ message, language, requestId }) => {
         <div className={classes.syntax}>
           <CodeEditor
             language={language}
-            value={editMode ? editedCodeSnippet : codeSnippet}
+            value={codeSnippet}
             readOnly={!editMode}
             onChange={handleCodeSnippetChange}
           />
@@ -184,7 +171,7 @@ const Messages = ({ message, language, requestId }) => {
               fullWidth
               multiline
               rows={5}
-              value={editMode ? editedComments : comments}
+              value={comments}
               onChange={handleFormChange}
               style={editMode ? { display: "block" } : { display: "none" }}
             />
