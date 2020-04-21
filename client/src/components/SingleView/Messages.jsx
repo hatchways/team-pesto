@@ -29,14 +29,22 @@ const Messages = ({ message, language, requestId }) => {
   const [messageId, setMessageId] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [codeSnippet, setCodeSnippet] = useState("");
-  const [editedCodeSnippet, setEditedCodeSnippet] = useState(false);
+  const [editedCodeSnippet, setEditedCodeSnippet] = useState({
+    state: false,
+    value: "",
+  });
   const [comments, setComments] = useState("");
-  const [editedComments, setEditedComments] = useState(false);
+  const [editedComments, setEditedComments] = useState({
+    state: false,
+    value: "",
+  });
 
   useEffect(() => {
     setMessageId(message["_id"]);
     setCodeSnippet(message.code);
     setComments(message.comments);
+    setEditedCodeSnippet({ value: message.code });
+    setEditedComments({ value: message.comments });
   }, [message.code, message.comments]);
 
   const toggelEditMessage = () => {
@@ -49,11 +57,11 @@ const Messages = ({ message, language, requestId }) => {
     switch (name) {
       case "code-snippet":
         setCodeSnippet(value);
-        setEditedCodeSnippet(true);
+        setEditedCodeSnippet({ state: true, value });
         break;
       case "comments":
         setComments(value);
-        setEditedComments(true);
+        setEditedComments({ state: true, value });
         break;
       default:
     }
@@ -61,13 +69,13 @@ const Messages = ({ message, language, requestId }) => {
 
   const handleCodeSnippetChange = (value) => {
     setCodeSnippet(value);
-    setEditedCodeSnippet(true);
+    setEditedCodeSnippet({ state: true, value });
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!editedComments && !editedCodeSnippet) {
+    if (!editedComments.state && !editedCodeSnippet.state) {
       setSnackbar({
         open: true,
         severity: "warning",
@@ -138,7 +146,7 @@ const Messages = ({ message, language, requestId }) => {
         <div className={classes.syntax}>
           <CodeEditor
             language={language}
-            value={codeSnippet}
+            value={!editMode ? codeSnippet : editedCodeSnippet.value}
             readOnly={!editMode}
             onChange={handleCodeSnippetChange}
           />
@@ -171,7 +179,7 @@ const Messages = ({ message, language, requestId }) => {
               fullWidth
               multiline
               rows={5}
-              value={comments}
+              value={!editMode ? comments : editedComments.value}
               onChange={handleFormChange}
               style={editMode ? { display: "block" } : { display: "none" }}
             />
