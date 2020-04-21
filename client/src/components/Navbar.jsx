@@ -70,11 +70,12 @@ const useStyles = makeStyles((theme) => ({
 
 const Navbar = () => {
   const classes = useStyles();
-  const { user, logout } = useContext(UserContext);
+  const { user, setUser, logout } = useContext(UserContext);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState({});
   const [notifications, setNotifications] = useState([]);
   const [newNotification, setNewNotification] = useState([]);
+  const [newScore, setNewScore] = useState({ score: 0 });
 
   const handleUploadDialog = () => {
     setUploadDialogOpen(!uploadDialogOpen);
@@ -95,7 +96,7 @@ const Navbar = () => {
 
   useEffect(() => {
     // initialize socket connection
-    socket.connect(localStorage.token, setNewNotification);
+    socket.connect(localStorage.token, setNewScore, setNewNotification);
 
     // fetch all notifications for this user from db
     (async function () {
@@ -107,6 +108,14 @@ const Navbar = () => {
   useEffect(() => {
     setNotifications([newNotification, ...notifications]);
   }, [newNotification]);
+
+  useEffect(() => {
+    setUser({
+      ...user,
+      totalRatings: user.totalRatings + 1,
+      totalRatingsScore: user.totalRatingsScore + newScore.score,
+    });
+  }, [newScore]);
 
   return (
     <AppBar>

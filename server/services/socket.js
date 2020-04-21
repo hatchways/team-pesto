@@ -43,6 +43,11 @@ class Socket {
     const recipientSocketId = this.usersByUserId[recipient];
     this.io.to(recipientSocketId).emit("notification", data);
   }
+
+  updateProfileRating(reviewerId, score) {
+    const reviewerSocketId = this.usersByUserId[reviewerId];
+    this.io.to(reviewerSocketId).emit("new-rating", score)
+  }
 }
 
 module.exports = new Socket();
