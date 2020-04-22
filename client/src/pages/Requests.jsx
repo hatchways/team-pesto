@@ -4,7 +4,7 @@ import axios from "axios";
 import ReviewThreads from 'components/ReviewThreads';
 import { getToken } from 'utils/storage';
 
-const Requests = ({ match }) => {
+const Requests = () => {
   const [requests, setRequests] = useState([]);
 
   useEffect(() => {
@@ -25,7 +25,6 @@ const Requests = ({ match }) => {
     <ReviewThreads
       reviews={requests}
       type='requests'
-      match={match}
     />
   );
 };

@@ -1,12 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Drawer, Typography, Card } from '@material-ui/core';
 
 import useStyles from './Sidebar.css';
 import formatDate from 'utils/formatDate';
 
-const Sidebar = ({ reviews, type, active }) => {
+const Sidebar = ({ reviews, type }) => {
   const classes = useStyles();
+  const activeId = useParams().id;
 
   const title = type[0].toUpperCase() + type.slice(1);
 
@@ -32,7 +33,7 @@ const Sidebar = ({ reviews, type, active }) => {
           >
             <Card
               className={
-                `${classes.card} ${review['_id'] === active ? classes.active: null}`
+                `${classes.card} ${review['_id'] === activeId ? classes.active: null}`
               }
               data-id={review.id}
               variant="outlined"

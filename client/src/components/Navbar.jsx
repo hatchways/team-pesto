@@ -13,12 +13,12 @@ import {
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 
+import Notifications from "./Notifications/Notifications";
 import UserContext from "context/UserContext";
 import CodeUploadDialog from "pages/CodeUploadDialog";
+import logo from 'assets/images/logo.png';
 
 import socket from "utils/socket";
-
-import Notifications from "./Notifications/Notifications";
 
 // TO DO: import styles from centralized location
 
@@ -117,7 +117,7 @@ const Navbar = () => {
       <Toolbar>
         <Toolbar className={classes.logo}>
           <Link to="/">
-            <img src="logo.png" />
+            <img src={logo} />
           </Link>
         </Toolbar>
 

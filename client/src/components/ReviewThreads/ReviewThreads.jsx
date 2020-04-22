@@ -5,12 +5,12 @@ import useStyles from './ReviewThreads.css';
 import Sidebar from './Sidebar';
 import Thread from './Thread';
 
-const ReviewThreads = ({ type, reviews, match }) => {
+const ReviewThreads = ({ type, reviews, fetchReviews }) => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <Sidebar reviews={reviews} type={type} active={match.params.id} />
+      <Sidebar reviews={reviews} type={type} />
       <div className={classes.threadContainer}>
         <Switch>
           {reviews.map((review) => (
@@ -18,13 +18,19 @@ const ReviewThreads = ({ type, reviews, match }) => {
               key={review['_id']}
               exact
               path={`/${type}/${review['_id']}`}
-              render={() => <Thread review={review} type={type} />}
+              render=
+                {() => (
+                  <Thread
+                    review={review}
+                    type={type}
+                    fetchReviews={fetchReviews}
+                  />
+                )}
             />
           ))}
 
           {reviews.length > 0 ? (
             <Route
-              exact
               path={`/${type}`}
               render={() => <Redirect to={`/${type}/${reviews[0]['_id']}`} />}
             />

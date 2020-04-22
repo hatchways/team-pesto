@@ -1,16 +1,40 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Button, Paper, Typography, Avatar } from "@material-ui/core";
-import UserContext from "context/UserContext";
-import formatDate from "utils/formatDate";
-import CodeEditor from "components/CodeEditor";
+import axios from 'axios';
 
 import useStyles from "./Thread.css";
+import UserContext from "context/UserContext";
+import CodeEditor from "components/CodeEditor";
+import { getToken } from 'utils/storage';
+import formatDate from "utils/formatDate";
 
-const Thread = ({ review, type }) => {
+const Thread = ({ review, type, fetchReviews }) => {
   const classes = useStyles();
 
+  const [loading, setLoading] = useState(false);
+
   const { user } = useContext(UserContext);
+
   const { title, date, messages, language, status } = review;
+
+  const handleAcceptReject = async (status) => {
+    setLoading(true);
+
+    const token = getToken();
+    try {
+      await axios.put(
+        `/api/reviews/${review['_id']}/status`,
+        { status },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      fetchReviews();
+    } catch (err) {
+      console.error(err);
+    }
+
+    setLoading(false);
+  };
 
   const renderHeader = () => {
     let actions = null;
@@ -21,14 +45,18 @@ const Thread = ({ review, type }) => {
             variant='contained'
             color='primary'
             disableElevation
-            className={classes.headerActionButton}
+            disabled={loading}
+            className={classes.headerActionButton}            
+            onClick={() => { handleAcceptReject('accepted') }}
           >
             Accept
           </Button>
           <Button
             variant='outlined'
             color='primary'
+            disabled={loading}
             className={classes.headerActionButton}
+            onClick={() => { handleAcceptReject('rejected') }}
           >
             Reject
           </Button>
