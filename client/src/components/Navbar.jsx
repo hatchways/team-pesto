@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useReducer } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -68,14 +68,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const initialState = {
+  notifications: [],
+};
+
+const reducer = (state, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case "fetchNotifications":
+      return { ...initialState, notifications: payload };
+    case "addNotification":
+      return { ...initialState, notifications: [payload, ...state.notifications] };
+  }
+};
+
 const Navbar = () => {
   const classes = useStyles();
-  const { user, setUser, logout } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
+  const [state, dispatch] = useReducer(reducer, initialState);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState({});
-  const [notifications, setNotifications] = useState([]);
-  const [newNotification, setNewNotification] = useState([]);
-  const [newScore, setNewScore] = useState({ score: 0 });
 
   const handleUploadDialog = () => {
     setUploadDialogOpen(!uploadDialogOpen);
@@ -96,26 +108,39 @@ const Navbar = () => {
 
   useEffect(() => {
     // initialize socket connection
-    socket.connect(localStorage.token, setNewScore, setNewNotification);
+    socket.connect(localStorage.token);
 
     // fetch all notifications for this user from db
     (async function () {
       const data = await socket.fetchNotifications();
-      setNotifications(data);
+      dispatch({ type: "fetchNotifications", payload: data.reverse() });
     })();
+
+    // subscribe this component to socket IO client
+    socket.subscribe("navbar", data => {
+      const { type, payload } = data;
+      switch (type) {
+        case "notification":
+      }
+      if (type === "notification") {
+        dispatch({ type: "addNotification", payload });
+      }
+    });
+
+    // useEffect returns a callback for unsubscribing when it unmounts
+    return () => socket.unsubscribe("navbar");
   }, []);
 
-  useEffect(() => {
-    setNotifications([newNotification, ...notifications]);
-  }, [newNotification]);
+  // TO DO: DELETE THIS WHEN DONE
+  // useEffect(() => {
+  //   setUser({
+  //     ...user,
+  //     totalRatings: user.totalRatings + 1,
+  //     totalRatingsScore: user.totalRatingsScore + newScore.score,
+  //   });
+  // }, [newScore]);
 
-  useEffect(() => {
-    setUser({
-      ...user,
-      totalRatings: user.totalRatings + 1,
-      totalRatingsScore: user.totalRatingsScore + newScore.score,
-    });
-  }, [newScore]);
+  console.log('STATE:', state);
 
   return (
     <AppBar>
@@ -148,9 +173,9 @@ const Navbar = () => {
               <Badge
                 color="secondary"
                 variant="dot"
-                invisible={notifications.every((n) => n.seen)}
+                invisible={state.notifications.every((n) => n.seen)}
               >
-                {notifications.length ? (
+                {state.notifications.length ? (
                   <NotificationsIcon />
                 ) : (
                   <NotificationsNoneIcon />
@@ -165,7 +190,7 @@ const Navbar = () => {
             open={anchorEl.id === "notifications"}
             onClose={handleClose}
           >
-            <Notifications notifications={notifications} />
+            <Notifications notifications={state.notifications} />
           </Menu>
 
           <Button

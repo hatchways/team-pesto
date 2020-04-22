@@ -9,31 +9,31 @@ const REQUESTER_NEW_POST = 5;
 const REVIEWER_NEW_POST = 6;
 
 const createNotification = async data => {
-  const { reviewId, recipient, counterpart, code } = data;
-  const body = { recipient: recipient.id };
+  const { reviewId, recipientId, counterpartName, code } = data;
+  const body = { recipient: recipientId };
   switch (code) {
     case RECEIVED_REVIEW_REQUEST:
-      body.title = `${counterpart.name} has requested your review!`;
+      body.title = `${counterpartName} has requested your review!`;
       body.link = `reviews/${reviewId}`;
       break;
     case REQUEST_ACCEPTED:
-      body.title = `${counterpart.name} has accepted your request!`;
+      body.title = `${counterpartName} has accepted your request!`;
       body.link = `requests/${reviewId}`;
       break;
     case REQUEST_DECLINED:
-      body.title = `${counterpart.name} has declined your request.`;
+      body.title = `${counterpartName} has declined your request.`;
       body.link = `requests/${reviewId}`;
       break;
     case REVIEW_COMPLETED:
-      body.title = `${counterpart.name} has marked the review complete!`;
+      body.title = `${counterpartName} has marked the review complete!`;
       body.link = `requests/${reviewId}`;
       break;
     case REQUESTER_NEW_POST:
-      body.title = `${counterpart.name} made a post in your thread!`;
+      body.title = `${counterpartName} made a post in your thread!`;
       body.link = `reviews/${reviewId}`;
       break;
     case REVIEWER_NEW_POST:
-      body.title = `${counterpart.name} made a post in your thread!`;
+      body.title = `${counterpartName} made a post in your thread!`;
       body.link = `requests/${reviewId}`;
       break;
     default:

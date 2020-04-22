@@ -9,7 +9,5 @@ const ratingSchema = new Schema({
   score: { type: Number, required: true },
 });
 
-ratingSchema.index({ reviewer: 1 });
-
 const Rating = mongoose.model("rating", ratingSchema);
 module.exports = Rating;

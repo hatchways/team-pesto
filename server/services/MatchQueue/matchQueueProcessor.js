@@ -58,8 +58,8 @@ const matchQueueProcessor = async (job) => {
     // send a notification to the assigned reviewer
     await createNotification({
       reviewId,
-      recipient: reviewer,
-      counterpart: requester,
+      recipientId: reviewer.id,
+      counterpartName: requester.name,
       code: 1,
     });
   }

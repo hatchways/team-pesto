@@ -2,24 +2,28 @@ import io from "socket.io-client";
 import axios from "axios";
 
 class Socket {
-  connect(token, setNewScore, setNewNotification) {
+  constructor () {
+    this.subscribers = {};
+  }
+
+  connect(token) {
     this.socket = io("localhost:3001");
 
     // emit event with token from localStorage (will be verified in back end with JWT)
     this.socket.emit("store-user-id", { token });
 
-    // TO DO: RETHINK THE SCALABILITY OF THIS METHOD. PROB CAN'T KEEP
-    // ADDING MORE set___ METHODS INTO THIS CONNECT METHOD?
-    // receive notification from server
-    this.socket.on("notification", data => {
-      setNewNotification(data);
-    });
-
-    // TO DO: FIGURE OUT HOW TO UPDATE USER RATING
-    // receive new rating from server
-    this.socket.on("new-rating", score => {
-      console.log("SCORE:", typeof score, score)
-      setNewScore({ score });
+    // place a socket listener that listens for all "send-data" events, and triggers subscriber
+    // components to invoke their callback functions. `data` is an object with keys 'type' and
+    // 'payload'
+    this.socket.on("send-data", data => {
+      for (const component in this.subscribers) {
+        try {
+          const callback = this.subscribers[component];
+          callback(data);
+        } catch (err) {
+          console.error(err);
+        }
+      }
     });
   }
 
@@ -34,6 +38,15 @@ class Socket {
       console.error(err);
     }
   }
+
+  subscribe(component, callback) {
+    this.subscribers[component] = callback;
+  }
+
+  unsubscribe(component) {
+    delete this.subscribers[component];
+  }
+
 }
 
 export default new Socket();
