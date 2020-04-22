@@ -6,6 +6,7 @@ const configureStripe = require("stripe");
 
 const { passportSecret, stripeSecretKey } = require("../../config/keys");
 const User = require("../../models/User");
+const Review = require("../../models/Review");
 const validateEmail = require("../../validation/email");
 const validatePassword = require("../../validation/password");
 const validateExperience = require("../../validation/experience");
@@ -157,10 +158,11 @@ router.get("/profile/:id", authenticate, async (req, res) => {
 
   try {
     const user = await User.findById(id);
+    const reviews = await Review.find({ reviewerId: id });
 
     if (user) {
       const profile = user.profile();
-      res.status(200).send(profile);
+      res.status(200).send({ profile, reviews: reviews.length });
     } else {
       return res.sendStatus(400);
     }

@@ -26,6 +26,7 @@ const Profile = (props) => {
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
   const [years, setYears] = useState("");
+  const [reviews, setReviews] = useState(0);
   const [experience, setExperience] = useState([]);
   const [image, setImage] = useState("");
 
@@ -42,18 +43,21 @@ const Profile = (props) => {
           headers: { Authorization: `Bearer ${getToken()}` },
         });
 
-        setProfileId(data["_id"]);
-        setName(data.name);
-        setTitle(data.title);
-        setYears(data.years);
-        setExperience(data.experience);
-        setImage(data.image);
+        const { profile, reviews } = data;
 
-        setEditedName(data.name);
-        setEditedTitle(data.title);
-        setEditedYears(data.years);
-        setEditedExperience(data.experience);
-        setEditedImage(data.image);
+        setProfileId(profile["_id"]);
+        setReviews(reviews);
+        setName(profile.name);
+        setTitle(profile.title);
+        setYears(profile.years);
+        setExperience(profile.experience);
+        setImage(profile.image);
+
+        setEditedName(profile.name);
+        setEditedTitle(profile.title);
+        setEditedYears(profile.years);
+        setEditedExperience(profile.experience);
+        setEditedImage(profile.image);
       } catch (err) {
         console.error(err);
       }
@@ -182,7 +186,7 @@ const Profile = (props) => {
             </Typography>
           </div>
           <div>
-            <Typography className={classes.text}>24</Typography>
+            <Typography className={classes.text}>{reviews}</Typography>
             <Typography className={classes.text}>Reviews</Typography>
           </div>
           <div>
