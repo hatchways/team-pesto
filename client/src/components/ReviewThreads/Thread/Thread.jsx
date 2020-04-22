@@ -1,25 +1,59 @@
 import React, { useContext } from "react";
-import { Paper, Typography, Avatar } from "@material-ui/core";
+import { Button, Paper, Typography, Avatar } from "@material-ui/core";
 import UserContext from "context/UserContext";
 import formatDate from "utils/formatDate";
 import CodeEditor from "components/CodeEditor";
 
 import useStyles from "./Thread.css";
 
-const Thread = (props) => {
+const Thread = ({ review, type }) => {
   const classes = useStyles();
 
   const { user } = useContext(UserContext);
-  const { title, date, messages, language } = props.singleRequestView;
+  const { title, date, messages, language, status } = review;
+
+  const renderHeader = () => {
+    let actions = null;
+    if (type === 'reviews' && status === 'pending') {
+      actions = (
+        <div className={classes.headerActions}>
+          <Button
+            variant='contained'
+            color='primary'
+            disableElevation
+            className={classes.headerActionButton}
+          >
+            Accept
+          </Button>
+          <Button
+            variant='outlined'
+            color='primary'
+            className={classes.headerActionButton}
+          >
+            Reject
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <div className={classes.header}>
+        <div>
+          <Typography className={classes.title} variant="h3">
+            {title}
+          </Typography>
+          <Typography className={classes.date}>{formatDate(date)}</Typography>
+        </div>
+
+        {actions}
+      </div>
+    );
+  };
 
   return (
     <Paper className={classes.singleView}>
-      <div className={classes.header}>
-        <Typography className={classes.title} variant="h3">
-          {title}
-        </Typography>
-        <Typography className={classes.date}>{formatDate(date)}</Typography>
-      </div>
+      {renderHeader()}
+
       <div className={classes.syntaxWrapper}>
         {messages.map((message) => (
           <div key={message["_id"]}>

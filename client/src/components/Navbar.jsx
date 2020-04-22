@@ -192,16 +192,14 @@ const Navbar = () => {
             open={anchorEl.id === "profile"}
             onClose={handleClose}
           >
-            <>
-              <MenuItem>
-                <Link className={classes.link} to="/profile">
-                  Go to Profile
-                </Link>
-              </MenuItem>
-              <MenuItem onClick={handleLogout}>
-                <Link className={classes.link} to="/">Logout</Link>
-              </MenuItem>
-            </>
+            <MenuItem>
+              <Link className={classes.link} to="/profile">
+                Go to Profile
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={handleLogout}>
+              <Link className={classes.link} to="/">Logout</Link>
+            </MenuItem>
           </Menu>
         </Toolbar>
       </Toolbar>

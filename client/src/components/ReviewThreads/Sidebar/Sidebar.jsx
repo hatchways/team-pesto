@@ -26,7 +26,7 @@ const Sidebar = ({ reviews, type, active }) => {
 
         {reviews.map((review) => (
           <Link
-            key={review.id}
+            key={review['_id']}
             className={classes.link}
             to={`/${type}/${review['_id']}`}
           >

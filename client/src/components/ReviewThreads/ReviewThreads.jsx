@@ -18,7 +18,7 @@ const ReviewThreads = ({ type, reviews, match }) => {
               key={review['_id']}
               exact
               path={`/${type}/${review['_id']}`}
-              render={() => <Thread singleRequestView={review} />}
+              render={() => <Thread review={review} type={type} />}
             />
           ))}
 
