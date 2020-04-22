@@ -154,13 +154,17 @@ const Profile = (props) => {
     <MainContainer>
       <form className={classes.MainWrapper}>
         <div className={classes.gridRow1}>
-          <div className={classes.userAvatar}>
-            <Avatar src={image} />
+          <span></span>
+          <div className={classes.text}>
+            <div>
+              <div className={classes.userAvatar}>
+                <Avatar src={image} />
+              </div>
+              <Typography className={classes.profileName}>{name}</Typography>
+
+              <Typography className={classes.title}>{title}</Typography>
+            </div>
           </div>
-          <Typography className={classes.profileName}>{name}</Typography>
-
-          <Typography className={classes.title}>{title}</Typography>
-
           <div
             className={classes.editHeader}
             style={showEditOption ? { display: "block" } : { display: "none" }}
@@ -188,8 +192,8 @@ const Profile = (props) => {
         </div>
 
         <div className={classes.gridRow3}>
-          {editedExperience.map((exp) => (
-            <div>
+          {editedExperience.map((exp, index) => (
+            <div key={index}>
               <Typography className={classes.text}>
                 {options[exp.language]}
               </Typography>

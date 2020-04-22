@@ -19,8 +19,8 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   gridRow1: {
-    display: "flex",
-    flexDirection: "column",
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(50px, 1fr))",
     alignItems: "center",
     width: "100%",
   },
@@ -45,6 +45,15 @@ const useStyles = makeStyles((theme) => ({
   inputField: {
     "& .MuiInputBase-input": {
       textAlign: "center",
+    },
+  },
+  editHeader: {
+    height: "100%",
+    textAlign: "right",
+  },
+  editIcon: {
+    "&:hover": {
+      cursor: "pointer",
     },
   },
 }));

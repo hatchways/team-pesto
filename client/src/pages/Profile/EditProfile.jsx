@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Button,
   TextField,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -83,9 +82,6 @@ const EditProfile = ({
       <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Update your Profile</DialogTitle>
         <DialogContent className={classes.content}>
-          <DialogContentText>
-            Please fill in the options below to update your profile.
-          </DialogContentText>
           <TextField
             name="name"
             label="Your name"
