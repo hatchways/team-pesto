@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   MainWrapper: {
     display: "grid",
-    gridTemplateRows: "repeat(3, 20%) 1fr",
+    gridTemplateRows: "repeat(3, 1fr) 1fr",
     justifyItems: "center",
     width: "100%",
     height: "100%",
@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
   text: {
     display: "flex",
     justifyContent: "center",
+    textAlign: "center",
   },
   gridRow1: {
     display: "flex",
@@ -40,6 +41,11 @@ const useStyles = makeStyles((theme) => ({
     gridTemplateColumns: "repeat(auto-fit, minmax(50px, 1fr))",
     alignItems: "center",
     width: "100%",
+  },
+  inputField: {
+    "& .MuiInputBase-input": {
+      textAlign: "center",
+    },
   },
 }));
 

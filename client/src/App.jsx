@@ -12,7 +12,7 @@ import Balance from "pages/Balance";
 import { remove } from "utils/storage";
 import Onboarding from "pages/Onboarding";
 import Requests from "pages/Requests/Requests";
-import Profile from "pages/Profile";
+import Profile from "pages/Profile/Profile";
 
 import "./App.css";
 
