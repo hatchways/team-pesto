@@ -1,5 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import UserContext from "context/UserContext";
+import axios from "axios";
 import {
   Typography,
   Avatar,
@@ -8,28 +9,55 @@ import {
   Portal,
   Snackbar,
 } from "@material-ui/core";
+import { getToken } from "utils/storage";
 import useStyle from "pages/Profile.css";
 
 import MainContainer from "components/MainContainer";
 
-const Profile = () => {
+const Profile = (props) => {
   const classes = useStyle();
   const { user } = useContext(UserContext);
+  const [profile, setProfile] = useState({
+    name: "",
+    title: "",
+    years: "",
+    experience: [],
+  });
+
+  useEffect(() => {
+    const getProfile = async (id) => {
+      try {
+        const { data } = await axios.get(`/api/users/profile/${id}`, {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        });
+
+        setProfile(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    getProfile(props.match.params.id || user.id);
+  }, []);
+
+  console.log(profile);
+
   return (
     <MainContainer>
-      {console.log(user)}
       <div className={classes.MainWrapper}>
         <div className={classes.gridRow1}>
           <div className={classes.userAvatar}>
-            <Avatar src={user && user.image} />
+            <Avatar src={profile && profile.image} />
           </div>
-          <Typography className={classes.userName}>{user.name}</Typography>
-          <Typography className={classes.title}>{user.title}</Typography>
+          <Typography className={classes.profileName}>
+            {profile.name}
+          </Typography>
+          <Typography className={classes.title}>{profile.title}</Typography>
         </div>
 
         <div className={classes.gridRow2}>
           <div>
-            <Typography className={classes.text}>{user.years}</Typography>
+            <Typography className={classes.text}>{profile.years}</Typography>
             <Typography className={classes.text}>
               Years of Experience
             </Typography>
@@ -45,7 +73,7 @@ const Profile = () => {
         </div>
 
         <div className={classes.gridRow3}>
-          {user.experience.map((exp) => (
+          {profile.experience.map((exp) => (
             <div>
               <Typography className={classes.text}>{exp.language}</Typography>
               <Typography className={classes.text}>{exp.level}</Typography>
