@@ -19,6 +19,7 @@ async(req, res) => {
     const review = await Review.findById(reviewId);
     const { reviewerId, requesterId } = review;
 
+    // TO DO: RESTORE THIS COMMENTED OUT CODE WHEN NOT TESTING WITH POSTMAN
     // verify that poster is requester
     // if (req.user.id !== requesterId) return res.sendStatus(401);
 

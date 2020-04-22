@@ -41,7 +41,6 @@ class Socket {
   sendNotification(payload) {
     const { recipient } = payload;
     const recipientSocketId = this.usersByUserId[recipient];
-    // this.io.to(recipientSocketId).emit("notification", data);
     this.io.to(recipientSocketId).emit("send-data", {
       type: "notification",
       payload,
