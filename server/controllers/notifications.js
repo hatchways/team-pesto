@@ -1,4 +1,5 @@
 const Notification = require("../models/Notification");
+const User = require("../models/User");
 const Socket = require("../services/socket");
 
 const RECEIVED_REVIEW_REQUEST = 1;
@@ -9,7 +10,8 @@ const REQUESTER_NEW_POST = 5;
 const REVIEWER_NEW_POST = 6;
 
 const createNotification = async data => {
-  const { reviewId, recipientId, counterpartName, code } = data;
+  const { reviewId, recipientId, counterpartId, code } = data;
+  const counterpartName = (await User.findById(counterpartId)).name;
   const body = { recipient: recipientId };
   switch (code) {
     case RECEIVED_REVIEW_REQUEST:

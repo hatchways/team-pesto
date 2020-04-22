@@ -59,7 +59,7 @@ const matchQueueProcessor = async (job) => {
     await createNotification({
       reviewId,
       recipientId: reviewer.id,
-      counterpartName: requester.name,
+      counterpartId: requester.id,
       code: 1,
     });
   }
