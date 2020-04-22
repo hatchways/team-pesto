@@ -9,7 +9,7 @@ class Socket {
     this.socket.emit("store-user-id", { token });
 
     // receive notification from server
-    this.socket.on("notification", data => {
+    this.socket.on("notification", (data) => {
       setNewNotification(data);
     });
   }
@@ -18,8 +18,8 @@ class Socket {
     const AuthStr = localStorage.token;
     try {
       const { data } = await axios.get("/api/notifications", {
-        headers: { Authorization: "Bearer " + AuthStr },
-      })
+        headers: { Authorization: `Bearer ${AuthStr}` },
+      });
       return data;
     } catch (err) {
       console.error(err);

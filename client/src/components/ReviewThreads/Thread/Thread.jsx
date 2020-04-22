@@ -4,9 +4,9 @@ import UserContext from "context/UserContext";
 import formatDate from "utils/formatDate";
 import CodeEditor from "components/CodeEditor";
 
-import useStyles from "./SingleView.css";
+import useStyles from "./Thread.css";
 
-const SingleView = (props) => {
+const Thread = (props) => {
   const classes = useStyles();
 
   const { user } = useContext(UserContext);
@@ -54,4 +54,4 @@ const SingleView = (props) => {
   );
 };
 
-export default SingleView;
+export default Thread;

@@ -1,16 +1,16 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    height: '100vh',
-    width: '100vw',
+    display: "flex",
+    height: "100vh",
+    width: "100vw",
     backgroundColor: `${theme.palette.background.main}`,
   },
 
-  threadContainer: {    
+  threadContainer: {
     flexGrow: 1,
-    margin: 'auto',
+    margin: "auto",
     marginTop: 64,
   },
 }));

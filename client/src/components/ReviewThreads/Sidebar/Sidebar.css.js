@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from "@material-ui/core";
 
 const drawerWidth = 375;
 
@@ -10,11 +10,11 @@ const useStyles = makeStyles((theme) => ({
 
   reviewSidebarPaper: {
     width: drawerWidth,
-    boxSizing: 'border-box',
+    boxSizing: "border-box",
   },
 
   title: {
-    margin: '50px 0 30px 0',
+    margin: "50px 0 30px 0",
   },
 
   quantity: {
@@ -22,12 +22,12 @@ const useStyles = makeStyles((theme) => ({
   },
 
   drawerContainer: {
-    overflow: 'auto',
-    padding: '3rem',
+    overflow: "auto",
+    padding: "3rem",
   },
 
   link: {
-    textDecoration: 'none',
+    textDecoration: "none",
   },
 
   card: {
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   active: {
-    borderColor: "#43DDC1"
+    borderColor: "#43DDC1",
   },
 
   reviewTitle: {

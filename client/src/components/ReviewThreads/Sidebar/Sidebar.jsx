@@ -2,11 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Drawer, Typography, Card } from '@material-ui/core';
 
-import useStyles from './ReviewSidebar.css';
+import useStyles from './Sidebar.css';
 import formatDate from 'utils/formatDate';
 
-const ReviewSidebar = ({ reviews, active }) => {
+const Sidebar = ({ reviews, type, active }) => {
   const classes = useStyles();
+
+  const title = type[0].toUpperCase() + type.slice(1);
 
   return (
     <Drawer
@@ -19,14 +21,14 @@ const ReviewSidebar = ({ reviews, active }) => {
     >
       <div className={classes.drawerContainer}>
         <Typography variant="h3" className={classes.title}>
-          Reviews <span className={classes.quantity}>({reviews.length})</span>
+          {title} <span className={classes.quantity}>({reviews.length})</span>
         </Typography>
 
         {reviews.map((review) => (
           <Link
             key={review.id}
             className={classes.link}
-            to={`/reviews/${review['_id']}`}
+            to={`/${type}/${review['_id']}`}
           >
             <Card
               className={
@@ -47,4 +49,4 @@ const ReviewSidebar = ({ reviews, active }) => {
   );
 };
 
-export default ReviewSidebar;
+export default Sidebar;
