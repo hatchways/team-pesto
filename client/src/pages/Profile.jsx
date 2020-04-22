@@ -24,11 +24,12 @@ const Profile = () => {
             <Avatar src={user && user.image} />
           </div>
           <Typography className={classes.userName}>{user.name}</Typography>
+          <Typography className={classes.title}>{user.title}</Typography>
         </div>
 
         <div className={classes.gridRow2}>
           <div>
-            <Typography className={classes.text}>5</Typography>
+            <Typography className={classes.text}>{user.years}</Typography>
             <Typography className={classes.text}>
               Years of Experience
             </Typography>

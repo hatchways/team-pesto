@@ -24,7 +24,20 @@ const userSchema = new Schema({
   experience: { type: Array },
   balance: { type: Number, default: 3 },
   image: { type: String },
+  title: { type: String },
+  years: { type: String },
 });
+
+userSchema.methods.profile = function () {
+  return {
+    _id: this._id,
+    name: this.name,
+    experience: this.experience,
+    image: this.image,
+    title: this.title,
+    years: this.years,
+  };
+};
 
 // hash password before saving
 userSchema.pre("save", hashHook);
