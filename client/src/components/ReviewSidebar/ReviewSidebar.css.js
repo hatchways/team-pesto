@@ -27,9 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   link: {
-    '&:hover': {
-      textDecoration: 'none',
-    }
+    textDecoration: 'none',
   },
 
   card: {
@@ -41,6 +39,10 @@ const useStyles = makeStyles((theme) => ({
       cursor: "pointer",
       borderColor: `${theme.palette.secondary.main}`,
     },
+  },
+
+  active: {
+    borderColor: "#43DDC1"
   },
 
   reviewTitle: {

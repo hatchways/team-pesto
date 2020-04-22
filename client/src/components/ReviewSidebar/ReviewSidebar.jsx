@@ -1,10 +1,11 @@
 import React from 'react';
-import { Drawer, Paper, Typography, Link, Card } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import { Drawer, Typography, Card } from '@material-ui/core';
 
 import useStyles from './ReviewSidebar.css';
 import formatDate from 'utils/formatDate';
 
-const ReviewSidebar = ({ reviews }) => {
+const ReviewSidebar = ({ reviews, active }) => {
   const classes = useStyles();
 
   return (
@@ -25,13 +26,14 @@ const ReviewSidebar = ({ reviews }) => {
           <Link
             key={review.id}
             className={classes.link}
-            to={`/requests/${review.id}`}
+            to={`/reviews/${review['_id']}`}
           >
             <Card
-              className={classes.card}
+              className={
+                `${classes.card} ${review['_id'] === active ? classes.active: null}`
+              }
               data-id={review.id}
               variant="outlined"
-              // style={borderColor(review["_id"])}
             >
               <Typography className={classes.reviewTitle}>{review.title}</Typography>
               <Typography className={classes.date}>
