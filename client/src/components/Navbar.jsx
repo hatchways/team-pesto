@@ -84,7 +84,7 @@ const reducer = (state, action) => {
 
 const Navbar = () => {
   const classes = useStyles();
-  const { user, logout } = useContext(UserContext);
+  const { user, setUser, logout } = useContext(UserContext);
   const [state, dispatch] = useReducer(reducer, initialState);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState({});
@@ -121,26 +121,22 @@ const Navbar = () => {
       const { type, payload } = data;
       switch (type) {
         case "notification":
-      }
-      if (type === "notification") {
-        dispatch({ type: "addNotification", payload });
+          dispatch({ type: "addNotification", payload });
+          return;
+        case "new-rating":
+          setUser({
+            ...user,
+            totalRatings: user.totalRatings + 1,
+            totalRatingsScore: user.totalRatingsScore + payload,
+          });
+          console.log('USER:', user);   // TO DO: THIS DOESN'T ALWAYS UPDATE VISUALLY ON THE PAGE. WHY?
+          return;
       }
     });
 
     // useEffect returns a callback for unsubscribing when it unmounts
     return () => socket.unsubscribe("navbar");
   }, []);
-
-  // TO DO: DELETE THIS WHEN DONE
-  // useEffect(() => {
-  //   setUser({
-  //     ...user,
-  //     totalRatings: user.totalRatings + 1,
-  //     totalRatingsScore: user.totalRatingsScore + newScore.score,
-  //   });
-  // }, [newScore]);
-
-  console.log('STATE:', state);
 
   return (
     <AppBar>
@@ -154,7 +150,8 @@ const Navbar = () => {
         <Toolbar className={classes.toolbar}>
           <Button className={classes.clickable}>
             <Link className={classes.link} to="/requests">
-              Requests
+              {/* Requests */}        {/* TO DO: REMOVE THIS WHEN DONE TESTING */}
+              {user.totalRatings}     {/* TO DO: REMOVE THIS WHEN DONE TESTING */}
             </Link>
           </Button>
 
