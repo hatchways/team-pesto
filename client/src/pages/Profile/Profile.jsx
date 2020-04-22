@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import UserContext from "context/UserContext";
 import axios from "axios";
 import { Typography, Avatar, Portal, Snackbar } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import EditIcon from "@material-ui/icons/Edit";
 
 import { getToken } from "utils/storage";
@@ -15,6 +16,12 @@ const Profile = (props) => {
 
   const [showEditOption, setShowEditOption] = useState(true);
   const [open, setOpen] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    severity: "",
+    message: "",
+  });
+
   const [profileId, setProfileId] = useState("");
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
@@ -87,24 +94,60 @@ const Profile = (props) => {
     setTitle(editedTitle);
     setYears(editedYears);
 
-    try {
-      await axios.put(
-        "/api/users/me",
-        {
-          id: profileId,
-          name: editedName,
-          title: editedTitle,
-          years: editedYears,
-        },
-        {
-          headers: { Authorization: `Bearer ${getToken()}` },
-        }
-      );
+    if (
+      editedExperience.some((obj) => obj.language === "" || obj.level === "")
+    ) {
+      setSnackbar({
+        open: true,
+        severity: "warning",
+        message: "No empty input fields allowed.",
+      });
+    } else if (editedExperience.length === 0) {
+      setSnackbar({
+        open: true,
+        severity: "warning",
+        message: "You must select at least one language.",
+      });
+    } else {
+      setSnackbar({
+        open: true,
+        severity: "success",
+        message: "Profile updated!",
+      });
+      try {
+        await axios.put(
+          "/api/users/me",
+          {
+            id: profileId,
+            name: editedName,
+            title: editedTitle,
+            years: editedYears,
+            experience: editedExperience,
+          },
+          {
+            headers: { Authorization: `Bearer ${getToken()}` },
+          }
+        );
 
-      handleClose();
-    } catch (err) {
-      console.error(err);
+        handleClose();
+      } catch (err) {
+        console.error(err);
+      }
     }
+  };
+
+  const options = {
+    javascript: "JavaScript",
+    python: "Python",
+    java: "Java",
+    cpp: "C++",
+    ruby: "Ruby",
+  };
+
+  const levels = {
+    0: "Beginner",
+    1: "Intermediate",
+    2: "Advanced",
   };
 
   return (
@@ -145,10 +188,14 @@ const Profile = (props) => {
         </div>
 
         <div className={classes.gridRow3}>
-          {experience.map((exp) => (
+          {editedExperience.map((exp) => (
             <div>
-              <Typography className={classes.text}>{exp.language}</Typography>
-              <Typography className={classes.text}>{exp.level}</Typography>
+              <Typography className={classes.text}>
+                {options[exp.language]}
+              </Typography>
+              <Typography className={classes.text}>
+                {levels[exp.level]}
+              </Typography>
             </div>
           ))}
         </div>
@@ -168,7 +215,23 @@ const Profile = (props) => {
         years={editedYears}
         experience={editedExperience}
         image={editedImage}
+        options={options}
+        levels={levels}
+        setEditedExperience={setEditedExperience}
+        setSnackbar={setSnackbar}
       />
+
+      <Portal>
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={5000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+        >
+          <Alert variant="filled" severity={snackbar.severity}>
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+      </Portal>
     </MainContainer>
   );
 };

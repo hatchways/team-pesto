@@ -126,9 +126,9 @@ router.get("/me", authenticate, (req, res) => {
 
 router.put("/me", authenticate, async (req, res) => {
   const userId = req.user.id;
-  const { id, name, title, years } = req.body;
+  const { id, name, title, years, experience } = req.body;
 
-  if ((!id || !name || !title, !years)) {
+  if ((!id || !name || !title, !years, !experience)) {
     res.status(400).send({ response: "Invalid input." });
     return;
   }
@@ -139,6 +139,7 @@ router.put("/me", authenticate, async (req, res) => {
       user.name = name;
       user.title = title;
       user.years = years;
+      user.experience = experience;
 
       user.save();
       res.sendStatus(200);

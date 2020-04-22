@@ -8,8 +8,8 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@material-ui/core";
-
 import { makeStyles } from "@material-ui/core/styles";
+import DynamicSelect from "pages/DynamicSelect";
 
 const useStyle = makeStyles((theme) => ({
   content: {
@@ -20,6 +20,14 @@ const useStyle = makeStyles((theme) => ({
     marginTop: "1rem",
     marginBottom: "1rem",
   },
+  ul: {
+    padding: 0,
+    listStyle: "none",
+  },
+  dialogContent: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
 }));
 
 const EditProfile = ({
@@ -27,13 +35,48 @@ const EditProfile = ({
   onClose,
   handleFormChange,
   handleSubmit,
+  setSnackbar,
   name,
   title,
   years,
   experience,
+  options,
+  levels,
+  setEditedExperience,
   image,
 }) => {
   const classes = useStyle();
+
+  const addLanguage = () => {
+    setEditedExperience([...experience, { language: "", level: "" }]);
+  };
+
+  const removeLanguage = (index, lang) => {
+    const updatedLanguageList = experience.slice();
+    updatedLanguageList.splice(index, 1);
+    setEditedExperience(updatedLanguageList);
+  };
+
+  const updateList = (userInput, index) => {
+    const updatedLanguageList = experience.slice();
+    updatedLanguageList[index] = {
+      ...updatedLanguageList[index],
+      [userInput.type]: userInput.value,
+    };
+
+    if (
+      userInput.type === "language" &&
+      experience.some((obj) => obj.language === userInput.value)
+    ) {
+      setSnackbar({
+        open: true,
+        severity: "warning",
+        message: `You already selected ${userInput.value}!`,
+      });
+    } else {
+      setEditedExperience(updatedLanguageList);
+    }
+  };
 
   return (
     <div>
@@ -70,14 +113,34 @@ const EditProfile = ({
             className={classes.inputField}
             className={classes.textField}
           />
+
+          <ul className={classes.ul}>
+            {experience.map((languageObj, index) => (
+              <DynamicSelect
+                key={index}
+                index={index}
+                options={options}
+                levels={levels}
+                languageObj={languageObj}
+                languageList={experience}
+                updateList={updateList}
+                removeLanguage={removeLanguage}
+              />
+            ))}
+          </ul>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose} color="primary">
-            Cancel
+        <DialogActions className={classes.dialogContent}>
+          <Button onClick={addLanguage} color="primary">
+            Add another Language
           </Button>
-          <Button onClick={handleSubmit} color="primary">
-            Save
-          </Button>
+          <div>
+            <Button onClick={onClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleSubmit} color="primary">
+              Save
+            </Button>
+          </div>
         </DialogActions>
       </Dialog>
     </div>
