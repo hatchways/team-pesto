@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import useStyles from "./Thread.css";
 import UserContext from "context/UserContext";
+import AppSnackbarContext from 'context/AppSnackbarContext';
 import CodeEditor from "components/CodeEditor";
 import { getToken } from 'utils/storage';
 import formatDate from "utils/formatDate";
@@ -14,6 +15,7 @@ const Thread = ({ review, type, fetchReviews }) => {
   const [loading, setLoading] = useState(false);
 
   const { user } = useContext(UserContext);
+  const { setSnackbar } = useContext(AppSnackbarContext);
 
   const { title, date, messages, language, status } = review;
 
@@ -30,7 +32,8 @@ const Thread = ({ review, type, fetchReviews }) => {
 
       fetchReviews();
     } catch (err) {
-      console.error(err);
+      const errMessage = err.response.data.response || err.response.data;
+      setSnackbar({ open: true, severity: 'error', message: errMessage });
     }
 
     setLoading(false);

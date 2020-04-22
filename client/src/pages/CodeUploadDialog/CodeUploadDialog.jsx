@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useTheme } from "@material-ui/core/styles";
 import {
   Dialog,
@@ -9,14 +9,12 @@ import {
   MenuItem,
   useMediaQuery,
   CircularProgress,
-  Portal,
-  Snackbar,
 } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
 import CloseIcon from "@material-ui/icons/Close";
 import axios from "axios";
 
 import useStyles from "./CodeUploadDialog.css";
+import AppSnackbarContext from 'context/AppSnackbarContext';
 import CodeEditor from "components/CodeEditor";
 import SubmitButton from "components/SubmitButton";
 import { getToken } from "utils/storage";
@@ -38,15 +36,9 @@ const CodeUploadDialog = ({ open, onClose }) => {
   const [language, setLanguage] = useState(defaultLanguage);
   const [codeSnippet, setCodeSnippet] = useState("");
   const [comments, setComments] = useState("");
-  const [errorSnackbar, setErrorSnackbar] = useState({
-    open: false,
-    message: "",
-  });
-  const [successSnackbar, setSuccessSnackbar] = useState({
-    open: false,
-    message: "",
-  });
   const [loading, setLoading] = useState(false);
+
+  const { setSnackbar } = useContext(AppSnackbarContext);
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
@@ -94,27 +86,17 @@ const CodeUploadDialog = ({ open, onClose }) => {
           headers: { Authorization: `Bearer ${getToken()}` },
         }
       );
-      setSuccessSnackbar({ open: true, message: "Submitted code for review!" });
+      setSnackbar({
+        open: true,
+        severity: 'success',
+        message: "Submitted code for review!"
+      });
       onClose();
     } catch (err) {
       const message = err.response.data.response || err.response.data;
-      setErrorSnackbar({ open: true, message: `Error: ${message}` });
+      setSnackbar({ open: true, severity: 'error', message });
     }
     setLoading(false);
-  };
-
-  const handleErrorSnackbarClose = () => {
-    setErrorSnackbar({
-      open: false,
-      message: errorSnackbar.message,
-    });
-  };
-
-  const handleSuccessSnackbarClose = () => {
-    setSuccessSnackbar({
-      open: false,
-      message: successSnackbar.message,
-    });
   };
 
   const renderLanguageChoices = () => {
@@ -219,30 +201,6 @@ const CodeUploadDialog = ({ open, onClose }) => {
           </Box>
         </form>
       </Dialog>
-
-      <Portal>
-        <Snackbar
-          open={errorSnackbar.open}
-          autoHideDuration={5000}
-          onClose={handleErrorSnackbarClose}
-        >
-          <Alert variant="filled" severity="error">
-            {errorSnackbar.message}
-          </Alert>
-        </Snackbar>
-      </Portal>
-
-      <Portal>
-        <Snackbar
-          open={successSnackbar.open}
-          autoHideDuration={5000}
-          onClose={handleSuccessSnackbarClose}
-        >
-          <Alert variant="filled" severity="success">
-            {successSnackbar.message}
-          </Alert>
-        </Snackbar>
-      </Portal>
     </>
   );
 };
