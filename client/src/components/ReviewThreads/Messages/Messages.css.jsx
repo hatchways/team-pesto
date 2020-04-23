@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "10px",
     lineHeight: 1,
     padding: "8px",
-
+  },
   authorComment: {
     paddingLeft: "55px",
     overflowWrap: 'break-word',
