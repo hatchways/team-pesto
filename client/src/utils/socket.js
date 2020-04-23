@@ -12,9 +12,9 @@ class Socket {
     // emit event with token from localStorage (will be verified in back end with JWT)
     this.socket.emit("store-user-id", { token });
 
-    // place a socket listener that listens for all "send-data" events, and triggers subscriber
-    // components to invoke their callback functions. `data` is an object with keys 'type' and
-    // 'payload'
+    // place a socket listener that listens for all "send-data" events, and triggers
+    // subscriber components to invoke their callback functions. `data` is an object
+    // with keys 'type' and 'payload'
     this.socket.on("send-data", data => {
       for (const component in this.subscribers) {
         try {

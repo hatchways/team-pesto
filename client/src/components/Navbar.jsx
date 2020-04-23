@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useReducer } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -68,24 +68,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const initialState = {
-  notifications: [],
-};
-
-const reducer = (state, action) => {
-  const { type, payload } = action;
-  switch (type) {
-    case "fetchNotifications":
-      return { ...initialState, notifications: payload };
-    case "addNotification":
-      return { ...initialState, notifications: [payload, ...state.notifications] };
-  }
-};
-
 const Navbar = () => {
   const classes = useStyles();
   const { user, setUser, logout } = useContext(UserContext);
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [notifications, setNotifications] = useState([]);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState({});
 
@@ -113,7 +99,7 @@ const Navbar = () => {
     // fetch all notifications for this user from db
     (async function () {
       const data = await socket.fetchNotifications();
-      dispatch({ type: "fetchNotifications", payload: data.reverse() });
+      setNotifications(data.reverse());
     })();
 
     // subscribe this component to socket IO client
@@ -121,15 +107,14 @@ const Navbar = () => {
       const { type, payload } = data;
       switch (type) {
         case "notification":
-          dispatch({ type: "addNotification", payload });
+          setNotifications(prevNotifications => [payload, ...prevNotifications]);
           return;
         case "new-rating":
-          setUser({
-            ...user,
-            totalRatings: user.totalRatings + 1,
-            totalRatingsScore: user.totalRatingsScore + payload,
-          });
-          console.log('USER:', user);   // TO DO: THIS DOESN'T ALWAYS UPDATE VISUALLY ON THE PAGE. WHY?
+          setUser(prevUser => ({
+            ...prevUser,
+            totalRatings: prevUser.totalRatings + 1,
+            totalRatingsScore: prevUser.totalRatingsScore + payload,
+          }));
           return;
       }
     });
@@ -150,8 +135,7 @@ const Navbar = () => {
         <Toolbar className={classes.toolbar}>
           <Button className={classes.clickable}>
             <Link className={classes.link} to="/requests">
-              {/* Requests */}        {/* TO DO: REMOVE THIS WHEN DONE TESTING */}
-              {user.totalRatings}     {/* TO DO: REMOVE THIS WHEN DONE TESTING */}
+              Requests
             </Link>
           </Button>
 
@@ -170,9 +154,9 @@ const Navbar = () => {
               <Badge
                 color="secondary"
                 variant="dot"
-                invisible={state.notifications.every((n) => n.seen)}
+                invisible={notifications.every((n) => n.seen)}
               >
-                {state.notifications.length ? (
+                {notifications.length ? (
                   <NotificationsIcon />
                 ) : (
                   <NotificationsNoneIcon />
@@ -187,7 +171,7 @@ const Navbar = () => {
             open={anchorEl.id === "notifications"}
             onClose={handleClose}
           >
-            <Notifications notifications={state.notifications} />
+            <Notifications notifications={notifications} />
           </Menu>
 
           <Button
