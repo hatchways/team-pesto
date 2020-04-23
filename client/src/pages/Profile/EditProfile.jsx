@@ -103,6 +103,8 @@ const EditProfile = ({
           <TextField
             name="years"
             label="Years of experience"
+            type="number"
+            InputProps={{ inputProps: { min: 0 } }}
             InputLabelProps={{ shrink: true }}
             value={years}
             onChange={handleFormChange}

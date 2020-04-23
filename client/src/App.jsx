@@ -68,6 +68,7 @@ function App() {
                   <Route exact path="/balance" component={Balance} />
                   <Route exact path="/requests/:id" component={Requests} />
                   <Route exact path="/requests" component={Requests} />
+                  <Route exact path="/profile/:id" component={Profile} />
                   {/* TODO: Future routes
                   <Route exact path="/upload" component={Upload} />*/}
                   <Redirect exact to="/" />

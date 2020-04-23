@@ -68,7 +68,6 @@ const Profile = (props) => {
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
-    console.log(name, value);
 
     switch (name) {
       case "name":
@@ -94,10 +93,6 @@ const Profile = (props) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setName(editedName);
-    setTitle(editedTitle);
-    setYears(editedYears);
-
     if (
       editedExperience.some((obj) => obj.language === "" || obj.level === "")
     ) {
@@ -113,11 +108,17 @@ const Profile = (props) => {
         message: "You must select at least one language.",
       });
     } else {
+      setName(editedName);
+      setTitle(editedTitle);
+      setYears(editedYears);
+      setExperience(editedExperience);
+
       setSnackbar({
         open: true,
         severity: "success",
         message: "Profile updated!",
       });
+
       try {
         await axios.put(
           "/api/users/me",
@@ -200,7 +201,7 @@ const Profile = (props) => {
           </div>
 
           <div className={classes.gridRow3}>
-            {editedExperience.map((exp, index) => (
+            {experience.map((exp, index) => (
               <div key={index}>
                 <Typography className={classes.decorativeText}>
                   {options[exp.language]}

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import UserContext from "context/UserContext";
 import {
@@ -29,6 +30,7 @@ const Messages = ({ message, language, requestId }) => {
   const [messageId, setMessageId] = useState("");
   // TODO get author name
   const [authorName, setAuthorName] = useState("");
+  const [authorID, setAuthorId] = useState("");
   const [codeSnippet, setCodeSnippet] = useState("");
   const [editedCodeSnippet, setEditedCodeSnippet] = useState({
     state: false,
@@ -41,6 +43,7 @@ const Messages = ({ message, language, requestId }) => {
   });
 
   useEffect(() => {
+    setAuthorId(message.authorId);
     setMessageId(message["_id"]);
     setCodeSnippet(message.code);
     setComments(message.comments);
@@ -159,7 +162,9 @@ const Messages = ({ message, language, requestId }) => {
               <Avatar src={user && user.image} />
             </div>
             <div>
-              <Typography variant="h5">John Doe</Typography>
+              <Link to={`/profile/${authorID}`}>
+                <Typography variant="h5">John Doe</Typography>
+              </Link>
               <Typography className={classes.date}>
                 {formatDate(message.date)}
               </Typography>
