@@ -12,17 +12,35 @@ matchQueue.process(matchQueueProcessor);
 matchQueue.on("completed", async (job, result) => {
   const reviewStatus = result;
 
+  // remove completed job from queue
+  await job.remove();
+
   // if review still pending, requeue review
   if (reviewStatus === "pending") {
-    await matchQueue.add(job.data, { delay: REQUEST_TIMEOUT });
+    await matchQueue.add(job.data, {
+      jobId: job.data.reviewId,
+      delay: REQUEST_TIMEOUT,
+    });
   }
-
-  // remove completed job from queue
-  job.remove();
 });
 
+const queueReview = async (reviewId) => {
+  await matchQueue.add({ reviewId }, { jobId: reviewId });
+};
+
+const remove = async (reviewId) => {
+  const job = await matchQueue.getJob(reviewId);
+  if (job) await job.remove();
+};
+
+const promote = async (reviewId) => {
+  const job = await matchQueue.getJob(reviewId);
+  if (job) await job.remove();
+  await queueReview(reviewId);
+};
+
 module.exports = {
-  queueReview: async (reviewId) => {
-    await matchQueue.add({ reviewId });
-  },
+  queueReview,
+  remove,
+  promote,
 };

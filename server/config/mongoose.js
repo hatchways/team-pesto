@@ -5,6 +5,7 @@ const { mongoUri } = require("./keys");
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true,
 };
 
 mongoose

@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   paper: {
-    padding: "2rem",
+    padding: "2rem 5rem",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

@@ -2,7 +2,7 @@ import io from "socket.io-client";
 import axios from "axios";
 
 class Socket {
-  constructor () {
+  constructor() {
     this.subscribers = {};
   }
 
@@ -15,7 +15,7 @@ class Socket {
     // place a socket listener that listens for all "send-data" events, and triggers
     // subscriber components to invoke their callback functions. `data` is an object
     // with keys 'type' and 'payload'
-    this.socket.on("send-data", data => {
+    this.socket.on("send-data", (data) => {
       for (const component in this.subscribers) {
         try {
           const callback = this.subscribers[component];
@@ -31,11 +31,12 @@ class Socket {
     const AuthStr = localStorage.token;
     try {
       const { data } = await axios.get("/api/notifications", {
-        headers: { Authorization: "Bearer " + AuthStr },
-      })
+        headers: { Authorization: `Bearer ${AuthStr}` },
+      });
       return data;
     } catch (err) {
       console.error(err);
+      return [];
     }
   }
 
@@ -46,7 +47,6 @@ class Socket {
   unsubscribe(component) {
     delete this.subscribers[component];
   }
-
 }
 
 export default new Socket();
