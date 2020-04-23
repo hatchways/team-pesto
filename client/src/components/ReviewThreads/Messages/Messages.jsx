@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import {
   Typography,
@@ -23,7 +24,7 @@ const Messages = ({ message, language, reviewId, fetchReviews }) => {
   const { setSnackbar } = useContext(AppSnackbarContext);
 
   const [editMode, setEditMode] = useState(false);
-  const [codeSnippet, setCodeSnippet] = useState(message.code);
+  const [codeSnippet, setCodeSnippet] = useState(message.code);  
   const [editedCodeSnippet, setEditedCodeSnippet] = useState({
     state: false,
     value: message.code,
@@ -152,7 +153,9 @@ const Messages = ({ message, language, reviewId, fetchReviews }) => {
               <Avatar src={message.author.image} />
             </div>
             <div>
-            <Typography variant="h5">{message.author.name}</Typography>
+              <Link to={`/profile/${message.author.id}`} className={classes.authorLink}>
+                <Typography variant="h5">{message.author.name}</Typography>
+              </Link>
               <Typography className={classes.date}>
                 {formatDate(message.date)}
               </Typography>

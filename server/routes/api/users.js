@@ -6,6 +6,7 @@ const configureStripe = require("stripe");
 
 const { passportSecret, stripeSecretKey } = require("../../config/keys");
 const User = require("../../models/User");
+const Review = require("../../models/Review");
 const validateEmail = require("../../validation/email");
 const validatePassword = require("../../validation/password");
 const validateExperience = require("../../validation/experience");
@@ -113,8 +114,77 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/me", authenticate, (req, res) => {
-  const { id, email, name, experience, balance, totalRatings, totalRatingsScore, image } = req.user;
-  res.json({ id, email, name, experience, balance, totalRatings, totalRatingsScore, image });
+  const {
+    id,
+    email,
+    name,
+    experience,
+    balance,
+    totalRatings,
+    totalRatingsScore,
+    title,
+    years,
+    image,
+  } = req.user;
+  res.json({
+    id,
+    email,
+    name,
+    experience,
+    balance,
+    totalRatings,
+    totalRatingsScore,
+    title,
+    years,
+    image,
+  });
+});
+
+router.put("/me", authenticate, async (req, res) => {
+  const userId = req.user.id;
+  const { id, name, title, years, experience } = req.body;
+
+  if ((!id || !name || !title, !years, !experience)) {
+    res.status(400).send({ response: "Invalid input." });
+    return;
+  }
+
+  try {
+    const user = await User.findById(id);
+    if (userId == id) {
+      user.name = name;
+      user.title = title;
+      user.years = years;
+      user.experience = experience;
+
+      user.save();
+      res.sendStatus(200);
+    } else {
+      return res.sendStatus(403);
+    }
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
+router.get("/profile/:id", authenticate, async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const user = await User.findById(id);
+    const reviews = await Review.find({ reviewerId: id });
+
+    if (user) {
+      const profile = user.profile();
+      res.status(200).send({ profile, reviews: reviews.length });
+    } else {
+      return res.sendStatus(400);
+    }
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
 });
 
 router.post("/experience", authenticate, async (req, res) => {

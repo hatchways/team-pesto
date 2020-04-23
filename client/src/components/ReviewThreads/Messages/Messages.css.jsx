@@ -37,6 +37,11 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "1rem",
   },
 
+  authorLink: {
+    textDecoration: 'none',
+    color: 'black',
+  },
+
   date: {
     color: `${theme.palette.secondary.lightGray}`,
     fontSize: "12px",
