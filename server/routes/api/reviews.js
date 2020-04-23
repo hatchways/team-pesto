@@ -1,9 +1,11 @@
 const { Router } = require("express");
 
 const authenticate = require("../../middlewares/authenticate");
+const User = require('../../models/User');
 const Review = require("../../models/Review");
 const Message = require("../../models/Message");
 const MatchQueue = require("../../services/MatchQueue");
+const { createNotification } = require('../../controllers/notifications');
 
 const router = Router();
 const REQUIRED_CREDITS = 1;
@@ -48,6 +50,15 @@ router.put('/:reviewId/status', authenticate, async (req, res) => {
     review.status = req.body.status;
     await review.save();
     await MatchQueue.remove(review.id);
+
+    const requester = await User.findById(review.requesterId);
+    await createNotification({
+      reviewId: review.id,
+      recipient: requester,
+      counterpart: req.user,
+      code: 2,
+    });
+
     res.status(200).send('Accepted');
     return;
   }

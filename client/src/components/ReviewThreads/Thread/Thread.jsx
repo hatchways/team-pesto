@@ -22,12 +22,12 @@ const Thread = ({ review, type, fetchReviews }) => {
 
     const token = getToken();
     try {
-      await axios.put(
+      const { data } = await axios.put(
         `/api/reviews/${review._id}/status`,
         { status },
         { headers: { Authorization: `Bearer ${token}` } },
       );
-      setSnackbar({ open: true, severity: 'success', message: 'Accepted' });
+      setSnackbar({ open: true, severity: 'success', message: data });
       fetchReviews();
     } catch (err) {
       const errMessage = err.response.data.response || err.response.data;

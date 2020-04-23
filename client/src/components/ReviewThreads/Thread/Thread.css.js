@@ -1,14 +1,10 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
-  singleViewWrapper: {
-    overflow: "auto",
-  },
-
   singleView: {
-    margin: "50px",
+    margin: '50px auto auto',
+    width: '80%',
     position: "relative",
-    overflow: "auto",
   },
 
   header: {
