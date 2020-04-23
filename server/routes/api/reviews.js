@@ -48,7 +48,7 @@ router.put('/:reviewId/status', authenticate, async (req, res) => {
     review.status = req.body.status;
     await review.save();
     await MatchQueue.remove(review.id);
-    res.sendStatus(200);
+    res.status(200).send('Accepted');
     return;
   }
 
@@ -57,13 +57,50 @@ router.put('/:reviewId/status', authenticate, async (req, res) => {
     review.reviewerId = null;
     await review.save();
     await MatchQueue.promote(review.id);
-    res.sendStatus(200);
+    res.status(200).send('Rejected');
     return;
   }
 
   // send status 400 if request body unrecognized
   res.sendStatus(400);
 });
+
+router.put(
+  "/:requestId/messages/:messageId",
+  authenticate,
+  async (req, res) => {
+    const messageId = req.params.messageId;
+    const requestId = req.params.requestId;
+    const userId = req.user.id;
+    const { code, comments } = req.body;
+
+    if (!code && !comments) {
+      return res.sendStatus(400);
+    }
+
+    try {
+      const request = await Review.findById(requestId);
+      const message = request.messages.id(messageId);
+
+      if (!message) {
+        return res.sendStatus(404);
+      }
+
+      if (message["_id"] == messageId && message.authorId == userId) {
+        request.messages.id(messageId).code = code;
+        request.messages.id(messageId).comments = comments;
+
+        await request.save();
+        return res.sendStatus(200);
+      } else {
+        return res.sendStatus(403);
+      }
+    } catch (err) {
+      console.error(err);
+      res.sendStatus(500);
+    }
+  }
+);
 
 router.get("/requests", authenticate, async (req, res) => {
   try {

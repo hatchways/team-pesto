@@ -10,7 +10,7 @@ const Requests = () => {
 
   const { setSnackbar } = useContext(AppSnackbarContext);
 
-  useEffect(() => {
+  const fetchRequests = () => {
     try {
       const token = getToken();
       (async () => {
@@ -23,12 +23,14 @@ const Requests = () => {
       const errorMessage = err.response.data.response || err.response.data;
       setSnackbar({ open: true, severity: 'error', message: errorMessage });
     }
-  }, []);
+  };
+  useEffect(fetchRequests, []);
 
   return (
     <ReviewThreads
       reviews={requests}
       type='requests'
+      fetchReviews={fetchRequests}
     />
   );
 };

@@ -1,11 +1,10 @@
 import React, { useState, useContext } from "react";
-import { Button, Paper, Typography, Avatar } from "@material-ui/core";
+import { Button, Paper, Typography } from "@material-ui/core";
 import axios from 'axios';
 
 import useStyles from "./Thread.css";
-import UserContext from "context/UserContext";
 import AppSnackbarContext from 'context/AppSnackbarContext';
-import CodeEditor from "components/CodeEditor";
+import Messages from 'components/ReviewThreads/Messages';
 import { getToken } from 'utils/storage';
 import formatDate from "utils/formatDate";
 
@@ -14,7 +13,6 @@ const Thread = ({ review, type, fetchReviews }) => {
 
   const [loading, setLoading] = useState(false);
 
-  const { user } = useContext(UserContext);
   const { setSnackbar } = useContext(AppSnackbarContext);
 
   const { title, date, messages, language, status } = review;
@@ -25,11 +23,11 @@ const Thread = ({ review, type, fetchReviews }) => {
     const token = getToken();
     try {
       await axios.put(
-        `/api/reviews/${review['_id']}/status`,
+        `/api/reviews/${review._id}/status`,
         { status },
         { headers: { Authorization: `Bearer ${token}` } },
       );
-
+      setSnackbar({ open: true, severity: 'success', message: 'Accepted' });
       fetchReviews();
     } catch (err) {
       const errMessage = err.response.data.response || err.response.data;
@@ -83,36 +81,17 @@ const Thread = ({ review, type, fetchReviews }) => {
 
   return (
     <Paper className={classes.singleView}>
-      {renderHeader()}
+      {renderHeader()}  
 
       <div className={classes.syntaxWrapper}>
         {messages.map((message) => (
-          <div key={message["_id"]}>
-            <div className={classes.syntax}>
-              <CodeEditor
-                language={language}
-                value={message.code}
-                readOnly={true}
-              />
-            </div>
-
-            <div className={classes.author}>
-              <div className={classes.authorHeader}>
-                <div className={classes.authorAvatar}>
-                  <Avatar src={user && user.image} />
-                </div>
-                <div>
-                  <Typography variant="h5">John Doe</Typography>
-                  <Typography className={classes.date}>
-                    {formatDate(message.date)}
-                  </Typography>
-                </div>
-              </div>
-              <div className={classes.authorComment}>
-                <Typography>{message.comments}</Typography>
-              </div>
-            </div>
-          </div>
+          <Messages
+            reviewId={review._id}
+            key={message._id}
+            message={message}
+            language={language}
+            fetchReviews={fetchReviews}
+          />
         ))}
       </div>
     </Paper>

@@ -1,6 +1,10 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
+  singleViewWrapper: {
+    overflow: "auto",
+  },
+
   singleView: {
     margin: "50px",
     position: "relative",
@@ -25,31 +29,8 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "20px",
   },
 
-  date: {
-    color: `${theme.palette.secondary.lightGray}`,
-    fontSize: "12px",
-  },
-
   syntaxWrapper: {
     padding: "3rem",
-  },
-
-  syntax: {
-    maxHeight: "400px",
-    overflow: "auto",
-  },
-
-  authorHeader: {
-    display: "flex",
-    margin: "3rem 0 1rem 0",
-  },
-
-  authorAvatar: {
-    marginRight: "1rem",
-  },
-
-  authorComment: {
-    paddingLeft: "55px",
   },
 }));
 
