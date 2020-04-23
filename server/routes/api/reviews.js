@@ -254,6 +254,7 @@ router.post(
       // note: must coerce from Object ID to String
       if (userId !== String(requesterId) && userId !== String(reviewerId)) return res.sendStatus(403);
 
+      // create the new message
       const newMessage = await new Message({
         author: String(requesterId),
         date: Date.now(),
@@ -261,8 +262,11 @@ router.post(
         comments,
       });
       const message = await newMessage.save();
+
+      // push the new message id into the request's message array
       request.messages.push(newMessage['_id']);
       await request.save();
+      
       return res.status(201).send(message);
     } catch (err) {
       console.error(err);

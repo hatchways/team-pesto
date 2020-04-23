@@ -5,6 +5,8 @@ import {
   Typography,
   Avatar,
   Button,
+  FormControlLabel,
+  Switch,
   TextField,
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
@@ -23,6 +25,7 @@ const NewPost = ({ reviewId, language, setNewPost }) => {
   const { setSnackbar } = useContext(AppSnackbarContext);
   const [codeSnippet, setCodeSnippet] = useState("");  
   const [comments, setComments] = useState("");
+  const [useCode, setUseCode] = useState(false);
 
   const handleFormChange = (event) => {
     setComments(event.target.value);
@@ -41,7 +44,7 @@ const NewPost = ({ reviewId, language, setNewPost }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!codeSnippet && !comments) {
+    if (!comments && (!useCode || !codeSnippet)) {
       setSnackbar({
         open: true,
         severity: "warning",
@@ -52,7 +55,7 @@ const NewPost = ({ reviewId, language, setNewPost }) => {
         await axios.post(
           `/api/reviews/${reviewId}`,
           {
-            code: codeSnippet,
+            code: useCode ? codeSnippet : "",
             comments: comments,
           },
           {
@@ -86,14 +89,25 @@ const NewPost = ({ reviewId, language, setNewPost }) => {
           />
         </div>
 
-        <div className={classes.syntax}>
-          <CodeEditor
-            language={language}
-            value={codeSnippet}
-            readOnly={false}
-            onChange={handleCodeSnippetChange}
+        <div className={classes.editHeader}>
+          <FormControlLabel
+            control={<Switch color="secondary" />}
+            label="Insert code snippet"
+            labelPlacement="start"
+            onChange={() => setUseCode(!useCode)}
           />
         </div>
+
+        {useCode && (
+          <div className={classes.syntax}>
+            <CodeEditor
+              language={language}
+              value={codeSnippet}
+              readOnly={false}
+              onChange={handleCodeSnippetChange}
+            />
+          </div>
+        )}
 
         <div className={classes.author}>
           <div className={classes.authorHeader}>
