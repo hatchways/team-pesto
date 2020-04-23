@@ -9,7 +9,7 @@ const REVIEW_COMPLETED = 4;
 const REQUESTER_NEW_POST = 5;
 const REVIEWER_NEW_POST = 6;
 
-const createNotification = async data => {
+const createNotification = async (data) => {
   const { reviewId, recipientId, counterpartId, code } = data;
   const counterpartName = (await User.findById(counterpartId)).name;
   const body = { recipient: recipientId };

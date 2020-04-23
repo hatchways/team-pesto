@@ -1,7 +1,6 @@
 const { Router } = require("express");
 
 const authenticate = require("../../middlewares/authenticate");
-const User = require("../../models/User");
 const Review = require("../../models/Review");
 const Message = require("../../models/Message");
 const MatchQueue = require("../../services/MatchQueue");
@@ -92,7 +91,7 @@ router.put(
       return;
     }
 
-    try {      
+    try {
       const message = await Message.findById(messageId);
 
       if (!message) {
