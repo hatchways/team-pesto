@@ -12,7 +12,7 @@ import Balance from "pages/Balance";
 import { remove } from "utils/storage";
 import Onboarding from "pages/Onboarding";
 import Requests from "pages/Requests/Requests";
-import Profile from "pages/Profile";
+import Profile from "pages/Profile/Profile";
 
 import "./App.css";
 
@@ -68,6 +68,7 @@ function App() {
                   <Route exact path="/balance" component={Balance} />
                   <Route exact path="/requests/:id" component={Requests} />
                   <Route exact path="/requests" component={Requests} />
+                  <Route exact path="/profile/:id" component={Profile} />
                   {/* TODO: Future routes
                   <Route exact path="/upload" component={Upload} />*/}
                   <Redirect exact to="/" />
