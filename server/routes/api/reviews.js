@@ -85,7 +85,6 @@ router.put(
   authenticate,
   async (req, res) => {
     const { messageId } = req.params;
-    const { requestId } = req.params;
     const userId = req.user.id;
     const { code, comments } = req.body;
 
@@ -94,9 +93,8 @@ router.put(
       return;
     }
 
-    try {
-      const request = await Review.findById(requestId);
-      const message = request.messages.id(messageId);
+    try {      
+      const message = await Message.findById(messageId);
 
       if (!message) {
         res.sendStatus(404);
@@ -104,11 +102,11 @@ router.put(
       }
 
       // eslint-disable-next-line eqeqeq
-      if (message._id == messageId && message.author == userId) {
-        request.messages.id(messageId).code = code;
-        request.messages.id(messageId).comments = comments;
+      if (message.author == userId) {
+        message.code = code;
+        message.comments = comments;
 
-        await request.save();
+        await message.save();
         res.sendStatus(200);
         return;
       }

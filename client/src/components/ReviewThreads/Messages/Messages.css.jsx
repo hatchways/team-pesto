@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: "55px",
     overflowWrap: 'break-word',
     wordWrap: 'break-word',
+    width: '100%',
   },
 }));
 
