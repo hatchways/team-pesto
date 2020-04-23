@@ -157,17 +157,16 @@ const Profile = (props) => {
   return (
     <MainContainer>
       <form className={classes.MainWrapper}>
-        <div className={classes.gridRow1}>
-          <span></span>
-          <div className={classes.text}>
-            <div>
-              <div className={classes.userAvatar}>
-                <Avatar src={image} />
-              </div>
-              <Typography className={classes.profileName}>{name}</Typography>
-
-              <Typography className={classes.title}>{title}</Typography>
+        <div className={classes.headerWrapper}>
+          <div className={classes.subHeaderWrapper}>
+            <div className={classes.avatarWrapper}>
+              <Avatar className={classes.userAvatar} src={image} />
             </div>
+            <Typography className={classes.profileName} variant="h3">
+              {name}
+            </Typography>
+
+            <Typography className={classes.title}>{title}</Typography>
           </div>
           <div
             className={classes.editHeader}
@@ -177,39 +176,45 @@ const Profile = (props) => {
           </div>
         </div>
 
-        <div className={classes.gridRow2}>
-          <div>
-            <Typography className={classes.text}>{years}</Typography>
-
-            <Typography className={classes.text}>
-              Years of Experience
-            </Typography>
-          </div>
-          <div>
-            <Typography className={classes.text}>{reviews}</Typography>
-            <Typography className={classes.text}>Reviews</Typography>
-          </div>
-          <div>
-            <Typography className={classes.text}>4.8</Typography>
-            <Typography className={classes.text}>Ratings</Typography>
-          </div>
-        </div>
-
-        <div className={classes.gridRow3}>
-          {editedExperience.map((exp, index) => (
-            <div key={index}>
-              <Typography className={classes.text}>
-                {options[exp.language]}
+        <div className={classes.contentWrapper}>
+          <div className={classes.gridRow2}>
+            <div>
+              <Typography className={classes.decorativeText}>
+                {years}
               </Typography>
+
               <Typography className={classes.text}>
-                {levels[exp.level]}
+                Years of Experience
               </Typography>
             </div>
-          ))}
-        </div>
+            <div>
+              <Typography className={classes.decorativeText}>
+                {reviews}
+              </Typography>
+              <Typography className={classes.text}>Reviews</Typography>
+            </div>
+            <div>
+              <Typography className={classes.decorativeText}>4.8</Typography>
+              <Typography className={classes.text}>Ratings</Typography>
+            </div>
+          </div>
 
-        <div className={classes.gridRow4}>
-          <div className={classes.text}>some content</div>
+          <div className={classes.gridRow3}>
+            {editedExperience.map((exp, index) => (
+              <div key={index}>
+                <Typography className={classes.decorativeText}>
+                  {options[exp.language]}
+                </Typography>
+                <Typography className={classes.text}>
+                  {levels[exp.level]}
+                </Typography>
+              </div>
+            ))}
+          </div>
+
+          <div className={classes.gridRow4}>
+            <div className={classes.text}>some content</div>
+          </div>
         </div>
       </form>
 

@@ -2,45 +2,67 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   MainWrapper: {
-    display: "grid",
-    gridTemplateRows: "repeat(3, 1fr) 1fr",
-    justifyItems: "center",
     width: "100%",
     height: "100%",
   },
-  userAvatar: {
+  headerWrapper: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    borderBottom: `1px solid ${theme.palette.secondary.superLightGray}`,
+  },
+  subHeaderWrapper: {
+    transform: "translate(0, -60px)",
+    gridColumn: 2,
+    justifySelf: "center",
+    textAlign: "center",
+    marginBottom: "-2rem",
+  },
+  avatarWrapper: {
     display: "flex",
     justifyContent: "center",
-    width: "100%",
+    marginBottom: "1rem",
+  },
+  userAvatar: {
+    width: "3.5rem",
+    height: "3.5rem",
+  },
+  contentWrapper: {
+    display: "grid",
+    gridTemplateRows: "repeat(2, 1fr) 1fr",
+    gridRowGap: "2rem",
+    justifyItems: "center",
+    marginTop: "2rem",
   },
   text: {
     display: "flex",
     justifyContent: "center",
     textAlign: "center",
+    fontSize: "14px",
+    fontWeight: "bold",
   },
-  gridRow1: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(50px, 1fr))",
-    alignItems: "center",
-    width: "100%",
+  decorativeText: {
+    display: "flex",
+    justifyContent: "center",
+    textAlign: "center",
+    color: `${theme.palette.primary.main}`,
+    fontSize: "24px",
+    fontWeight: "bold",
   },
   gridRow2: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(50px, 1fr))",
     alignItems: "center",
     width: "100%",
+    borderBottom: `1px solid ${theme.palette.secondary.superLightGray}`,
+    paddingBottom: "2rem",
   },
   gridRow3: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(50px, 1fr))",
     alignItems: "center",
     width: "100%",
-  },
-  gridRow4: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(50px, 1fr))",
-    alignItems: "center",
-    width: "100%",
+    borderBottom: `1px solid ${theme.palette.secondary.superLightGray}`,
+    paddingBottom: "2rem",
   },
   inputField: {
     "& .MuiInputBase-input": {
@@ -48,13 +70,15 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   editHeader: {
-    height: "100%",
     textAlign: "right",
   },
   editIcon: {
     "&:hover": {
       cursor: "pointer",
     },
+  },
+  title: {
+    color: `${theme.palette.secondary.lightGray}`,
   },
 }));
 
