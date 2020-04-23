@@ -5,18 +5,17 @@ import axios from 'axios';
 import useStyles from "./Thread.css";
 import AppSnackbarContext from 'context/AppSnackbarContext';
 import Messages from 'components/ReviewThreads/Messages';
+import NewPost from "components/ReviewThreads/Messages/NewPost";
 import { getToken } from 'utils/storage';
 import formatDate from "utils/formatDate";
 
 const Thread = ({ review, type, fetchReviews }) => {
   const classes = useStyles();
-
   const [loading, setLoading] = useState(false);
-
   const { setSnackbar } = useContext(AppSnackbarContext);
-
   const { title, date, messages, language, status } = review;
-
+  const [newPost, setNewPost] = useState(null);
+  
   const handleAcceptReject = async (status) => {
     setLoading(true);
 
@@ -79,6 +78,14 @@ const Thread = ({ review, type, fetchReviews }) => {
     );
   };
 
+  const handleNewPost = () => {
+    try {
+      setNewPost(true);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+    
   return (
     <Paper className={classes.singleView}>
       {renderHeader()}  
@@ -93,6 +100,17 @@ const Thread = ({ review, type, fetchReviews }) => {
             fetchReviews={fetchReviews}
           />
         ))}
+        {!newPost ? (
+          <div className={classes.addPost}>
+            <Button className={classes.button} onClick={handleNewPost}>Add Post</Button>
+          </div>
+        ) : (
+          <NewPost
+            reviewId={review._id}
+            language={language}
+            setNewPost={setNewPost}
+          />
+        )}
       </div>
     </Paper>
   );

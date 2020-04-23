@@ -1,96 +1,69 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
-import UserContext from "context/UserContext";
 import {
   Typography,
   Avatar,
   Button,
   TextField,
-  Portal,
-  Snackbar,
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import CloseIcon from "@material-ui/icons/Close";
-import { Alert } from "@material-ui/lab";
+
+import useStyle from "./Messages.css";
+import UserContext from "context/UserContext";
+import AppSnackbarContext from 'context/AppSnackbarContext';
 import CodeEditor from "components/CodeEditor";
 import formatDate from "utils/formatDate";
 import { getToken } from "utils/storage";
-import useStyle from "components/SingleView/SingleView.css";
 
-const NewPost = ({ language }) => {
+const NewPost = ({ reviewId, language, setNewPost }) => {
   const classes = useStyle();
   const { user } = useContext(UserContext);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    severity: "",
-    message: "",
-  });
-  // const [messageId, setMessageId] = useState("");
-  // TODO get author name
-  const [authorName, setAuthorName] = useState("");
-  const [codeSnippet, setCodeSnippet] = useState("");
-  // const [editedCodeSnippet, setEditedCodeSnippet] = useState({
-  //   state: false,
-  //   value: "",
-  // });
+  const { setSnackbar } = useContext(AppSnackbarContext);
+  const [codeSnippet, setCodeSnippet] = useState("");  
   const [comments, setComments] = useState("");
-  // const [editedComments, setEditedComments] = useState({
-  //   state: false,
-  //   value: "",
-  // });
-
-  // useEffect(() => {
-  //   // setMessageId(message["_id"]);
-  //   // setCodeSnippet(message.code);
-  //   // setComments(message.comments);
-  //   // setEditedCodeSnippet({ value: message.code });
-  //   // setEditedComments({ value: message.comments });
-  // }, [message.code, message.comments]);
-
-  // const toggleEditMessage = () => {
-  //   setEditMode(!editMode);
-  // };
 
   const handleFormChange = (event) => {
-    const { name, value } = event.target;
-    switch (name) {
-      case "code-snippet":
-        setCodeSnippet(value);
-        break;
-      case "comments":
-        setComments(value);
-        break;
-      default:
-    }
+    setComments(event.target.value);
   };
 
   const handleCodeSnippetChange = (value) => {
     setCodeSnippet(value);
-    setEditedCodeSnippet({ state: true, value });
   };
+
+  const handleClose = () => {
+    setCodeSnippet("");
+    setComments("");
+    setNewPost(false);
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      setEditMode(!editMode);
-      await axios.put(
-        `/api/reviews/${requestId}/messages/${messageId}`,
-        {
-          code: codeSnippet,
-          comments: comments,
-        },
-        {
-          headers: { Authorization: `Bearer ${getToken()}` },
-        }
-      );
 
+    if (!codeSnippet && !comments) {
       setSnackbar({
         open: true,
-        severity: "success",
-        message: "Update successful!",
+        severity: "warning",
+        message: "You must make a change first!",
       });
-    } catch (err) {
-      console.error(err);
+    } else {
+      try {
+        await axios.post(
+          `/api/reviews/${reviewId}`,
+          {
+            code: codeSnippet,
+            comments: comments,
+          },
+          {
+            headers: { Authorization: `Bearer ${getToken()}` },
+          }
+        );
+        handleClose();
+      } catch (err) {
+        const errMessage = err.response.data.response || err.response.data;
+        setSnackbar({ open: true, severity: 'error', message: errMessage });
+      }
     }
   };
 
@@ -101,41 +74,23 @@ const NewPost = ({ language }) => {
           <Button
             variant="contained"
             type="submit"
-            onSubmit={handleSubmit}
             className={classes.button}
-            style={editMode ? { display: "block" } : { display: "none" }}
+            style={{ display: "block" }}
           >
-            Save
+            Post
           </Button>
-
-          {editMode ? (
-            <CloseIcon
-              className={classes.editIcon}
-              onClick={toggleEditMessage}
-              style={
-                message.authorId === user.id
-                  ? { display: "block" }
-                  : { display: "none" }
-              }
-            />
-          ) : (
-            <EditIcon
-              className={classes.editIcon}
-              onClick={toggleEditMessage}
-              style={
-                message.authorId === user.id
-                  ? { display: "block" }
-                  : { display: "none" }
-              }
-            />
-          )}
+          <CloseIcon
+            className={classes.editIcon}
+            onClick={() => handleClose()}
+            style={{ display: "block" }}
+          />
         </div>
 
         <div className={classes.syntax}>
           <CodeEditor
             language={language}
-            value={!editMode ? codeSnippet : editedCodeSnippet.value}
-            readOnly={!editMode}
+            value={codeSnippet}
+            readOnly={false}
             onChange={handleCodeSnippetChange}
           />
         </div>
@@ -143,22 +98,18 @@ const NewPost = ({ language }) => {
         <div className={classes.author}>
           <div className={classes.authorHeader}>
             <div className={classes.authorAvatar}>
-              <Avatar src={user && user.image} />
+              <Avatar src={user.image} />
             </div>
             <div>
-              <Typography variant="h5">John Doe</Typography>
+              <Link to={`/profile/${user.id}`} className={classes.authorLink}>
+                <Typography variant="h5">{user.name}</Typography>
+              </Link>
               <Typography className={classes.date}>
-                {formatDate(message.date)}
+                {formatDate(Date.now())}
               </Typography>
             </div>
           </div>
           <div className={classes.authorComment}>
-            <Typography
-              style={editMode ? { display: "none" } : { display: "block" }}
-            >
-              {comments}
-            </Typography>
-
             <TextField
               name="comments"
               variant="outlined"
@@ -167,25 +118,12 @@ const NewPost = ({ language }) => {
               fullWidth
               multiline
               rows={5}
-              value={!editMode ? comments : editedComments.value}
+              value={comments}
               onChange={handleFormChange}
-              style={editMode ? { display: "block" } : { display: "none" }}
             />
           </div>
         </div>
       </form>
-
-      <Portal>
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={5000}
-          onClose={() => setSnackbar({ ...snackbar, open: false })}
-        >
-          <Alert variant="filled" severity={snackbar.severity}>
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
-      </Portal>
     </>
   );
 };

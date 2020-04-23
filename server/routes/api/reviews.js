@@ -242,7 +242,7 @@ router.post(
     const userId = req.user.id;
     const { code, comments } = req.body;
 
-    if (!code || !comments) {
+    if (!code && !comments) {
       return res.sendStatus(400);
     }
 
@@ -250,25 +250,23 @@ router.post(
       const request = await Review.findById(requestId);
       const { requesterId, reviewerId } = request;
 
-      // return 403 if user is neither requester nor reviewer
-      if (userId !== requesterId && userId !== reviewerId) return res.sendStatus(403);
+      // return 403 if user is neither requester nor reviewer.
+      // note: must coerce from Object ID to String
+      if (userId !== String(requesterId) && userId !== String(reviewerId)) return res.sendStatus(403);
 
-      const message = await new Message({
-        authorId: requesterId,
-        
+      const newMessage = await new Message({
+        author: String(requesterId),
+        date: Date.now(),
+        code,
+        comments,
       });
-
-
-      // const message = new Message({
-      //   authorId: requester.id,
-      //   date,
-      //   code,
-      //   comments,
-      // });
-
+      const message = await newMessage.save();
+      request.messages.push(newMessage['_id']);
+      await request.save();
       return res.status(201).send(message);
     } catch (err) {
       console.error(err);
+      res.sendStatus(500);
     }
   }
 );
