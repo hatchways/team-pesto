@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { MuiThemeProvider } from "@material-ui/core";
+import { MuiThemeProvider, CssBaseline } from "@material-ui/core";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import axios from "axios";
 
@@ -63,6 +63,8 @@ function App() {
       <AppSnackbarContext.Provider value={{ snackbar, setSnackbar }}>
         <MuiThemeProvider theme={theme}>
           <BrowserRouter>
+            <CssBaseline />
+
             <Switch>
               {/* Routes placed here are only available after logging in and having experience */}
               {user && user.experience.length > 0 && (
