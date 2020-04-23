@@ -14,7 +14,7 @@ const Profile = (props) => {
   const classes = useStyle();
   const { user } = useContext(UserContext);
 
-  const [showEditOption, setShowEditOption] = useState(true);
+  const [showEditOption, setShowEditOption] = useState(false);
   const [open, setOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -44,6 +44,10 @@ const Profile = (props) => {
         });
 
         const { profile, reviews } = data;
+
+        if (profile["_id"] === user.id) {
+          setShowEditOption(true);
+        }
 
         setProfileId(profile["_id"]);
         setReviews(reviews);
