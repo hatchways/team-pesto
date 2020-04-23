@@ -79,11 +79,10 @@ const CodeUploadDialog = ({ open, onClose }) => {
 
     if (submitDisabled) return;
 
-    const apiEndpoint = "/api/reviews/requests";
     setLoading(true);
     try {
       await axios.post(
-        apiEndpoint,
+        "/api/reviews/requests",
         {
           title,
           language,

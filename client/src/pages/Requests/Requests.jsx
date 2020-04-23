@@ -5,9 +5,16 @@ import axios from "axios";
 import SingleView from "components/SingleView/SingleView";
 import Sidebar from "components/Sidebar";
 
+// TO DO: decide if we want to use context here?
+import { useContext } from "react";
+import UserContext from "context/UserContext";
+
 const Requests = (props) => {
   const classes = useStyles();
   const [requests, setRequests] = useState([]);
+
+  // TO DO: decide if we want to use context here?
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     try {

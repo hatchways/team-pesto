@@ -93,12 +93,12 @@ function App() {
               </Switch>
             )}
 
-            {/* Routes placed here are available if loggedout */}
+            {/* Routes placed here are available if logged out */}
             {!user && (
               <Switch>
                 <Route exact path="/sign-up" component={SignUp} />
                 <Route exact path="/login" component={Login} />
-                <Redirect from="/" exact to="/login" />
+                <Redirect exact to="/login" />
               </Switch>
             )}
           </Switch>

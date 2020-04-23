@@ -1,5 +1,5 @@
 import React from "react";
-import { Paper, Typography } from "@material-ui/core";
+import { Paper, Typography, Button } from "@material-ui/core";
 import formatDate from "utils/formatDate";
 import Messages from "components/SingleView/Messages";
 
@@ -18,6 +18,9 @@ const SingleView = ({ singleRequestView }) => {
               {title}
             </Typography>
             <Typography className={classes.date}>{formatDate(date)}</Typography>
+
+            <Button>ADD POST</Button>
+
           </div>
         </div>
         <div className={classes.syntaxWrapper}>
