@@ -10,9 +10,9 @@ const useStyles = makeStyles((theme) => ({
   header: {
     padding: "40px",
     borderBottom: `1px solid ${theme.palette.secondary.lightGray}`,
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
+    // display: "flex",
+    // justifyContent: "space-between",
+    // alignItems: "center",
   },
 
   headerActionButton: {

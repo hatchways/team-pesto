@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
-import { Button, Paper, Typography } from "@material-ui/core";
+import { Button, Box, Chip, Paper, Typography } from "@material-ui/core";
+import { HourglassFull, Check, DoneAll } from '@material-ui/icons';
 import axios from 'axios';
 
 import useStyles from "./Thread.css";
@@ -38,6 +39,42 @@ const Thread = ({ review, type, fetchReviews }) => {
   };
 
   const renderHeader = () => {
+    let statusChip;
+    switch (review.status) {
+      case 'pending':
+        statusChip = 
+          <Chip
+            icon={<HourglassFull />}
+            label='Pending'
+            size='small'
+            color='primary'
+            variant='outlined'
+          />;
+        break;
+      case 'accepted':
+        statusChip =
+          <Chip
+            icon={<Check />}
+            label='Accepted'
+            size='small'
+            color='primary'
+            variant='outlined'
+          />;
+        break;
+      case 'completed':
+        statusChip =
+          <Chip
+            icon={<DoneAll />}
+            label='Completed'
+            size='small'
+            color='primary'
+            variant='default'
+          />;
+        break;
+      default:
+        statusChip = null;
+    }
+
     let actions = null;
     if (type === 'reviews' && status === 'pending') {
       actions = (
@@ -67,14 +104,23 @@ const Thread = ({ review, type, fetchReviews }) => {
 
     return (
       <div className={classes.header}>
-        <div>
-          <Typography className={classes.title} variant="h3">
-            {title}
-          </Typography>
-          <Typography className={classes.date}>{formatDate(date)}</Typography>
-        </div>
+        {statusChip}
 
-        {actions}
+        <Box
+          display='flex'
+          justifyContent='space-between'
+          alignItems='center'
+          mt={1}
+        >
+          <div>          
+            <Typography className={classes.title} variant="h3">
+              {title}
+            </Typography>
+            <Typography className={classes.date}>{formatDate(date)}</Typography>
+          </div>
+
+          {actions}
+        </Box>
       </div>
     );
   };
