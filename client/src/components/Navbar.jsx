@@ -74,11 +74,10 @@ const useStyles = makeStyles((theme) => ({
 
 const Navbar = () => {
   const classes = useStyles();
-  const { user, logout } = useContext(UserContext);
+  const { user, setUser, logout } = useContext(UserContext);
+  const [notifications, setNotifications] = useState([]);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState({});
-  const [notifications, setNotifications] = useState([]);
-  const [newNotification, setNewNotification] = useState([]);
 
   const handleUploadDialog = () => {
     setUploadDialogOpen(!uploadDialogOpen);
@@ -99,18 +98,34 @@ const Navbar = () => {
 
   useEffect(() => {
     // initialize socket connection
-    socket.connect(localStorage.token, setNewNotification);
+    socket.connect(localStorage.token);
 
     // fetch all notifications for this user from db
     (async function () {
       const data = await socket.fetchNotifications();
-      setNotifications(data);
+      setNotifications(data.reverse());
     })();
-  }, []);
 
-  useEffect(() => {
-    setNotifications([newNotification, ...notifications]);
-  }, [newNotification]);
+    // subscribe this component to socket IO client
+    socket.subscribe("navbar", data => {
+      const { type, payload } = data;
+      switch (type) {
+        case "notification":
+          setNotifications(prevNotifications => [payload, ...prevNotifications]);
+          return;
+        case "new-rating":
+          setUser(prevUser => ({
+            ...prevUser,
+            totalRatings: prevUser.totalRatings + 1,
+            totalRatingsScore: prevUser.totalRatingsScore + payload,
+          }));
+          return;
+      }
+    });
+
+    // useEffect returns a callback for unsubscribing when it unmounts
+    return () => socket.unsubscribe("navbar");
+  }, []);
 
   return (
     <AppBar className={classes.appBar}>

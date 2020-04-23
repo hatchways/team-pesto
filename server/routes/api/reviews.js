@@ -55,11 +55,10 @@ router.put("/:reviewId/status", authenticate, async (req, res) => {
     await review.save();
     await MatchQueue.remove(review.id);
 
-    const requester = await User.findById(review.requesterId);
     await createNotification({
       reviewId: review.id,
-      recipient: requester,
-      counterpart: req.user,
+      recipientId: review.requesterId,
+      counterpartId: req.user.id,
       code: 2,
     });
 

@@ -40,12 +40,21 @@ class Socket {
   }
 
   // send notification to specific user (via user's unique room)
-  sendNotification(data) {
-    const { recipient } = data;
+  sendNotification(payload) {
+    const { recipient } = payload;
     const recipientSocketId = this.usersByUserId[recipient];
-    if (recipientSocketId) {
-      this.io.to(recipientSocketId).emit("notification", data);
-    }
+    this.io.to(recipientSocketId).emit("send-data", {
+      type: "notification",
+      payload,
+    });
+  }
+
+  updateProfileRating(reviewerId, score) {
+    const reviewerSocketId = this.usersByUserId[reviewerId];
+    this.io.to(reviewerSocketId).emit("send-data", {
+      type: "new-rating",
+      payload: score,
+    });
   }
 }
 
