@@ -17,10 +17,10 @@ matchQueue.on("completed", async (job, result) => {
 
   // if review still pending, requeue review
   if (reviewStatus === "pending") {
-    await matchQueue.add(
-      job.data,
-      { jobId: job.data.reviewId, delay: REQUEST_TIMEOUT, }
-    );
+    await matchQueue.add(job.data, {
+      jobId: job.data.reviewId,
+      delay: REQUEST_TIMEOUT,
+    });
   }
 });
 
@@ -33,7 +33,7 @@ const remove = async (reviewId) => {
   if (job) await job.remove();
 };
 
-const promote = async (reviewId)  => {
+const promote = async (reviewId) => {
   const job = await matchQueue.getJob(reviewId);
   if (job) await job.remove();
   await queueReview(reviewId);

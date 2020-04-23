@@ -1,38 +1,34 @@
 const { Router } = require("express");
 
 const authenticate = require("../../middlewares/authenticate");
-const User = require('../../models/User');
+const User = require("../../models/User");
 const Review = require("../../models/Review");
 const Message = require("../../models/Message");
 const MatchQueue = require("../../services/MatchQueue");
-const { createNotification } = require('../../controllers/notifications');
+const { createNotification } = require("../../controllers/notifications");
 
 const router = Router();
 const REQUIRED_CREDITS = 1;
 
-
-router.get('/', authenticate, async (req, res) => {
+router.get("/", authenticate, async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const reviews = await Review.find(
-      { reviewerId: userId },
-      null,
-      { sort: { date: -1 } },
-    );
+    const reviews = await Review.find({ reviewerId: userId }, null, {
+      sort: { date: -1 },
+    });
 
-    const filteredReviews = reviews.map((review) =>
-      review.filteredSchema()
-    );
+    const filteredReviews = reviews.map((review) => review.filteredSchema());
 
     res.send({ reviews: filteredReviews });
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error(err);
     res.sendStatus(500);
   }
 });
 
-router.put('/:reviewId/status', authenticate, async (req, res) => {
+router.put("/:reviewId/status", authenticate, async (req, res) => {
   const review = await Review.findOne({ _id: req.params.reviewId });
 
   if (!review) {
@@ -41,12 +37,13 @@ router.put('/:reviewId/status', authenticate, async (req, res) => {
   }
 
   // check if user is the requested reviewer
+  // eslint-disable-next-line eqeqeq
   if (req.user.id != review.reviewerId) {
     res.sendStatus(403);
     return;
   }
 
-  if (req.body.status === 'accepted') {
+  if (req.body.status === "accepted") {
     review.status = req.body.status;
     await review.save();
     await MatchQueue.remove(review.id);
@@ -59,16 +56,16 @@ router.put('/:reviewId/status', authenticate, async (req, res) => {
       code: 2,
     });
 
-    res.status(200).send('Accepted');
+    res.status(200).send("Accepted");
     return;
   }
 
-  if (req.body.status === 'rejected') {
+  if (req.body.status === "rejected") {
     review.declinedIds.push(review.reviewerId);
     review.reviewerId = null;
     await review.save();
     await MatchQueue.promote(review.id);
-    res.status(200).send('Rejected');
+    res.status(200).send("Rejected");
     return;
   }
 
@@ -80,13 +77,14 @@ router.put(
   "/:requestId/messages/:messageId",
   authenticate,
   async (req, res) => {
-    const messageId = req.params.messageId;
-    const requestId = req.params.requestId;
+    const { messageId } = req.params;
+    const { requestId } = req.params;
     const userId = req.user.id;
     const { code, comments } = req.body;
 
     if (!code && !comments) {
-      return res.sendStatus(400);
+      res.sendStatus(400);
+      return;
     }
 
     try {
@@ -94,19 +92,22 @@ router.put(
       const message = request.messages.id(messageId);
 
       if (!message) {
-        return res.sendStatus(404);
+        res.sendStatus(404);
+        return;
       }
 
-      if (message["_id"] == messageId && message.authorId == userId) {
+      // eslint-disable-next-line eqeqeq
+      if (message._id == messageId && message.authorId == userId) {
         request.messages.id(messageId).code = code;
         request.messages.id(messageId).comments = comments;
 
         await request.save();
-        return res.sendStatus(200);
-      } else {
-        return res.sendStatus(403);
+        res.sendStatus(200);
+        return;
       }
+      res.sendStatus(403);
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error(err);
       res.sendStatus(500);
     }
@@ -117,11 +118,9 @@ router.get("/requests", authenticate, async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const usersRequests = await Review.find(
-      { requesterId: userId },
-      null,
-      { sort: { date: -1 } },
-    );
+    const usersRequests = await Review.find({ requesterId: userId }, null, {
+      sort: { date: -1 },
+    });
 
     const filteredRequests = usersRequests.map((request) =>
       request.filteredSchema()
@@ -129,6 +128,7 @@ router.get("/requests", authenticate, async (req, res) => {
 
     res.send({ usersRequests: filteredRequests });
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error(err);
     res.sendStatus(500);
   }
@@ -148,11 +148,13 @@ router.get("/requests/:id", authenticate, async (req, res) => {
     if (singleRequest[0]) {
       singleRequest[0].filteredSchema();
     } else {
-      return res.sendStatus(400);
+      res.sendStatus(400);
+      return;
     }
 
     res.send({ singleRequest });
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error(err);
     res.sendStatus(500);
   }

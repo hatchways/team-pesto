@@ -8,7 +8,7 @@ const REVIEW_COMPLETED = 4;
 const REQUESTOR_NEW_POST = 5;
 const REVIEWER_NEW_POST = 6;
 
-const createNotification = async data => {
+const createNotification = async (data) => {
   const { reviewId, recipient, counterpart, code } = data;
   const body = { recipient: recipient.id };
   switch (code) {
@@ -45,8 +45,9 @@ const createNotification = async data => {
   await notification.save();
 };
 
-const getNotifications = async recipient => {
-  return await Notification.find({ recipient });
+const getNotifications = async (recipient) => {
+  const notifications = await Notification.find({ recipient });
+  return notifications;
 };
 
 module.exports = {

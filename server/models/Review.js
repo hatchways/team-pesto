@@ -15,6 +15,7 @@ const reviewSchema = new Schema({
   messages: [Message.schema],
 });
 
+// eslint-disable-next-line func-names
 reviewSchema.methods.filteredSchema = function () {
   return {
     _id: this._id,

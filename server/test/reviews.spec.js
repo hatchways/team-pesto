@@ -15,7 +15,6 @@ chai.use(chaiHttp);
 const app = TestApp();
 app.use("/api/reviews", reviewsRouter);
 
-
 describe("POST /api/reviews/requests", () => {
   const testUser1 = new User({
     name: "Scrooge McDuck",
@@ -172,30 +171,24 @@ describe("POST /api/reviews/requests", () => {
   });
 });
 
-describe('PUT /api/reviews/:reviewId/status', () => {
+describe("PUT /api/reviews/:reviewId/status", () => {
   const testRequester = new User({
-    name: 'Requester',
-    email: 'requester@email.com',
-    password: 'helppls',
-    experience: [
-      { language: 'python', level: 0 },
-    ],
+    name: "Requester",
+    email: "requester@email.com",
+    password: "helppls",
+    experience: [{ language: "python", level: 0 }],
   });
   const testReviewer = new User({
-    name: 'Reviewer',
-    email: 'reviewer@email.com',
-    password: 'here2help',
-    experience: [
-      { language: 'python', level: 2 },
-    ],
+    name: "Reviewer",
+    email: "reviewer@email.com",
+    password: "here2help",
+    experience: [{ language: "python", level: 2 }],
   });
   const randomUser = new User({
-    name: 'Random',
-    email: 'user@email.com',
-    password: 'qwertyuiop',
-    experience: [
-      { language: 'javascript', level: 0 },
-    ],
+    name: "Random",
+    email: "user@email.com",
+    password: "qwertyuiop",
+    experience: [{ language: "javascript", level: 0 }],
   });
 
   before(async () => {
@@ -212,93 +205,93 @@ describe('PUT /api/reviews/:reviewId/status', () => {
     const requester = chai.request(app).keepOpen();
 
     await requester
-      .post('/api/reviews/requests')
-      .set('Authorization', `Bearer ${token}`)
+      .post("/api/reviews/requests")
+      .set("Authorization", `Bearer ${token}`)
       .send({
-        title: 'Accept This',
-        language: 'python',
+        title: "Accept This",
+        language: "python",
         code: `print('good code')`,
-        comments: 'check it out',
+        comments: "check it out",
       });
     await requester
-      .post('/api/reviews/requests')
-      .set('Authorization', `Bearer ${token}`)
+      .post("/api/reviews/requests")
+      .set("Authorization", `Bearer ${token}`)
       .send({
-        title: 'Reject This',
-        language: 'python',
+        title: "Reject This",
+        language: "python",
         code: `print('good code')`,
-        comments: 'check it out',
+        comments: "check it out",
       });
-    
+
     // wait for review matching
     await setTimeout(() => {}, 2000);
     requester.close();
   });
 
-  it('should return status 200 and change review status to accepted if request accepted', async () => {
+  it("should return status 200 and change review status to accepted if request accepted", async () => {
     const token = jwt.sign({ id: testReviewer.id }, passportSecret);
-    const review = await Review.findOne({ title: 'Accept This' });
+    const review = await Review.findOne({ title: "Accept This" });
 
     const res = await chai
       .request(app)
       .put(`/api/reviews/${review.id}/status`)
-      .set('Authorization', `Bearer ${token}`)
-      .send({ status: 'accepted' });
+      .set("Authorization", `Bearer ${token}`)
+      .send({ status: "accepted" });
 
     res.should.have.status(200);
     const updatedReview = await Review.findById(review.id);
-    updatedReview.status.should.equal('accepted');
+    updatedReview.status.should.equal("accepted");
   });
 
   // test will fail if run while server is running
-  it('should return status 200 and modify review document accordingly if request declined', async () => {
+  it("should return status 200 and modify review document accordingly if request declined", async () => {
     const token = jwt.sign({ id: testReviewer.id }, passportSecret);
-    const review = await Review.findOne({ title: 'Reject This' });
+    const review = await Review.findOne({ title: "Reject This" });
 
     const res = await chai
       .request(app)
       .put(`/api/reviews/${review.id}/status`)
-      .set('Authorization', `Bearer ${token}`)
-      .send({ status: 'rejected' });
-      
+      .set("Authorization", `Bearer ${token}`)
+      .send({ status: "rejected" });
+
     res.should.have.status(200);
     const updatedReview = await Review.findById(review.id);
-    updatedReview.status.should.equal('pending');
+    updatedReview.status.should.equal("pending");
     should.not.exist(updatedReview.reviewerId);
     updatedReview.declinedIds.should.include(testReviewer.id);
   });
 
-  it('should return status 401 if user not authorized', async () => {
-    const review = await Review.findOne({ title: 'Accept This' });
+  it("should return status 401 if user not authorized", async () => {
+    const review = await Review.findOne({ title: "Accept This" });
 
     const res = await chai
       .request(app)
       .put(`/api/reviews/${review.id}/status`)
-      .send({ status: 'accepted' });
+      .send({ status: "accepted" });
     res.should.have.status(401);
   });
 
-  it('should return status 403 if user authorized but is not the requested reviewer', async () => {
+  it("should return status 403 if user authorized but is not the requested reviewer", async () => {
     const token = jwt.sign({ id: randomUser.id }, passportSecret);
-    const review = await Review.findOne({ title: 'Accept This' });
+    const review = await Review.findOne({ title: "Accept This" });
 
     const res = await chai
       .request(app)
       .put(`/api/reviews/${review.id}/status`)
-      .set('Authorization', `Bearer ${token}`)
-      .send({ status: 'accepted' });
+      .set("Authorization", `Bearer ${token}`)
+      .send({ status: "accepted" });
     res.should.have.status(403);
   });
 
-  it('should return status 400 if request body is invalid', async () => {
+  it("should return status 400 if request body is invalid", async () => {
     const token = jwt.sign({ id: testReviewer.id }, passportSecret);
-    const review = await Review.findOne({ title: 'Accept This' });
+    const review = await Review.findOne({ title: "Accept This" });
 
     const res = await chai
       .request(app)
       .put(`/api/reviews/${review.id}/status`)
-      .set('Authorization', `Bearer ${token}`)
-      .send({ status: 'asdflk;jas' });
+      .set("Authorization", `Bearer ${token}`)
+      .send({ status: "asdflk;jas" });
     res.should.have.status(400);
   });
 
