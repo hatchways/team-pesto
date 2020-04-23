@@ -216,10 +216,6 @@ const Profile = (props) => {
               </div>
             ))}
           </div>
-
-          <div className={classes.gridRow4}>
-            <div className={classes.text}>some content</div>
-          </div>
         </div>
       </form>
 
