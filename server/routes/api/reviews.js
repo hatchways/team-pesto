@@ -5,6 +5,7 @@ const Review = require("../../models/Review");
 const Message = require("../../models/Message");
 const MatchQueue = require("../../services/MatchQueue");
 const { createNotification } = require("../../controllers/notifications");
+const { newMessage } = require("../../controllers/reviews");
 
 const router = Router();
 const REQUIRED_CREDITS = 1;
@@ -254,19 +255,25 @@ router.post(
       // note: must coerce from Object ID to String
       if (userId !== String(requesterId) && userId !== String(reviewerId)) return res.sendStatus(403);
 
-      // create the new message
-      const newMessage = await new Message({
-        author: String(requesterId),
+      const requesterIsSender = userId === String(requesterId);
+
+      // make the reviews controller save message info to db and update request, and send
+      // socket to update FE message information
+      const message = await newMessage({
+        author: String(requesterIsSender ? requesterId : reviewerId),
         date: Date.now(),
         code,
         comments,
-      });
-      const message = await newMessage.save();
+      }, request);
 
-      // push the new message id into the request's message array
-      request.messages.push(newMessage['_id']);
-      await request.save();
-      
+      // make the notifications controller save and send a notification to receiving party
+      await createNotification({
+        reviewId: String(reviewerId),
+        recipientId: String(requesterIsSender ? reviewerId : requesterId),
+        counterpartId: String(requesterIsSender ? requesterId : reviewerId),
+        code: requesterIsSender ? 5 : 6,
+      });
+
       return res.status(201).send(message);
     } catch (err) {
       console.error(err);

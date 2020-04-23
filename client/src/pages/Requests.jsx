@@ -26,6 +26,8 @@ const Requests = () => {
   };
   useEffect(fetchRequests, []);
 
+  // TO DO: MAKE THIS SUBSCRIBE TO SOCKETS
+  
   return (
     <ReviewThreads
       reviews={requests}

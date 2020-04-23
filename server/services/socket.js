@@ -39,7 +39,6 @@ class Socket {
     });
   }
 
-  // send notification to specific user (via user's unique room)
   sendNotification(payload) {
     const { recipient } = payload;
     const recipientSocketId = this.usersByUserId[recipient];
@@ -56,6 +55,21 @@ class Socket {
       payload: score,
     });
   }
+
+  addNewPost(request, message) {
+    const { requesterId, reviewerId } = request;
+    const requesterSocketId = this.usersByUserId[String(requesterId)];
+    const reviewerSocketId = this.usersByUserId[String(reviewerId)];
+    this.io.to(requesterSocketId).emit("send-data", {
+      type: "new-post",
+      payload: message,
+    });
+    this.io.to(reviewerSocketId).emit("send-data", {
+      type: "new-post",
+      payload: message,
+    });
+  };
+
 }
 
 module.exports = new Socket();
