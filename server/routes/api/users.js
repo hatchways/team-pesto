@@ -100,6 +100,8 @@ router.post("/login", async (req, res) => {
       email: user.email,
       experience: user.experience,
       balance: user.balance,
+      totalRatings: user.totalRatings,
+      totalRatingsScore: user.totalRatingsScore,
       image: user.image,
     };
     const token = jwt.sign(payload, passportSecret);
@@ -118,11 +120,24 @@ router.get("/me", authenticate, (req, res) => {
     name,
     experience,
     balance,
-    image,
+    totalRatings,
+    totalRatingsScore,
     title,
     years,
+    image,
   } = req.user;
-  res.json({ id, email, name, experience, balance, image, title, years });
+  res.json({
+    id,
+    email,
+    name,
+    experience,
+    balance,
+    totalRatings,
+    totalRatingsScore,
+    title,
+    years,
+    image,
+  });
 });
 
 router.put("/me", authenticate, async (req, res) => {

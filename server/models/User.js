@@ -23,6 +23,8 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   experience: { type: Array },
   balance: { type: Number, default: 3 },
+  totalRatings: { type: Number, default: 0 },
+  totalRatingsScore: { type: Number, default: 0 },
   image: { type: String },
   title: { type: String },
   years: { type: String },

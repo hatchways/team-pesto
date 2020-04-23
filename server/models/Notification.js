@@ -12,5 +12,5 @@ const notificationSchema = new Schema({
 
 notificationSchema.index({ recipient: 1 });
 
-const Notification = mongoose.model("Notification", notificationSchema);
+const Notification = mongoose.model("notification", notificationSchema);
 module.exports = Notification;
