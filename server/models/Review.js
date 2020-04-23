@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 
-const Message = require("./Message");
-
 const { Schema, ObjectId } = mongoose;
 
 const reviewSchema = new Schema({
@@ -12,7 +10,7 @@ const reviewSchema = new Schema({
   date: { type: Date, default: Date.now },
   language: { type: String, required: true },
   status: { type: String, default: "pending" },
-  messages: [Message.schema],
+  messages: [ObjectId],
 });
 
 // eslint-disable-next-line func-names

@@ -23,6 +23,7 @@ class Socket {
       return data;
     } catch (err) {
       console.error(err);
+      return [];
     }
   }
 }

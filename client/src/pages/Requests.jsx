@@ -17,7 +17,7 @@ const Requests = () => {
         const { data } = await axios.get("/api/reviews/requests", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setRequests(data.usersRequests);
+        setRequests(data.requests);
       })();      
     } catch (err) {
       const errorMessage = err.response.data.response || err.response.data;

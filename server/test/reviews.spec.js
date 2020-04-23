@@ -6,6 +6,7 @@ const { passportSecret } = require("../config/keys");
 const reviewsRouter = require("../routes/api/reviews");
 const User = require("../models/User");
 const Review = require("../models/Review");
+const Message = require("../models/Message");
 const TestApp = require("./TestApp");
 const TestDb = require("./TestDb");
 
@@ -59,8 +60,10 @@ describe("POST /api/reviews/requests", () => {
         review.language.should.equal("javascript");
         review.messages.should.have.lengthOf(1);
 
-        const message = review.messages[0];
-        message.authorId.toString().should.equal(testUser1.id);
+        const messageId = review.messages[0];
+        const message = await Message.findById(messageId);
+
+        message.author.toString().should.equal(testUser1.id);
         message.code.should.equal(`console.log('hello world!');`);
         message.comments.should.equal("please take a look at my code");
 

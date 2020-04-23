@@ -16,6 +16,13 @@ router.get("/", authenticate, async (req, res) => {
 
     const reviews = await Review.find({ reviewerId: userId }, null, {
       sort: { date: -1 },
+    }).populate({
+      path: "messages",
+      model: "message",
+      populate: {
+        path: "author",
+        model: "user",
+      },
     });
 
     const filteredReviews = reviews.map((review) => review.filteredSchema());
@@ -97,7 +104,7 @@ router.put(
       }
 
       // eslint-disable-next-line eqeqeq
-      if (message._id == messageId && message.authorId == userId) {
+      if (message._id == messageId && message.author == userId) {
         request.messages.id(messageId).code = code;
         request.messages.id(messageId).comments = comments;
 
@@ -118,15 +125,22 @@ router.get("/requests", authenticate, async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const usersRequests = await Review.find({ requesterId: userId }, null, {
+    const requests = await Review.find({ requesterId: userId }, null, {
       sort: { date: -1 },
+    }).populate({
+      path: "messages",
+      model: "message",
+      populate: {
+        path: "author",
+        model: "user",
+      },
     });
 
-    const filteredRequests = usersRequests.map((request) =>
+    const filteredRequests = requests.map((request) =>
       request.filteredSchema()
     );
 
-    res.send({ usersRequests: filteredRequests });
+    res.send({ requests: filteredRequests });
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error(err);
@@ -180,7 +194,7 @@ router.post("/requests", authenticate, async (req, res) => {
 
   // create initial message
   const message = new Message({
-    authorId: requester.id,
+    author: requester.id,
     date,
     code,
     comments,
@@ -192,7 +206,7 @@ router.post("/requests", authenticate, async (req, res) => {
     date,
     title,
     language,
-    messages: [message],
+    messages: [message.id],
   });
 
   // update user balance

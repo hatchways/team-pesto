@@ -23,8 +23,6 @@ const Messages = ({ message, language, reviewId, fetchReviews }) => {
   const { setSnackbar } = useContext(AppSnackbarContext);
 
   const [editMode, setEditMode] = useState(false);
-  // TODO get author name
-  const [authorName, setAuthorName] = useState("");
   const [codeSnippet, setCodeSnippet] = useState(message.code);
   const [editedCodeSnippet, setEditedCodeSnippet] = useState({
     state: false,
@@ -121,7 +119,7 @@ const Messages = ({ message, language, reviewId, fetchReviews }) => {
               className={classes.editIcon}
               onClick={handleCloseEdit}
               style={
-                message.authorId === user.id
+                message.author._id == user.id
                   ? { display: "block" }
                   : { display: "none" }
               }
@@ -131,7 +129,7 @@ const Messages = ({ message, language, reviewId, fetchReviews }) => {
               className={classes.editIcon}
               onClick={toggleEditMessage}
               style={
-                message.authorId === user.id
+                message.author._id == user.id
                   ? { display: "block" }
                   : { display: "none" }
               }
@@ -151,10 +149,10 @@ const Messages = ({ message, language, reviewId, fetchReviews }) => {
         <div className={classes.author}>
           <div className={classes.authorHeader}>
             <div className={classes.authorAvatar}>
-              <Avatar src={user && user.image} />
+              <Avatar src={message.author.image} />
             </div>
             <div>
-              <Typography variant="h5">John Doe</Typography>
+            <Typography variant="h5">{message.author.name}</Typography>
               <Typography className={classes.date}>
                 {formatDate(message.date)}
               </Typography>
