@@ -10,7 +10,7 @@ const authenticate = require("../../middlewares/authenticate");
 const router = Router();
 
 // create a new rating
-router.post("/", authenticate, async(req, res) => {
+router.post("/", authenticate, async (req, res) => {
   const { reviewId, score } = req.body;
   try {
     const review = await Review.findById(reviewId);
@@ -20,14 +20,19 @@ router.post("/", authenticate, async(req, res) => {
     if (req.user.id !== requesterId) return res.sendStatus(401);
 
     // make the reviews controller save rating info to db and send socket to update FE user
-    const rating = await setRating({ reviewId, requesterId, reviewerId, score });
+    const rating = await setRating({
+      reviewId,
+      requesterId,
+      reviewerId,
+      score,
+    });
 
     // make the notifications controller save and send a notification to reviewer
     await createNotification({
       reviewId,
       recipientId: reviewerId,
       counterpartId: requesterId,
-      code: 4
+      code: 4,
     });
 
     const reviewer = await User.findById(reviewerId);

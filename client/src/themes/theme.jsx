@@ -32,7 +32,8 @@ const theme = createMuiTheme({
     },
     background: {
       main: "#ECF0FA",
-    },
+      default: "#ECF0FA",
+    }
   },
 });
 

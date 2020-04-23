@@ -9,7 +9,7 @@ const REVIEW_COMPLETED = 4;
 const REQUESTER_NEW_POST = 5;
 const REVIEWER_NEW_POST = 6;
 
-const createNotification = async data => {
+const createNotification = async (data) => {
   const { reviewId, recipientId, counterpartId, code } = data;
   const counterpartName = (await User.findById(counterpartId)).name;
   const body = { recipient: recipientId };
@@ -42,13 +42,14 @@ const createNotification = async data => {
       body.title = "";
       body.link = "";
   }
-  const notification = await new Notification(body);
+  const notification = new Notification(body);
   Socket.sendNotification(notification);
-  return await notification.save();
+  await notification.save();
 };
 
-const getNotifications = async recipient => {
-  return await Notification.find({ recipient });
+const getNotifications = async (recipient) => {
+  const notifications = await Notification.find({ recipient });
+  return notifications;
 };
 
 module.exports = {
