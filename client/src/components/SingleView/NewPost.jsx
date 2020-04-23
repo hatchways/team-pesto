@@ -17,51 +17,48 @@ import formatDate from "utils/formatDate";
 import { getToken } from "utils/storage";
 import useStyle from "components/SingleView/SingleView.css";
 
-const Messages = ({ requestId, message, language }) => {
+const NewPost = ({ language }) => {
   const classes = useStyle();
   const { user } = useContext(UserContext);
-  const [editMode, setEditMode] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     severity: "",
     message: "",
   });
-  const [messageId, setMessageId] = useState("");
+  // const [messageId, setMessageId] = useState("");
   // TODO get author name
   const [authorName, setAuthorName] = useState("");
   const [codeSnippet, setCodeSnippet] = useState("");
-  const [editedCodeSnippet, setEditedCodeSnippet] = useState({
-    state: false,
-    value: "",
-  });
+  // const [editedCodeSnippet, setEditedCodeSnippet] = useState({
+  //   state: false,
+  //   value: "",
+  // });
   const [comments, setComments] = useState("");
-  const [editedComments, setEditedComments] = useState({
-    state: false,
-    value: "",
-  });
+  // const [editedComments, setEditedComments] = useState({
+  //   state: false,
+  //   value: "",
+  // });
 
-  useEffect(() => {
-    setMessageId(message["_id"]);
-    setCodeSnippet(message.code);
-    setComments(message.comments);
-    setEditedCodeSnippet({ value: message.code });
-    setEditedComments({ value: message.comments });
-  }, [message.code, message.comments]);
+  // useEffect(() => {
+  //   // setMessageId(message["_id"]);
+  //   // setCodeSnippet(message.code);
+  //   // setComments(message.comments);
+  //   // setEditedCodeSnippet({ value: message.code });
+  //   // setEditedComments({ value: message.comments });
+  // }, [message.code, message.comments]);
 
-  const toggleEditMessage = () => {
-    setEditMode(!editMode);
-  };
+  // const toggleEditMessage = () => {
+  //   setEditMode(!editMode);
+  // };
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
     switch (name) {
       case "code-snippet":
         setCodeSnippet(value);
-        setEditedCodeSnippet({ state: true, value });
         break;
       case "comments":
         setComments(value);
-        setEditedComments({ state: true, value });
         break;
       default:
     }
@@ -74,35 +71,26 @@ const Messages = ({ requestId, message, language }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    try {
+      setEditMode(!editMode);
+      await axios.put(
+        `/api/reviews/${requestId}/messages/${messageId}`,
+        {
+          code: codeSnippet,
+          comments: comments,
+        },
+        {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        }
+      );
 
-    if (!editedComments.state && !editedCodeSnippet.state) {
       setSnackbar({
         open: true,
-        severity: "warning",
-        message: "You must make a change first!",
+        severity: "success",
+        message: "Update successful!",
       });
-    } else {
-      try {
-        setEditMode(!editMode);
-        await axios.put(
-          `/api/reviews/${requestId}/messages/${messageId}`,
-          {
-            code: codeSnippet,
-            comments: comments,
-          },
-          {
-            headers: { Authorization: `Bearer ${getToken()}` },
-          }
-        );
-
-        setSnackbar({
-          open: true,
-          severity: "success",
-          message: "Update successful!",
-        });
-      } catch (err) {
-        console.error(err);
-      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -202,4 +190,4 @@ const Messages = ({ requestId, message, language }) => {
   );
 };
 
-export default Messages;
+export default NewPost;

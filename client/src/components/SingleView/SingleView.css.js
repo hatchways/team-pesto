@@ -53,13 +53,19 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     marginBottom: "10px",
   },
-  saveButton: {
+  button: {
     backgroundColor: `${theme.palette.primary.main}`,
     color: "#FFFF",
     marginRight: "10px",
     lineHeight: 1,
     padding: "8px",
   },
+  addPost: {
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginBottom: "10px",
+  }
 }));
 
 export default useStyles;

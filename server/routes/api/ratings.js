@@ -17,7 +17,7 @@ router.post("/", authenticate, async(req, res) => {
     const { reviewerId, requesterId } = review;
 
     // verify that poster is requester
-    if (req.user.id !== requesterId) return res.sendStatus(401);
+    if (req.user.id !== requesterId) return res.sendStatus(403);
 
     // make the reviews controller save rating info to db and send socket to update FE user
     const rating = await setRating({ reviewId, requesterId, reviewerId, score });

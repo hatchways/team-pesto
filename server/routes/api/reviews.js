@@ -111,6 +111,45 @@ router.get("/requests/:id", authenticate, async (req, res) => {
   }
 });
 
+router.post(
+  "/:requestId",
+  authenticate,
+  async (req, res) => {
+    const requestId = req.params.requestId;
+    const userId = req.user.id;
+    const { code, comments } = req.body;
+
+    if (!code || !comments) {
+      return res.sendStatus(400);
+    }
+
+    try {
+      const request = await Review.findById(requestId);
+      const { requesterId, reviewerId } = request;
+
+      // return 403 if user is neither requester nor reviewer
+      if (userId !== requesterId && userId !== reviewerId) return res.sendStatus(403);
+
+      const message = await new Message({
+        authorId: requesterId,
+        
+      });
+
+
+      // const message = new Message({
+      //   authorId: requester.id,
+      //   date,
+      //   code,
+      //   comments,
+      // });
+
+      return res.status(201).send(message);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+);
+
 router.put(
   "/:requestId/messages/:messageId",
   authenticate,
