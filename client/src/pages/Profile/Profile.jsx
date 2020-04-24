@@ -40,9 +40,7 @@ const Profile = (props) => {
   useEffect(() => {
     const getProfile = async (id) => {
       try {
-        const { data } = await axios.get(`/api/users/profile/${id}`, {
-          headers: { Authorization: `Bearer ${getToken()}` },
-        });
+        const { data } = await axios.get(`/api/users/profile/${id}`);
 
         const { profile } = data;
 

@@ -152,7 +152,7 @@ const Messages = ({ message, language, reviewId, fetchReviews }) => {
               <Avatar src={message.author.image} />
             </div>
             <div>
-              <Link to={`/profile/${message.author.id}`} className={classes.authorLink}>
+              <Link to={`/profile/${message.author._id}`} className={classes.authorLink}>
                 <Typography variant="h5">{message.author.name}</Typography>
               </Link>
               <Typography className={classes.date}>

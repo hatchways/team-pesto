@@ -57,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
   
   authorComment: {
     paddingLeft: "55px",
+    marginBottom: "55px",
     overflowWrap: 'break-word',
     wordWrap: 'break-word',
     width: '100%',
