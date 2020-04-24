@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   makeStyles,
   MenuItem,
@@ -68,9 +69,13 @@ const parseDate = date => {
   }
 };
 
+const handleClick = () => {
+
+};
 
 const Notifications = ({ notifications }) => {
   const classes = useStyles();
+  console.log('NOTIFICATIONS', notifications)
   return (
     <>
       {
@@ -78,11 +83,14 @@ const Notifications = ({ notifications }) => {
           <MenuItem
             key={i}
             className={notification.seen ? classes.seenMenuItem : classes.unseenMenuItem}
+            onClick={handleClick}
           >
-            <Grid container direction="column">
-              <Typography className={classes.notificationTitle}>{notification.title}</Typography>
-              <Typography className={classes.timestamp}>{parseDate(notification.date)}</Typography>
-            </Grid>
+            <Link to={notification.link}>
+              <Grid container direction="column">
+                <Typography className={classes.notificationTitle}>{notification.title}</Typography>
+                <Typography className={classes.timestamp}>{parseDate(notification.date)}</Typography>
+              </Grid>
+            </Link>
           </MenuItem>
         )) : (
           <MenuItem className={classes.seenMenuItem}>

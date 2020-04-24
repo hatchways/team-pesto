@@ -208,7 +208,7 @@ const Navbar = () => {
             onClose={handleClose}
           >
             <MenuItem>
-              <Link className={classes.link} to="/profile">
+              <Link className={classes.link} to="/">
                 Go to Profile
               </Link>
             </MenuItem>

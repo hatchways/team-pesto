@@ -16,27 +16,27 @@ const createNotification = async (data) => {
   switch (code) {
     case RECEIVED_REVIEW_REQUEST:
       body.title = `${counterpartName} has requested your review!`;
-      body.link = `reviews/${reviewId}`;
+      body.link = `/reviews/${reviewId}`;
       break;
     case REQUEST_ACCEPTED:
       body.title = `${counterpartName} has accepted your request!`;
-      body.link = `requests/${reviewId}`;
+      body.link = `/requests/${reviewId}`;
       break;
     case REQUEST_DECLINED:
       body.title = `${counterpartName} has declined your request.`;
-      body.link = `requests/${reviewId}`;
+      body.link = `/requests/${reviewId}`;
       break;
     case REVIEW_COMPLETED:
       body.title = `${counterpartName} has marked the review complete!`;
-      body.link = `requests/${reviewId}`;
+      body.link = `/requests/${reviewId}`;
       break;
     case REQUESTER_NEW_POST:
       body.title = `${counterpartName} made a post in your thread!`;
-      body.link = `reviews/${reviewId}`;
+      body.link = `/reviews/${reviewId}`;
       break;
     case REVIEWER_NEW_POST:
       body.title = `${counterpartName} made a post in your thread!`;
-      body.link = `requests/${reviewId}`;
+      body.link = `/requests/${reviewId}`;
       break;
     default:
       body.title = "";
