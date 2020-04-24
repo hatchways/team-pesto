@@ -6,7 +6,6 @@ const configureStripe = require("stripe");
 
 const { passportSecret, stripeSecretKey } = require("../../config/keys");
 const User = require("../../models/User");
-const Review = require("../../models/Review");
 const validateEmail = require("../../validation/email");
 const validatePassword = require("../../validation/password");
 const validateExperience = require("../../validation/experience");
@@ -151,6 +150,7 @@ router.put("/me", authenticate, async (req, res) => {
 
   try {
     const user = await User.findById(id);
+    // eslint-disable-next-line eqeqeq
     if (userId == id) {
       user.name = name;
       user.title = title;
@@ -160,7 +160,8 @@ router.put("/me", authenticate, async (req, res) => {
       user.save();
       res.sendStatus(200);
     } else {
-      return res.sendStatus(403);
+      res.sendStatus(403);
+      return;
     }
   } catch (err) {
     console.error(err);
@@ -173,13 +174,13 @@ router.get("/profile/:id", authenticate, async (req, res) => {
 
   try {
     const user = await User.findById(id);
-    const reviews = await Review.find({ reviewerId: id });
 
     if (user) {
       const profile = user.profile();
-      res.status(200).send({ profile, reviews: reviews.length });
+      res.status(200).send({ profile });
     } else {
-      return res.sendStatus(400);
+      res.sendStatus(400);
+      return;
     }
   } catch (err) {
     console.error(err);

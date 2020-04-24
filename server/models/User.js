@@ -38,6 +38,8 @@ userSchema.methods.profile = function () {
     image: this.image,
     title: this.title,
     years: this.years,
+    totalRatings: this.totalRatings,
+    totalRatingsScore: this.totalRatingsScore,
   };
 };
 
