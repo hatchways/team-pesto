@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Paper, Button } from "@material-ui/core";
+import { Paper, Button, Box, Divider } from "@material-ui/core";
 
 import useStyles from "./Thread.css";
 import ThreadHeader from 'components/ReviewThreads/ThreadHeader';
@@ -27,13 +27,16 @@ const Thread = ({ review, type, fetchReviews }) => {
 
       <div className={classes.syntaxWrapper}>
         {messages.map((message) => (
-          <Messages
-            reviewId={review._id}
-            key={message._id}
-            message={message}
-            language={language}
-            fetchReviews={fetchReviews}
-          />
+          <Box mb={5}>
+            <Messages
+              reviewId={review._id}
+              key={message._id}
+              message={message}
+              language={language}
+              fetchReviews={fetchReviews}
+            />
+            <Divider />
+          </Box>
         ))}
         {(user.id === review.requesterId || review.status === "accepted") && (
           !newPost ? (

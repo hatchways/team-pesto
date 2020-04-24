@@ -169,12 +169,12 @@ router.put("/me", authenticate, async (req, res) => {
   }
 });
 
-router.get("/profile/:id", authenticate, async (req, res) => {
+router.get("/profile/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
     const user = await User.findById(id);
-
+    
     if (user) {
       const profile = user.profile();
       res.status(200).send({ profile });

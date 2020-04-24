@@ -78,6 +78,7 @@ function App() {
                     <Route exact path="/requests" component={Requests} />
                     <Route exact path="/reviews/:id" component={Reviews} />
                     <Route exact path="/reviews" component={Reviews} />
+                    <Route exact path="/profile/:id" component={Profile} />
                     {/* TODO: Future routes
                     <Route exact path="/upload" component={Upload} />*/}
                     <Redirect exact to="/" />
