@@ -44,7 +44,7 @@ class Socket {
     const { recipient } = payload;
     const recipientSocketId = this.usersByUserId[recipient];
     this.io.to(recipientSocketId).emit("send-data", {
-      type: "notification",
+      type: "add-notification",
       payload,
     });
   }
@@ -56,6 +56,7 @@ class Socket {
       payload: score,
     });
   }
+
 }
 
 module.exports = new Socket();

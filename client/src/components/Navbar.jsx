@@ -101,16 +101,17 @@ const Navbar = () => {
     socket.connect(localStorage.token);
 
     // fetch all notifications for this user from db
-    (async function () {
+    const fetchNotifications = async () => {
       const data = await socket.fetchNotifications();
       setNotifications(data.reverse());
-    })();
+    }
+    fetchNotifications();
 
     // subscribe this component to socket IO client
     socket.subscribe("navbar", data => {
       const { type, payload } = data;
       switch (type) {
-        case "notification":
+        case "add-notification":
           setNotifications(prevNotifications => [payload, ...prevNotifications]);
           return;
         case "new-rating":
@@ -181,7 +182,10 @@ const Navbar = () => {
             open={anchorEl.id === "notifications"}
             onClose={handleClose}
           >
-            <Notifications notifications={notifications} />
+            <Notifications
+              notifications={notifications}
+              setNotifications={setNotifications}
+            />
           </Menu>
 
           <Button
@@ -208,7 +212,7 @@ const Navbar = () => {
             onClose={handleClose}
           >
             <MenuItem>
-              <Link className={classes.link} to="/profile">
+              <Link className={classes.link} to="/">
                 Go to Profile
               </Link>
             </MenuItem>
