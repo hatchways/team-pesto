@@ -26,6 +26,14 @@ const newMessage = async (data, request) => {
     request.messages.push(message['_id']);
     await request.save();
 
+    // populate message's author field with that user's
+    // name and image, so it can be rendered on front end
+    await message.populate({
+      path: "author",
+      model: "user",
+      select: "name image",
+    }).execPopulate();
+
     // fire a socket to update both parties' FE reviews data
     Socket.addNewPost(request, message);
 

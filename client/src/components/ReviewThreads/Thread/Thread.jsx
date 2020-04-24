@@ -87,7 +87,7 @@ const Thread = ({ review, type, fetchReviews }) => {
       console.error(err);
     }
   }
-    
+  
   return (
     <Paper className={classes.singleView}>
       {renderHeader()}  
