@@ -22,6 +22,7 @@ import useStyles from "./Balance.css";
 import UserContext from "context/UserContext";
 
 import GridTemplateContainer from "components/GridTemplateContainer";
+import CodeUploadDialog from "pages/CodeUploadDialog";
 
 const CARD_ELEMENT_OPTIONS = {
   style: {
@@ -57,6 +58,7 @@ const Checkout = ({
   const [processing, setProcessing] = useState(false);
   const [billingDetails, setBillingDetails] = useState({ name: "" });
   const [paymentSuccessful, setPaymentSuccessful] = useState(false);
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -168,16 +170,17 @@ const Checkout = ({
           >
             View Balance
           </Button>
-          <Link to="/code-upload" className={classes.buttonLink}>
-            <Button
-              className={classes.button}
-              color="primary"
-              variant="contained"
-              onClick={() => setPaymentSuccessful(false)}
-            >
-              Upload Code
-            </Button>
-          </Link>
+          <Button
+            className={classes.button}
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              setPaymentSuccessful(false);
+              setUploadDialogOpen(true);
+            }}
+          >
+            Upload Code
+          </Button>
         </form>
         </GridTemplateContainer>
       )}
@@ -190,6 +193,7 @@ const Checkout = ({
           <Alert variant="filled" severity={snackbar.severity}>{snackbar.message}</Alert>
         </Snackbar>
       </Portal>
+      <CodeUploadDialog open={uploadDialogOpen} onClose={() => setUploadDialogOpen(false)} />
     </>
   );
 };
