@@ -1,14 +1,17 @@
-import React from "react";
-import { Paper } from "@material-ui/core";
+import React, { useState, useContext } from "react";
+import { Paper, Button } from "@material-ui/core";
 
 import useStyles from "./Thread.css";
 import ThreadHeader from 'components/ReviewThreads/ThreadHeader';
 import Messages from 'components/ReviewThreads/Messages';
+import NewPost from 'components/ReviewThreads/Messages/NewPost';
+import UserContext from "context/UserContext";
 
 const Thread = ({ review, type, fetchReviews }) => {
   const classes = useStyles();
-
+  const { user } = useContext(UserContext);
   const { messages, language } = review;
+  const [newPost, setNewPost] = useState(false);
 
   const handleNewPost = () => {
     try {
