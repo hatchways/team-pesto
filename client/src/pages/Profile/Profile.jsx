@@ -27,6 +27,7 @@ const Profile = (props) => {
   const [title, setTitle] = useState("");
   const [years, setYears] = useState("");
   const [reviews, setReviews] = useState(0);
+  const [totalRatingsScore, setTotalRatingsScore] = useState(0);
   const [experience, setExperience] = useState([]);
   const [image, setImage] = useState("");
 
@@ -43,14 +44,15 @@ const Profile = (props) => {
           headers: { Authorization: `Bearer ${getToken()}` },
         });
 
-        const { profile, reviews } = data;
+        const { profile } = data;
 
         if (profile["_id"] === user.id) {
           setShowEditOption(true);
         }
 
         setProfileId(profile["_id"]);
-        setReviews(reviews);
+        setReviews(profile.totalRatings);
+        setTotalRatingsScore(profile.totalRatingsScore);
         setName(profile.name);
         setTitle(profile.title);
         setYears(profile.years);
@@ -199,8 +201,14 @@ const Profile = (props) => {
               <Typography className={classes.text}>Reviews</Typography>
             </div>
             <div>
-              <Typography className={classes.decorativeText}>4.8</Typography>
-              <Typography className={classes.text}>Ratings</Typography>
+              <Typography className={classes.decorativeText}>
+                {
+                  reviews 
+                    ? Math.round((totalRatingsScore / reviews) * 10) / 10
+                    : 'N/A'
+                }
+              </Typography>
+              <Typography className={classes.text}>Average Rating</Typography>
             </div>
           </div>
 

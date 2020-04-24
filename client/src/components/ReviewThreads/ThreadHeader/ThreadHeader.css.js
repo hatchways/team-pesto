@@ -1,8 +1,8 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   ratingIcon: {
-    fontSize: '60px',
+    fontSize: "60px",
   },
 
   headerActionButton: {

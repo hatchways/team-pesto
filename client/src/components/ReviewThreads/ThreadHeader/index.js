@@ -1,3 +1,3 @@
-import ThreadHeader from './ThreadHeader';
+import ThreadHeader from "./ThreadHeader";
 
 export default ThreadHeader;

@@ -17,10 +17,14 @@ router.post("/", authenticate, async (req, res) => {
     const { reviewerId, requesterId } = review;
 
     // verify that poster is requester
-    if (req.user.id != requesterId) return res.sendStatus(403);
+    // eslint-disable-next-line eqeqeq
+    if (req.user.id != requesterId) {
+      res.sendStatus(403);
+      return;
+    }
 
     // mark review as complete
-    review.status = 'completed';
+    review.status = "completed";
     await review.save();
 
     // make the reviews controller save rating info to db and send socket to update FE user
@@ -40,7 +44,7 @@ router.post("/", authenticate, async (req, res) => {
     });
 
     const reviewer = await User.findById(reviewerId);
-    reviewer.totalRatings++;
+    reviewer.totalRatings += 1;
     reviewer.totalRatingsScore += score;
     await reviewer.save();
     res.status(201).send(rating);
