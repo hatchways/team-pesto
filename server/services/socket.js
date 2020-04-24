@@ -76,6 +76,17 @@ class Socket {
     });
   };
 
+  refetch(requesterId, reviewerId) {
+    const requesterSocketId = this.usersByUserId[String(requesterId)];
+    const reviewerSocketId = this.usersByUserId[String(reviewerId)];
+    this.io.to(requesterSocketId).emit("send-data", {
+      type: "refetch",
+    });
+    this.io.to(reviewerSocketId).emit("send-data", {
+      type: "refetch",
+    });
+  }
+
 }
 
 module.exports = new Socket();

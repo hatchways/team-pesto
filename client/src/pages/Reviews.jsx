@@ -31,6 +31,9 @@ const Reviews = () => {
     socket.subscribe("reviews", data => {
       const { type, payload } = data;
       switch (type) {
+        case "refetch":
+          fetchReviews();
+          return;
         case "new-post":
           setReviews(prevReviews => {
             return prevReviews.map(review => {

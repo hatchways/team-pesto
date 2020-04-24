@@ -2,6 +2,10 @@ const Rating = require("../models/Rating");
 const Message = require("../models/Message");
 const Socket = require("../services/socket");
 
+const addReview = (requesterId, reviewerId) => {
+  Socket.refetch(requesterId, reviewerId);
+};
+
 const setRating = async (data) => {
   const { reviewerId, score } = data;
   try {
@@ -44,6 +48,7 @@ const newMessage = async (data, request) => {
 };
 
 module.exports = {
+  addReview,
   setRating,
   newMessage,
 };

@@ -31,6 +31,9 @@ const Requests = () => {
     socket.subscribe("requests", data => {
       const { type, payload } = data;
       switch (type) {
+        case "refetch":
+          fetchRequests();
+          return;
         case "new-post":
           setRequests(prevRequests => {
             return prevRequests.map(request => {
