@@ -47,7 +47,6 @@ const Messages = ({ message, language, reviewId, fetchReviews }) => {
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
-
     switch (name) {
       case "comments":
         setEditedComments({ state: true, value });
@@ -109,7 +108,7 @@ const Messages = ({ message, language, reviewId, fetchReviews }) => {
             variant="contained"
             type="submit"
             onSubmit={handleSubmit}
-            className={classes.saveButton}
+            className={classes.button}
             style={editMode ? { display: "block" } : { display: "none" }}
           >
             Save

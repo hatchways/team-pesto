@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "10px",
   },
 
-  saveButton: {
+  button: {
     backgroundColor: `${theme.palette.primary.main}`,
     color: "#FFFF",
     marginRight: "10px",
@@ -47,6 +47,14 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "12px",
   },
 
+  button: {
+    backgroundColor: `${theme.palette.primary.main}`,
+    color: "#FFFF",
+    marginRight: "10px",
+    lineHeight: 1,
+    padding: "8px",
+  },
+  
   authorComment: {
     paddingLeft: "55px",
     overflowWrap: 'break-word',

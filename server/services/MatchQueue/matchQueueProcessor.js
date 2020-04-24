@@ -1,6 +1,7 @@
 const Review = require("../../models/Review");
 const User = require("../../models/User");
 const { createNotification } = require("../../controllers/notifications");
+const { addReview } = require("../../controllers/reviews");
 
 const matchQueueProcessor = async (job) => {
   const { reviewId } = job.data;
@@ -53,6 +54,10 @@ const matchQueueProcessor = async (job) => {
       reviewerPool[Math.floor(Math.random() * reviewerPool.length)];
     review.reviewerId = reviewer.id;
     await review.save();
+
+    // make the review controller fire a socket
+    // for reviewer to re-fetch
+    addReview(requester.id, reviewer.id);
 
     // send a notification to the assigned reviewer
     await createNotification({

@@ -10,6 +10,14 @@ const Thread = ({ review, type, fetchReviews }) => {
 
   const { messages, language } = review;
 
+  const handleNewPost = () => {
+    try {
+      setNewPost(true);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  
   return (
     <Paper className={classes.singleView}>
       <ThreadHeader type={type} review={review} fetchReviews={fetchReviews} />
@@ -24,6 +32,19 @@ const Thread = ({ review, type, fetchReviews }) => {
             fetchReviews={fetchReviews}
           />
         ))}
+        {(user.id === review.requesterId || review.status === "accepted") && (
+          !newPost ? (
+            <div className={classes.addPost}>
+              <Button className={classes.button} onClick={handleNewPost}>Add Post</Button>
+            </div>
+          ) : (
+            <NewPost
+              reviewId={review._id}
+              language={language}
+              setNewPost={setNewPost}
+            />
+          )
+        )}
       </div>
     </Paper>
   );

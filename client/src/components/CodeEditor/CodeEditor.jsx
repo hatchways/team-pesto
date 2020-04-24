@@ -44,6 +44,8 @@ const CodeEditor = ({ language, theme, value, onChange, readOnly }) => {
       hightlightActiveLine={true}
       showPrintMargin={false}
       width="100%"
+      minLines={3}
+      maxLines={30}
       onChange={onChange}
       setOptions={{ useWorker: false, readOnly: readOnly }}
     />

@@ -5,6 +5,7 @@ const Review = require("../../models/Review");
 const Message = require("../../models/Message");
 const MatchQueue = require("../../services/MatchQueue");
 const { createNotification } = require("../../controllers/notifications");
+const { newMessage } = require("../../controllers/reviews");
 
 const router = Router();
 const REQUIRED_CREDITS = 1;
@@ -233,5 +234,52 @@ router.post("/requests", authenticate, async (req, res) => {
   ]);
   res.sendStatus(500);
 });
+
+router.post(
+  "/:requestId",
+  authenticate,
+  async (req, res) => {
+    const requestId = req.params.requestId;
+    const userId = req.user.id;
+    const { code, comments } = req.body;
+
+    if (!code && !comments) {
+      return res.sendStatus(400);
+    }
+
+    try {
+      const request = await Review.findById(requestId);
+      const { requesterId, reviewerId } = request;
+
+      // return 403 if user is neither requester nor reviewer.
+      // note: must coerce from Object ID to String
+      if (userId !== String(requesterId) && userId !== String(reviewerId)) return res.sendStatus(403);
+
+      const requesterIsSender = userId === String(requesterId);
+
+      // make the reviews controller save message info to db and update request, and send
+      // socket to update FE message information
+      const message = await newMessage({
+        author: userId,
+        date: Date.now(),
+        code,
+        comments,
+      }, request);
+
+      // make the notifications controller save and send a notification to receiving party
+      await createNotification({
+        reviewId: String(reviewerId),
+        recipientId: String(requesterIsSender ? reviewerId : requesterId),
+        counterpartId: String(requesterIsSender ? requesterId : reviewerId),
+        code: requesterIsSender ? 5 : 6,
+      });
+
+      return res.status(201).send(message);
+    } catch (err) {
+      console.error(err);
+      res.sendStatus(500);
+    }
+  }
+);
 
 module.exports = router;
