@@ -127,6 +127,8 @@ const Navbar = () => {
     return () => socket.unsubscribe("navbar");
   }, []);
 
+  console.log('USER:', user)
+
   return (
     <AppBar className={classes.appBar}>
       <Toolbar>

@@ -4,6 +4,7 @@ import axios from "axios";
 import AppSnackbarContext from 'context/AppSnackbarContext';
 import ReviewThreads from 'components/ReviewThreads';
 import { getToken } from 'utils/storage';
+import socket from "utils/socket";
 
 const Requests = () => {
   const [requests, setRequests] = useState([]);
@@ -24,9 +25,29 @@ const Requests = () => {
       setSnackbar({ open: true, severity: 'error', message: errorMessage });
     }
   };
-  useEffect(fetchRequests, []);
 
-  // TO DO: MAKE THIS SUBSCRIBE TO SOCKETS
+  useEffect(() => {
+    fetchRequests();
+    socket.subscribe("requests", data => {
+      const { type, payload } = data;
+      switch (type) {
+        case "new-post":
+          setRequests(prevRequests => {
+            return prevRequests.map(request => {
+              if (request['_id'] === payload.requestId) {
+                request.messages.push(payload.message);
+              }
+              return request;
+            })
+
+          });
+          return;
+      }
+    });
+
+    // useEffect returns a callback for unsubscribing when it unmounts
+    return () => socket.unsubscribe("requests");
+  }, []);
   
   return (
     <ReviewThreads

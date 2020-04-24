@@ -66,8 +66,6 @@ const Thread = ({ review, type, fetchReviews }) => {
       );
     }
 
-    // TO DO: MAKE THIS SUBSCRIBE TO SOCKETS
-
     return (
       <div className={classes.header}>
         <div>

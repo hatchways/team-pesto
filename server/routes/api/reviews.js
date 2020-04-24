@@ -260,7 +260,7 @@ router.post(
       // make the reviews controller save message info to db and update request, and send
       // socket to update FE message information
       const message = await newMessage({
-        author: String(requesterIsSender ? requesterId : reviewerId),
+        author: userId,
         date: Date.now(),
         code,
         comments,

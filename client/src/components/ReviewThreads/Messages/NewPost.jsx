@@ -9,7 +9,6 @@ import {
   Switch,
   TextField,
 } from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
 import CloseIcon from "@material-ui/icons/Close";
 
 import useStyle from "./Messages.css";

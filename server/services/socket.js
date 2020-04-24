@@ -62,11 +62,17 @@ class Socket {
     const reviewerSocketId = this.usersByUserId[String(reviewerId)];
     this.io.to(requesterSocketId).emit("send-data", {
       type: "new-post",
-      payload: message,
+      payload: {
+        requestId: request.id,
+        message,
+      },
     });
     this.io.to(reviewerSocketId).emit("send-data", {
       type: "new-post",
-      payload: message,
+      payload: {
+        requestId: request.id,
+        message,
+      },
     });
   };
 
