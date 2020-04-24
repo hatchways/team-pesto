@@ -170,19 +170,17 @@ const Checkout = ({
           >
             View Balance
           </Button>
-          {/* <Link to="/code-upload" className={classes.buttonLink}> */}
-            <Button
-              className={classes.button}
-              color="primary"
-              variant="contained"
-              onClick={() => {
-                setPaymentSuccessful(false);
-                setUploadDialogOpen(true);
-              }}
-            >
-              Upload Code
-            </Button>
-          {/* </Link> */}
+          <Button
+            className={classes.button}
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              setPaymentSuccessful(false);
+              setUploadDialogOpen(true);
+            }}
+          >
+            Upload Code
+          </Button>
         </form>
         </GridTemplateContainer>
       )}
