@@ -80,7 +80,7 @@ function App() {
                     <Route exact path="/reviews" component={Reviews} />
                     {/* TODO: Future routes
                     <Route exact path="/upload" component={Upload} />*/}
-                    {/* <Redirect exact to="/" /> */}
+                    <Redirect exact to="/" />
                   </Switch>
                 </>
               )}
