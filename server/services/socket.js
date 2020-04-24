@@ -57,14 +57,6 @@ class Socket {
     });
   }
 
-  markAsRead(userId, notificationId) {
-    const userSocketId = this.usersByUserId[userId];
-    this.io.to(userSocketId).emit("send-data", {
-      type: "read-notification",
-      payload: notificationId,
-    });
-  };
-
 }
 
 module.exports = new Socket();

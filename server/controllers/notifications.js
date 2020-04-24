@@ -52,15 +52,19 @@ const getNotifications = async (recipient) => {
   return notifications;
 };
 
-const markAsRead = async (userId, notificationId) => {
-  const notification = await Notification.findById(notificationId);
+const markAsRead = async (id) => {
+  const notification = await Notification.findById(id);
   notification.seen = true;
-  Socket.markAsRead(userId, notificationId);
   return await notification.save();
+};
+
+const deleteNotification = async (id) => {
+  await Notification.findByIdAndDelete(id);
 };
 
 module.exports = {
   createNotification,
   getNotifications,
   markAsRead,
+  deleteNotification,
 };

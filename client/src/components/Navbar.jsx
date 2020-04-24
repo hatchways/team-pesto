@@ -114,12 +114,6 @@ const Navbar = () => {
         case "add-notification":
           setNotifications(prevNotifications => [payload, ...prevNotifications]);
           return;
-        case "read-notification":
-          setNotifications(prevNotifications => prevNotifications.map(notification => {
-            if (notification._id === payload) notification.seen = true;
-            return notification;
-          }));
-          return;
         case "new-rating":
           setUser(prevUser => ({
             ...prevUser,
@@ -188,7 +182,10 @@ const Navbar = () => {
             open={anchorEl.id === "notifications"}
             onClose={handleClose}
           >
-            <Notifications notifications={notifications} />
+            <Notifications
+              notifications={notifications}
+              setNotifications={setNotifications}
+            />
           </Menu>
 
           <Button
