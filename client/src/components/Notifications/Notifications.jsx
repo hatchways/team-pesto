@@ -1,10 +1,13 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   makeStyles,
   MenuItem,
   Grid,
   Typography,
 } from "@material-ui/core";
+import CloseIcon from "@material-ui/icons/Close";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   unseenMenuItem: {
@@ -24,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#FFFFFF",
     "&:hover": {
       cursor: "pointer",
-      backgroundColor: "EEEEEE",
+      backgroundColor: "#EEEEEE",
     },
   },
   notificationTitle: {
@@ -34,6 +37,26 @@ const useStyles = makeStyles((theme) => ({
   timestamp: {
     fontSize: "x-small",
   },
+  link: {
+    textDecoration: "none",
+    color: "#000000",
+  },
+  closeIconRow: {
+    height: "10px",
+    width: "100%",
+    display: "flex",
+    justifyContent: "flex-end",
+  },
+  closeIcon: {
+    height: "10px",
+    width: "10px",
+    "&:hover": {
+      cursor: "pointer",
+    },
+  },
+  grid: {
+    alignItems: "flex-start",
+  }
 }));
 
 const parseDate = date => {
@@ -68,8 +91,30 @@ const parseDate = date => {
   }
 };
 
+const handleClick = async (id, setNotifications) => {
+  try {
+    await axios.put(`/api/notifications/${id}`);
+    setNotifications(prevNotifications => prevNotifications.map(notification => {
+      if (notification._id === id) notification.seen = true;
+      return notification;
+    }));
+  } catch(err) {
+    console.error(err);
+  }
+};
 
-const Notifications = ({ notifications }) => {
+const handleDelete = async (id, setNotifications) => {
+  try {
+    await axios.delete(`/api/notifications/${id}`);
+    setNotifications(prevNotifications => prevNotifications.filter(notification => {
+      return notification._id !== id;
+    }));
+  } catch(err) {
+    console.error(err);
+  }
+};
+
+const Notifications = ({ notifications, setNotifications }) => {
   const classes = useStyles();
   return (
     <>
@@ -79,10 +124,20 @@ const Notifications = ({ notifications }) => {
             key={i}
             className={notification.seen ? classes.seenMenuItem : classes.unseenMenuItem}
           >
-            <Grid container direction="column">
-              <Typography className={classes.notificationTitle}>{notification.title}</Typography>
-              <Typography className={classes.timestamp}>{parseDate(notification.date)}</Typography>
-            </Grid>
+            <Link to={notification.link} className={classes.link}>
+              <Grid container direction="column" className={classes.grid}>
+                <div className={classes.closeIconRow}>
+                  <CloseIcon
+                    className={classes.closeIcon}
+                    onClick={() => handleDelete(notification._id, setNotifications)}
+                  />
+                </div>
+                <div onClick={() => handleClick(notification._id, setNotifications)}>
+                  <Typography className={classes.notificationTitle}>{notification.title}</Typography>
+                  <Typography className={classes.timestamp}>{parseDate(notification.date)}</Typography>
+                </div>
+              </Grid>
+            </Link>
           </MenuItem>
         )) : (
           <MenuItem className={classes.seenMenuItem}>

@@ -15,7 +15,7 @@ const setRating = async (data) => {
     // fire a socket to update user's FE user object
     Socket.updateProfileRating(reviewerId, score);
 
-    return await rating.save();
+    await rating.save();
   } catch(err) {
     console.error(err);
   }
