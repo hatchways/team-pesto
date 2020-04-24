@@ -97,6 +97,18 @@ const ThreadHeader = ({ type, review, fetchReviews }) => {
       </div>
     );
   }
+  if (type === 'requests' && status === 'accepted') {
+    actions = (
+      <Button
+        variant='contained'
+        color='primary'
+        disableElevation
+        disabled={loading}
+      >
+        Mark as Complete
+      </Button>
+    );
+  }
 
   return (
     <div className={classes.header}>
