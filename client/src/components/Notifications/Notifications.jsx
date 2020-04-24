@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#FFFFFF",
     "&:hover": {
       cursor: "pointer",
-      backgroundColor: "EEEEEE",
+      backgroundColor: "#EEEEEE",
     },
   },
   notificationTitle: {
@@ -34,6 +34,10 @@ const useStyles = makeStyles((theme) => ({
   },
   timestamp: {
     fontSize: "x-small",
+  },
+  link: {
+    textDecoration: "none",
+    color: "#000000",
   },
 }));
 
@@ -75,7 +79,6 @@ const handleClick = () => {
 
 const Notifications = ({ notifications }) => {
   const classes = useStyles();
-  console.log('NOTIFICATIONS', notifications)
   return (
     <>
       {
@@ -85,7 +88,7 @@ const Notifications = ({ notifications }) => {
             className={notification.seen ? classes.seenMenuItem : classes.unseenMenuItem}
             onClick={handleClick}
           >
-            <Link to={notification.link}>
+            <Link to={notification.link} className={classes.link}>
               <Grid container direction="column">
                 <Typography className={classes.notificationTitle}>{notification.title}</Typography>
                 <Typography className={classes.timestamp}>{parseDate(notification.date)}</Typography>
