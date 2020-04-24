@@ -101,17 +101,24 @@ const Navbar = () => {
     socket.connect(localStorage.token);
 
     // fetch all notifications for this user from db
-    (async function () {
+    const fetchNotifications = async () => {
       const data = await socket.fetchNotifications();
       setNotifications(data.reverse());
-    })();
+    }
+    fetchNotifications();
 
     // subscribe this component to socket IO client
     socket.subscribe("navbar", data => {
       const { type, payload } = data;
       switch (type) {
-        case "notification":
+        case "add-notification":
           setNotifications(prevNotifications => [payload, ...prevNotifications]);
+          return;
+        case "read-notification":
+          setNotifications(prevNotifications => prevNotifications.map(notification => {
+            if (notification._id === payload) notification.seen = true;
+            return notification;
+          }));
           return;
         case "new-rating":
           setUser(prevUser => ({

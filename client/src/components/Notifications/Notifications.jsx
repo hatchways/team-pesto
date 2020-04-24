@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import {
   makeStyles,
@@ -6,6 +6,8 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core";
+import axios from "axios";
+import UserContext from "context/UserContext";
 
 const useStyles = makeStyles((theme) => ({
   unseenMenuItem: {
@@ -73,12 +75,17 @@ const parseDate = date => {
   }
 };
 
-const handleClick = () => {
-
+const handleClick = async (notificationId, userId) => {
+  try {
+    axios.put(`/api/notifications/${notificationId}`, { userId });
+  } catch(err) {
+    console.error(err);
+  }
 };
 
 const Notifications = ({ notifications }) => {
   const classes = useStyles();
+  const { user } = useContext(UserContext);
   return (
     <>
       {
@@ -86,7 +93,7 @@ const Notifications = ({ notifications }) => {
           <MenuItem
             key={i}
             className={notification.seen ? classes.seenMenuItem : classes.unseenMenuItem}
-            onClick={handleClick}
+            onClick={() => handleClick(notification._id, user.id)}
           >
             <Link to={notification.link} className={classes.link}>
               <Grid container direction="column">
