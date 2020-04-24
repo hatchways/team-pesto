@@ -185,7 +185,7 @@ const Profile = (props) => {
           <div className={classes.gridRow2}>
             <div>
               <Typography className={classes.decorativeText}>
-                {years}
+                {years || 'N/A'}
               </Typography>
 
               <Typography className={classes.text}>

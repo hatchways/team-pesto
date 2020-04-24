@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Chip, Button, Box, Typography, Dialog, DialogContent, DialogTitle, DialogActions } from '@material-ui/core';
-import { HourglassFull, Check, DoneAll, EmojiEmotions, SentimentSatisfied } from '@material-ui/icons';
+import { HourglassFull, Check, CheckCircle, EmojiEmotions, SentimentSatisfied } from '@material-ui/icons';
 import axios from 'axios';
 
 import useStyles from './ThreadHeader.css';
@@ -19,6 +19,10 @@ const ThreadHeader = ({ type, review, fetchReviews }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { setSnackbar } = useContext(AppSnackbarContext);
+
+  const handleCloseRatingDialog = () => {    
+    setDialogOpen(false);
+  };
 
   const handleAcceptReject = async (newStatus) => {
     setLoading(true);
@@ -40,8 +44,24 @@ const ThreadHeader = ({ type, review, fetchReviews }) => {
     setLoading(false);
   };
 
-  const handleCloseRatingDialog = () => {    
-    setDialogOpen(false);
+  const handleSubmitRating = async () => {
+    setLoading(true);
+
+    const token = getToken();
+    try {
+      await axios.post(
+        '/api/ratings',
+        { reviewId: review._id, score: rating },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      fetchReviews();
+    } catch (err) {
+      const errMessage = err.response.data.response || err.response.data;
+      setSnackbar({ open: true, severity: 'error', message: errMessage });
+    }
+
+    setLoading(false);
+    handleCloseRatingDialog();
   };
 
   const renderRatingSelector = () => {
@@ -98,7 +118,7 @@ const ThreadHeader = ({ type, review, fetchReviews }) => {
     case 'completed':
       statusChip =
         <Chip
-          icon={<DoneAll />}
+          icon={<CheckCircle />}
           label='Completed'
           size='small'
           color='primary'
@@ -176,8 +196,8 @@ const ThreadHeader = ({ type, review, fetchReviews }) => {
             {renderRatingSelector()}
           </Box>
           <DialogActions>
-            <Button>Submit</Button>
-            <Button onClick={handleCloseRatingDialog}>Cancel</Button>
+            <Button onClick={handleSubmitRating} disabled={loading}>Submit</Button>
+            <Button onClick={handleCloseRatingDialog} disabled={loading}>Cancel</Button>
           </DialogActions>
         </DialogContent>
       </Dialog>
