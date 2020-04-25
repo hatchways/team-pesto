@@ -2,7 +2,6 @@ import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import {
   Button,
-  TextField,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,8 +18,14 @@ const ImageUpload = ({ open, onClose }) => {
   const [imageFile, setImageFile] = useState("");
 
   const onDrop = useCallback(async (acceptedFiles) => {
-    // Do something with the files
-    console.log(acceptedFiles);
+    const formData = new FormData();
+    formData.append("file", acceptedFiles[0]);
+
+    await axios.post("/api/users/upload", formData, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
