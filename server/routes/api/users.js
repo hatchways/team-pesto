@@ -270,8 +270,29 @@ router.put("/:id/add-credits", async (req, res) => {
   }
 });
 
-router.post("/upload", authenticate, uploadS3.single("file"), (req, res) => {
-  console.log("POST ", req.file);
-});
+router.post(
+  "/upload",
+  authenticate,
+  uploadS3.single("file"),
+  async (req, res) => {
+    const userId = req.user.id;
+    const location = req.file.location;
+
+    try {
+      if (userId) {
+        const user = await User.findById(userId);
+        user.image = location;
+        user.save();
+        res.send(200).send({ image: user.image });
+      } else {
+        res.sendStatus(400);
+        return;
+      }
+    } catch (err) {
+      console.error(err);
+      res.sendStatus(500);
+    }
+  }
+);
 
 module.exports = router;

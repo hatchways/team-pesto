@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
+import UserContext from "context/UserContext";
 import { useDropzone } from "react-dropzone";
 import {
   Button,
@@ -11,21 +12,35 @@ import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import { getToken } from "../../utils/storage";
 
-const useStyle = makeStyles((theme) => ({}));
+const useStyle = makeStyles((theme) => ({
+  dropBox: {
+    backgroundColor: `${theme.palette.secondary.light}`,
+    border: `1px dashed ${theme.palette.secondary.main}`,
+    height: 100,
+    padding: 10,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    "&:hover": {
+      cursor: "pointer",
+    },
+  },
+}));
 
 const ImageUpload = ({ open, onClose }) => {
   const classes = useStyle();
-  const [imageFile, setImageFile] = useState("");
 
   const onDrop = useCallback(async (acceptedFiles) => {
     const formData = new FormData();
     formData.append("file", acceptedFiles[0]);
 
-    await axios.post("/api/users/upload", formData, {
+    const { data } = await axios.post("/api/users/upload", formData, {
       headers: {
         Authorization: `Bearer ${getToken()}`,
       },
     });
+
+    onClose();
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -39,9 +54,11 @@ const ImageUpload = ({ open, onClose }) => {
         <div {...getRootProps()}>
           <input {...getInputProps()} />
           {isDragActive ? (
-            <p>Drop the files here ...</p>
+            <div className={classes.dropBox}>Drop the image file here ...</div>
           ) : (
-            <p>Drag 'n' drop some files here, or click to select files</p>
+            <div className={classes.dropBox}>
+              Drag 'n' drop image file here, or click to select a file
+            </div>
           )}
         </div>
       </DialogContent>
