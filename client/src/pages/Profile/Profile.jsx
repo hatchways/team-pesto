@@ -9,6 +9,7 @@ import { getToken } from "utils/storage";
 import useStyle from "pages/Profile/Profile.css";
 import MainContainer from "components/MainContainer";
 import EditProfile from "pages/Profile/EditProfile";
+import ImageUpload from "pages/Profile/ImageUpload";
 
 const Profile = (props) => {
   const classes = useStyle();
@@ -16,6 +17,7 @@ const Profile = (props) => {
 
   const [showEditOption, setShowEditOption] = useState(false);
   const [open, setOpen] = useState(false);
+  const [avatarOpen, setAvatarOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     severity: "",
@@ -91,8 +93,13 @@ const Profile = (props) => {
     setOpen(true);
   };
 
+  const handleAvatarClickOpen = () => {
+    setAvatarOpen(true);
+  };
+
   const handleClose = () => {
     setOpen(false);
+    setAvatarOpen(false);
   };
 
   const handleSubmit = async (event) => {
@@ -165,7 +172,15 @@ const Profile = (props) => {
         <div className={classes.headerWrapper}>
           <div className={classes.subHeaderWrapper}>
             <div className={classes.avatarWrapper}>
-              <Avatar className={classes.userAvatar} src={image} />
+              <Avatar
+                className={
+                  showEditOption
+                    ? `${classes.userAvatar} ${classes.userAvatarHover}`
+                    : classes.userAvatar
+                }
+                src={image}
+                onClick={showEditOption ? handleAvatarClickOpen : null}
+              />
             </div>
             <Typography className={classes.profileName} variant="h3">
               {name}
@@ -185,7 +200,7 @@ const Profile = (props) => {
           <div className={classes.gridRow2}>
             <div>
               <Typography className={classes.decorativeText}>
-                {years || 'N/A'}
+                {years || "N/A"}
               </Typography>
 
               <Typography className={classes.text}>
@@ -200,11 +215,9 @@ const Profile = (props) => {
             </div>
             <div>
               <Typography className={classes.decorativeText}>
-                {
-                  reviews 
-                    ? Math.round((totalRatingsScore / reviews) * 10) / 10
-                    : 'N/A'
-                }
+                {reviews
+                  ? Math.round((totalRatingsScore / reviews) * 10) / 10
+                  : "N/A"}
               </Typography>
               <Typography className={classes.text}>Average Rating</Typography>
             </div>
@@ -240,6 +253,8 @@ const Profile = (props) => {
         setEditedExperience={setEditedExperience}
         setSnackbar={setSnackbar}
       />
+
+      <ImageUpload open={avatarOpen} onClose={handleClose} />
 
       <Portal>
         <Snackbar
