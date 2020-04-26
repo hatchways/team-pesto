@@ -20,6 +20,7 @@ const validateEmail = require("../../validation/email");
 const validatePassword = require("../../validation/password");
 const validateExperience = require("../../validation/experience");
 const authenticate = require("../../middlewares/authenticate");
+const { newImage } = require("../../controllers/profileImage");
 
 const stripe = configureStripe(stripeSecretKey);
 
@@ -280,10 +281,9 @@ router.post(
 
     try {
       if (userId) {
-        const user = await User.findById(userId);
-        user.image = location;
-        user.save();
-        res.send(200).send({ image: user.image });
+        const imageUrl = await newImage(userId, location);
+
+        res.send(200).send({ image: imageUrl });
       } else {
         res.sendStatus(400);
         return;

@@ -6,6 +6,7 @@ import { Alert } from "@material-ui/lab";
 import EditIcon from "@material-ui/icons/Edit";
 
 import { getToken } from "utils/storage";
+import socket from "utils/socket";
 import useStyle from "pages/Profile/Profile.css";
 import MainContainer from "components/MainContainer";
 import EditProfile from "pages/Profile/EditProfile";
@@ -39,37 +40,49 @@ const Profile = (props) => {
   const [editedExperience, setEditedExperience] = useState([]);
   const [editedImage, setEditedImage] = useState("");
 
-  useEffect(() => {
-    const getProfile = async (id) => {
-      try {
-        const { data } = await axios.get(`/api/users/profile/${id}`);
+  const getProfile = async (id) => {
+    try {
+      const { data } = await axios.get(`/api/users/profile/${id}`);
 
-        const { profile } = data;
+      const { profile } = data;
 
-        if (profile["_id"] === user.id) {
-          setShowEditOption(true);
-        }
-
-        setProfileId(profile["_id"]);
-        setReviews(profile.totalRatings);
-        setTotalRatingsScore(profile.totalRatingsScore);
-        setName(profile.name);
-        setTitle(profile.title);
-        setYears(profile.years);
-        setExperience(profile.experience);
-        setImage(profile.image);
-
-        setEditedName(profile.name);
-        setEditedTitle(profile.title);
-        setEditedYears(profile.years);
-        setEditedExperience(profile.experience);
-        setEditedImage(profile.image);
-      } catch (err) {
-        console.error(err);
+      if (profile["_id"] === user.id) {
+        setShowEditOption(true);
       }
-    };
 
+      setProfileId(profile["_id"]);
+      setReviews(profile.totalRatings);
+      setTotalRatingsScore(profile.totalRatingsScore);
+      setName(profile.name);
+      setTitle(profile.title);
+      setYears(profile.years);
+      setExperience(profile.experience);
+      setImage(profile.image);
+
+      setEditedName(profile.name);
+      setEditedTitle(profile.title);
+      setEditedYears(profile.years);
+      setEditedExperience(profile.experience);
+      setEditedImage(profile.image);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
     getProfile(props.match.params.id || user.id);
+
+    socket.subscribe("profile", (data) => {
+      const { type, payload } = data;
+      switch (type) {
+        case "new-image":
+          setImage(payload);
+          return;
+      }
+    });
+
+    // useEffect returns a callback for unsubscribing when it unmounts
+    return () => socket.unsubscribe();
   }, []);
 
   const handleFormChange = (event) => {
