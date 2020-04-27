@@ -283,7 +283,7 @@ router.post(
       if (userId) {
         const imageUrl = await newImage(userId, location);
 
-        res.send(200).send({ image: imageUrl });
+        res.status(200).send({ image: imageUrl });
       } else {
         res.sendStatus(400);
         return;

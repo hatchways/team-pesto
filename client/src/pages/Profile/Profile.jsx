@@ -78,6 +78,7 @@ const Profile = (props) => {
         case "new-image":
           setImage(payload);
           return;
+        default:
       }
     });
 
