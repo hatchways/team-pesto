@@ -7,7 +7,7 @@
     "debug": "nodemon  --inspect ./bin/www",
     "lint": "npx eslint . --fix",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 120000",
-    "server-dev": "nodemon ./bin/www",
+    "server-dev": "NODE_ENV=dev nodemon ./bin/www",
     "start-mongo": "mongod --port 27017 --fork --logpath /dev/null",
     "stop-mongo": "mongod --shutdown"
   },
