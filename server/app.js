@@ -41,7 +41,7 @@ if (process.env.NODE_ENV !== 'dev') {
   app.use(express.static(join(__dirname, 'client/build')));
   // catch-all for all non-API routes
   app.use('*', (req, res) => {
-    res.sendFile(join(__dirName + '/client/build/index.html'));
+    res.sendFile(join(__dirname, 'client/build/index.html'));
   });
 }
 
