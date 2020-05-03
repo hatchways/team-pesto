@@ -1,4 +1,6 @@
-version: 2 # use CircleCI 2.0
+version: 2.1 # use CircleCI 2.0
+orbs:
+  heroku: circleci/heroku@1.0.1
 jobs: # a collection of steps
   build: # runs not using Workflows must have a `build` job as entry point
     docker: # run the steps with Docker
@@ -26,3 +28,18 @@ jobs: # a collection of steps
       - run: # run tests
           name: test
           command: cd server && npm test
+  deploy:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Build Docker image
+          command: docker build -t pesto:$CIRCLE_SHA1 .      
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
