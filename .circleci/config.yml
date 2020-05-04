@@ -35,9 +35,7 @@ jobs: # a collection of steps
       - run:
           name: Deploy to Heroku
           command: |
-            heroku login
-            $HEROKU_USERNAME
-            $HEROKU_API_KEY
+            printf "$HEROKU_USERNAME\n$HEROKU_API_KEY" | heroku login
             heroku container:login
             heroku container:push web --app $HEROKU_APP_NAME
             heroku container:release web --app $HEROKU_APP_NAME
