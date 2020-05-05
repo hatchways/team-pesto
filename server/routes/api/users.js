@@ -3,19 +3,50 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const configureStripe = require("stripe");
+const multer = require("multer");
+const multers3 = require("multer-s3");
+const AWS = require("aws-sdk");
 
-const { passportSecret, stripeSecretKey } = require("../../config/keys");
+const {
+  passportSecret,
+  stripeSecretKey,
+  awsBucketName,
+  awsAccessKeyId,
+  awsSecretAccessKey,
+  awsRegion,
+} = require("../../config/keys");
 const User = require("../../models/User");
 const validateEmail = require("../../validation/email");
 const validatePassword = require("../../validation/password");
 const validateExperience = require("../../validation/experience");
 const authenticate = require("../../middlewares/authenticate");
+const { newImage } = require("../../controllers/profileImage");
 
 const stripe = configureStripe(stripeSecretKey);
 
 const router = express.Router();
 
 const price = 100; // the USD price (in cents) of 1 credit
+
+const s3 = new AWS.S3({
+  accessKeyId: awsAccessKeyId,
+  secretAccessKey: awsSecretAccessKey,
+  region: awsRegion,
+});
+
+const uploadS3 = multer({
+  storage: multers3({
+    s3: s3,
+    acl: "public-read",
+    bucket: awsBucketName,
+    metadata: (req, file, cb) => {
+      cb(null, { fieldName: file.fieldname });
+    },
+    key: (req, file, cb) => {
+      cb(null, Date.now().toString() + "-" + file.originalname);
+    },
+  }),
+});
 
 const validateSignupInputs = (body) => {
   const { name, email, password } = body;
@@ -174,7 +205,7 @@ router.get("/profile/:id", async (req, res) => {
 
   try {
     const user = await User.findById(id);
-    
+
     if (user) {
       const profile = user.profile();
       res.status(200).send({ profile });
@@ -239,5 +270,29 @@ router.put("/:id/add-credits", async (req, res) => {
     res.status(400);
   }
 });
+
+router.post(
+  "/upload",
+  authenticate,
+  uploadS3.single("file"),
+  async (req, res) => {
+    const userId = req.user.id;
+    const location = req.file.location;
+
+    try {
+      if (userId) {
+        const imageUrl = await newImage(userId, location);
+
+        res.status(200).send({ image: imageUrl });
+      } else {
+        res.sendStatus(400);
+        return;
+      }
+    } catch (err) {
+      console.error(err);
+      res.sendStatus(500);
+    }
+  }
+);
 
 module.exports = router;

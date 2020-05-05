@@ -16,7 +16,7 @@ import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import Notifications from "./Notifications/Notifications";
 import UserContext from "context/UserContext";
 import CodeUploadDialog from "pages/CodeUploadDialog";
-import logo from 'assets/images/logo.png';
+import logo from "assets/images/logo.png";
 
 import socket from "utils/socket";
 
@@ -38,11 +38,11 @@ const useStyles = makeStyles((theme) => ({
     margin: "0 10px 0 10px",
   },
   link: {
-    color: 'black',
+    color: "black",
     textDecoration: "none",
   },
   linkText: {
-    color: "white",    
+    color: "white",
     fontWeight: "normal",
     textTransform: "none",
   },
@@ -78,6 +78,7 @@ const Navbar = () => {
   const [notifications, setNotifications] = useState([]);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState({});
+  const [image, setImage] = useState("");
 
   const handleUploadDialog = () => {
     setUploadDialogOpen(!uploadDialogOpen);
@@ -104,25 +105,33 @@ const Navbar = () => {
     const fetchNotifications = async () => {
       const data = await socket.fetchNotifications();
       setNotifications(data.reverse());
-    }
+    };
     fetchNotifications();
 
     // subscribe this component to socket IO client
-    socket.subscribe("navbar", data => {
+    socket.subscribe("navbar", (data) => {
       const { type, payload } = data;
       switch (type) {
         case "add-notification":
-          setNotifications(prevNotifications => [payload, ...prevNotifications]);
+          setNotifications((prevNotifications) => [
+            payload,
+            ...prevNotifications,
+          ]);
           return;
         case "new-rating":
-          setUser(prevUser => ({
+          setUser((prevUser) => ({
             ...prevUser,
             totalRatings: prevUser.totalRatings + 1,
             totalRatingsScore: prevUser.totalRatingsScore + payload,
           }));
           return;
+        case "new-image":
+          setImage(payload);
+          return;
       }
     });
+
+    setImage(user.image);
 
     // useEffect returns a callback for unsubscribing when it unmounts
     return () => socket.unsubscribe("navbar");
@@ -137,21 +146,21 @@ const Navbar = () => {
           </Link>
         </Toolbar>
 
-        <Toolbar className={classes.toolbar}>          
+        <Toolbar className={classes.toolbar}>
           <Link className={classes.link} to="/requests">
             <Button className={classes.clickable}>
               <span className={classes.linkText}>Requests</span>
             </Button>
-          </Link>          
+          </Link>
 
           <Link className={classes.link} to="/reviews">
-            <Button className={classes.clickable}>            
+            <Button className={classes.clickable}>
               <span className={classes.linkText}>Reviews</span>
             </Button>
           </Link>
 
           <Link className={classes.link} to="/balance">
-            <Button className={classes.clickable}>            
+            <Button className={classes.clickable}>
               <span className={classes.linkText}>Balance</span>
             </Button>
           </Link>
@@ -200,7 +209,7 @@ const Navbar = () => {
             className={classes.profileButton}
             onClick={handleMenu}
           >
-            <Avatar src={user && user.image} />
+            <Avatar src={user && image} />
             <div className={classes.linkText}>Profile</div>
             <div className={classes.triangle} />
           </Button>
@@ -217,7 +226,9 @@ const Navbar = () => {
               </Link>
             </MenuItem>
             <MenuItem onClick={handleLogout}>
-              <Link className={classes.link} to="/">Logout</Link>
+              <Link className={classes.link} to="/">
+                Logout
+              </Link>
             </MenuItem>
           </Menu>
         </Toolbar>
