@@ -4,12 +4,17 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const configureStripe = require("stripe");
 
-const { passportSecret, stripeSecretKey } = require("../../config/keys");
+const {
+  passportSecret,
+  stripeSecretKey,
+} = require("../../config/keys");
 const User = require("../../models/User");
 const validateEmail = require("../../validation/email");
 const validatePassword = require("../../validation/password");
 const validateExperience = require("../../validation/experience");
 const authenticate = require("../../middlewares/authenticate");
+const { newImage } = require("../../controllers/profileImage");
+const uploadS3 = require("../../services/awsS3")
 
 const stripe = configureStripe(stripeSecretKey);
 
@@ -174,7 +179,7 @@ router.get("/profile/:id", async (req, res) => {
 
   try {
     const user = await User.findById(id);
-    
+
     if (user) {
       const profile = user.profile();
       res.status(200).send({ profile });
@@ -239,5 +244,29 @@ router.put("/:id/add-credits", async (req, res) => {
     res.status(400);
   }
 });
+
+router.post(
+  "/upload",
+  authenticate,
+  uploadS3.single("file"),
+  async (req, res) => {
+    const userId = req.user.id;
+    const location = req.file.location;
+
+    try {
+      if (userId) {
+        const imageUrl = await newImage(userId, location);
+
+        res.status(200).send({ image: imageUrl });
+      } else {
+        res.sendStatus(400);
+        return;
+      }
+    } catch (err) {
+      console.error(err);
+      res.sendStatus(500);
+    }
+  }
+);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   editHeader: {
@@ -38,29 +38,20 @@ const useStyles = makeStyles((theme) => ({
   },
 
   authorLink: {
-    textDecoration: 'none',
-    color: 'black',
+    textDecoration: "none",
+    color: "black",
   },
 
   date: {
     color: `${theme.palette.secondary.lightGray}`,
     fontSize: "12px",
   },
-
-  button: {
-    backgroundColor: `${theme.palette.primary.main}`,
-    color: "#FFFF",
-    marginRight: "10px",
-    lineHeight: 1,
-    padding: "8px",
-  },
-  
   authorComment: {
     paddingLeft: "55px",
     marginBottom: "55px",
-    overflowWrap: 'break-word',
-    wordWrap: 'break-word',
-    width: '100%',
+    overflowWrap: "break-word",
+    wordWrap: "break-word",
+    width: "100%",
   },
 }));
 

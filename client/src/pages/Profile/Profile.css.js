@@ -26,6 +26,11 @@ const useStyles = makeStyles((theme) => ({
     width: "3.5rem",
     height: "3.5rem",
   },
+  userAvatarHover: {
+    "&:hover": {
+      cursor: "pointer",
+    },
+  },
   contentWrapper: {
     display: "grid",
     gridTemplateRows: "repeat(2, 1fr) 1fr",

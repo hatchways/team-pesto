@@ -56,6 +56,14 @@ class Socket {
     });
   }
 
+  updateProfileImage(userId, imageUrl) {
+    const userSocketId = this.usersByUserId[userId];
+    this.io.to(userSocketId).emit("send-data", {
+      type: "new-image",
+      payload: imageUrl,
+    });
+  }
+
   addNewPost(request, message) {
     const { requesterId, reviewerId } = request;
     const requesterSocketId = this.usersByUserId[String(requesterId)];
@@ -74,7 +82,7 @@ class Socket {
         message,
       },
     });
-  };
+  }
 
   refetch(requesterId, reviewerId) {
     const requesterSocketId = this.usersByUserId[String(requesterId)];
@@ -86,7 +94,6 @@ class Socket {
       type: "refetch",
     });
   }
-  
 }
 
 module.exports = new Socket();

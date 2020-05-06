@@ -108,7 +108,6 @@ const EditProfile = ({
             InputLabelProps={{ shrink: true }}
             value={years}
             onChange={handleFormChange}
-            className={classes.inputField}
             className={classes.textField}
           />
 

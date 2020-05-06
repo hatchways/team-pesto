@@ -6,9 +6,11 @@ import { Alert } from "@material-ui/lab";
 import EditIcon from "@material-ui/icons/Edit";
 
 import { getToken } from "utils/storage";
+import socket from "utils/socket";
 import useStyle from "pages/Profile/Profile.css";
 import MainContainer from "components/MainContainer";
 import EditProfile from "pages/Profile/EditProfile";
+import ImageUpload from "pages/Profile/ImageUpload";
 
 const Profile = (props) => {
   const classes = useStyle();
@@ -16,6 +18,7 @@ const Profile = (props) => {
 
   const [showEditOption, setShowEditOption] = useState(false);
   const [open, setOpen] = useState(false);
+  const [avatarOpen, setAvatarOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     severity: "",
@@ -37,37 +40,50 @@ const Profile = (props) => {
   const [editedExperience, setEditedExperience] = useState([]);
   const [editedImage, setEditedImage] = useState("");
 
-  useEffect(() => {
-    const getProfile = async (id) => {
-      try {
-        const { data } = await axios.get(`/api/users/profile/${id}`);
+  const getProfile = async (id) => {
+    try {
+      const { data } = await axios.get(`/api/users/profile/${id}`);
 
-        const { profile } = data;
+      const { profile } = data;
 
-        if (profile["_id"] === user.id) {
-          setShowEditOption(true);
-        }
-
-        setProfileId(profile["_id"]);
-        setReviews(profile.totalRatings);
-        setTotalRatingsScore(profile.totalRatingsScore);
-        setName(profile.name);
-        setTitle(profile.title);
-        setYears(profile.years);
-        setExperience(profile.experience);
-        setImage(profile.image);
-
-        setEditedName(profile.name);
-        setEditedTitle(profile.title);
-        setEditedYears(profile.years);
-        setEditedExperience(profile.experience);
-        setEditedImage(profile.image);
-      } catch (err) {
-        console.error(err);
+      if (profile["_id"] === user.id) {
+        setShowEditOption(true);
       }
-    };
 
+      setProfileId(profile["_id"]);
+      setReviews(profile.totalRatings);
+      setTotalRatingsScore(profile.totalRatingsScore);
+      setName(profile.name);
+      setTitle(profile.title);
+      setYears(profile.years);
+      setExperience(profile.experience);
+      setImage(profile.image);
+
+      setEditedName(profile.name);
+      setEditedTitle(profile.title);
+      setEditedYears(profile.years);
+      setEditedExperience(profile.experience);
+      setEditedImage(profile.image);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
     getProfile(props.match.params.id || user.id);
+
+    socket.subscribe("profile", (data) => {
+      const { type, payload } = data;
+      switch (type) {
+        case "new-image":
+          setImage(payload);
+          return;
+        default:
+      }
+    });
+
+    // useEffect returns a callback for unsubscribing when it unmounts
+    return () => socket.unsubscribe();
   }, []);
 
   const handleFormChange = (event) => {
@@ -91,8 +107,13 @@ const Profile = (props) => {
     setOpen(true);
   };
 
+  const handleAvatarClickOpen = () => {
+    setAvatarOpen(true);
+  };
+
   const handleClose = () => {
     setOpen(false);
+    setAvatarOpen(false);
   };
 
   const handleSubmit = async (event) => {
@@ -165,7 +186,15 @@ const Profile = (props) => {
         <div className={classes.headerWrapper}>
           <div className={classes.subHeaderWrapper}>
             <div className={classes.avatarWrapper}>
-              <Avatar className={classes.userAvatar} src={image} />
+              <Avatar
+                className={
+                  showEditOption
+                    ? `${classes.userAvatar} ${classes.userAvatarHover}`
+                    : classes.userAvatar
+                }
+                src={image}
+                onClick={showEditOption ? handleAvatarClickOpen : null}
+              />
             </div>
             <Typography className={classes.profileName} variant="h3">
               {name}
@@ -185,7 +214,7 @@ const Profile = (props) => {
           <div className={classes.gridRow2}>
             <div>
               <Typography className={classes.decorativeText}>
-                {years || 'N/A'}
+                {years || "N/A"}
               </Typography>
 
               <Typography className={classes.text}>
@@ -200,11 +229,9 @@ const Profile = (props) => {
             </div>
             <div>
               <Typography className={classes.decorativeText}>
-                {
-                  reviews 
-                    ? Math.round((totalRatingsScore / reviews) * 10) / 10
-                    : 'N/A'
-                }
+                {reviews
+                  ? Math.round((totalRatingsScore / reviews) * 10) / 10
+                  : "N/A"}
               </Typography>
               <Typography className={classes.text}>Average Rating</Typography>
             </div>
@@ -240,6 +267,8 @@ const Profile = (props) => {
         setEditedExperience={setEditedExperience}
         setSnackbar={setSnackbar}
       />
+
+      <ImageUpload open={avatarOpen} onClose={handleClose} />
 
       <Portal>
         <Snackbar
