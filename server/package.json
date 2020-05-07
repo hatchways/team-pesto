@@ -2,7 +2,9 @@
   "name": "server",
   "version": "0.0.0",
   "private": true,
-  "engines": { "node": ">=12.9.0" },
+  "engines": {
+    "node": ">=12.9.0"
+  },
   "scripts": {
     "dev": "run-s start-mongo server-dev",
     "debug": "nodemon  --inspect ./bin/www",

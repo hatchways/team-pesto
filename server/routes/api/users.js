@@ -4,17 +4,14 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const configureStripe = require("stripe");
 
-const {
-  passportSecret,
-  stripeSecretKey,
-} = require("../../config/keys");
+const { passportSecret, stripeSecretKey } = require("../../config/keys");
 const User = require("../../models/User");
 const validateEmail = require("../../validation/email");
 const validatePassword = require("../../validation/password");
 const validateExperience = require("../../validation/experience");
 const authenticate = require("../../middlewares/authenticate");
 const { newImage } = require("../../controllers/profileImage");
-const uploadS3 = require("../../services/awsS3")
+const uploadS3 = require("../../services/awsS3");
 
 const stripe = configureStripe(stripeSecretKey);
 
@@ -251,7 +248,7 @@ router.post(
   uploadS3.single("file"),
   async (req, res) => {
     const userId = req.user.id;
-    const location = req.file.location;
+    const { location } = req.file;
 
     try {
       if (userId) {

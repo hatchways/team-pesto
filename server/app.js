@@ -36,12 +36,12 @@ app.use("/api/ratings", ratingsRouter);
 app.use("/api/notifications", notificationsRouter);
 
 // serve React app if not API call
-if (process.env.NODE_ENV !== 'dev') {
+if (process.env.NODE_ENV !== "dev") {
   // serve static files from build directory
-  app.use(express.static(join(__dirname, 'client/build')));
+  app.use(express.static(join(__dirname, "client/build")));
   // catch-all for all non-API routes
-  app.use('*', (req, res) => {
-    res.sendFile(join(__dirname, 'client/build/index.html'));
+  app.use("*", (req, res) => {
+    res.sendFile(join(__dirname, "client/build/index.html"));
   });
 }
 
