@@ -15,6 +15,7 @@ const newImage = async (userId, imageUrl) => {
     return user.image;
   } catch (err) {
     console.error(err);
+    return "";
   }
 };
 

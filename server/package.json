@@ -2,14 +2,18 @@
   "name": "server",
   "version": "0.0.0",
   "private": true,
+  "engines": {
+    "node": ">=12.9.0"
+  },
   "scripts": {
     "dev": "run-s start-mongo server-dev",
     "debug": "nodemon  --inspect ./bin/www",
     "lint": "npx eslint . --fix",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 120000",
-    "server-dev": "nodemon ./bin/www",
+    "server-dev": "NODE_ENV=development nodemon ./bin/www",
     "start-mongo": "mongod --port 27017 --fork --logpath /dev/null",
-    "stop-mongo": "mongod --shutdown"
+    "stop-mongo": "mongod --shutdown",
+    "start": "NODE_ENV=production node ./bin/www"
   },
   "dependencies": {
     "aws-sdk": "^2.663.0",

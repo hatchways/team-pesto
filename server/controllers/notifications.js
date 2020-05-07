@@ -50,7 +50,7 @@ const getNotifications = async (recipient) => {
 const markAsRead = async (id) => {
   const notification = await Notification.findById(id);
   notification.seen = true;
-  return await notification.save();
+  await notification.save();
 };
 
 const deleteNotification = async (id) => {

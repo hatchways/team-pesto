@@ -16,7 +16,7 @@ const setRating = async (data) => {
     Socket.updateProfileRating(reviewerId, score);
 
     await rating.save();
-  } catch(err) {
+  } catch (err) {
     console.error(err);
   }
 };
@@ -27,22 +27,25 @@ const newMessage = async (data, request) => {
     const message = await new Message(data);
 
     // push the new message id into the request's message array
-    request.messages.push(message['_id']);
+    request.messages.push(message._id);
     await request.save();
 
     // populate message's author field with that user's
     // name and image, so it can be rendered on front end
-    await message.populate({
-      path: "author",
-      model: "user",
-      select: "name image",
-    }).execPopulate();
+    await message
+      .populate({
+        path: "author",
+        model: "user",
+        select: "name image",
+      })
+      .execPopulate();
 
     // fire a socket to update both parties' FE reviews data
     Socket.addNewPost(request, message);
 
-    return await message.save();
-  } catch(err) {
+    await message.save();
+    return;
+  } catch (err) {
     console.error(err);
   }
 };

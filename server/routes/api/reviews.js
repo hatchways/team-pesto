@@ -235,51 +235,55 @@ router.post("/requests", authenticate, async (req, res) => {
   res.sendStatus(500);
 });
 
-router.post(
-  "/:requestId",
-  authenticate,
-  async (req, res) => {
-    const requestId = req.params.requestId;
-    const userId = req.user.id;
-    const { code, comments } = req.body;
+router.post("/:requestId", authenticate, async (req, res) => {
+  const { requestId } = req.params;
+  const userId = req.user.id;
+  const { code, comments } = req.body;
 
-    if (!code && !comments) {
-      return res.sendStatus(400);
+  if (!code && !comments) {
+    res.sendStatus(400);
+    return;
+  }
+
+  try {
+    const request = await Review.findById(requestId);
+    const { requesterId, reviewerId } = request;
+
+    // return 403 if user is neither requester nor reviewer.
+    // note: must coerce from Object ID to String
+    if (userId !== String(requesterId) && userId !== String(reviewerId)) {
+      res.sendStatus(403);
+      return;
     }
 
-    try {
-      const request = await Review.findById(requestId);
-      const { requesterId, reviewerId } = request;
+    const requesterIsSender = userId === String(requesterId);
 
-      // return 403 if user is neither requester nor reviewer.
-      // note: must coerce from Object ID to String
-      if (userId !== String(requesterId) && userId !== String(reviewerId)) return res.sendStatus(403);
-
-      const requesterIsSender = userId === String(requesterId);
-
-      // make the reviews controller save message info to db and update request, and send
-      // socket to update FE message information
-      const message = await newMessage({
+    // make the reviews controller save message info to db and update request, and send
+    // socket to update FE message information
+    const message = await newMessage(
+      {
         author: userId,
         date: Date.now(),
         code,
         comments,
-      }, request);
+      },
+      request
+    );
 
-      // make the notifications controller save and send a notification to receiving party
-      await createNotification({
-        reviewId: String(reviewerId),
-        recipientId: String(requesterIsSender ? reviewerId : requesterId),
-        counterpartId: String(requesterIsSender ? requesterId : reviewerId),
-        code: requesterIsSender ? 5 : 6,
-      });
+    // make the notifications controller save and send a notification to receiving party
+    await createNotification({
+      reviewId: String(reviewerId),
+      recipientId: String(requesterIsSender ? reviewerId : requesterId),
+      counterpartId: String(requesterIsSender ? requesterId : reviewerId),
+      code: requesterIsSender ? 5 : 6,
+    });
 
-      return res.status(201).send(message);
-    } catch (err) {
-      console.error(err);
-      res.sendStatus(500);
-    }
+    res.status(201).send(message);
+    return;
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
   }
-);
+});
 
 module.exports = router;

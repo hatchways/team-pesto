@@ -345,10 +345,8 @@ describe("GET /api/reviews/requests", () => {
       .set("Authorization", `Bearer ${token}`)
       .end(async (err, res) => {
         should.not.exist(err);
-        const usersRequests = await Review.find({ requesterId: User1._id });
-        should.exist(usersRequests);
-        usersRequests.should.be.an("array").with.length.above(0);
-
+        res.should.have.status(200);
+        res.body.requests.should.have.length(1);
         done();
       });
   });
@@ -362,15 +360,13 @@ describe("GET /api/reviews/requests", () => {
       .set("Authorization", `Bearer ${token}`)
       .end(async (err, res) => {
         should.not.exist(err);
-        const usersRequests = await Review.find({ requesterId: User1._id });
-        should.exist(usersRequests);
-
-        usersRequests[0].requesterId.toString().should.equal(User1.id);
-        usersRequests[0].reviewerId.toString().should.equal(User2.id);
-        usersRequests[0].title.length.should.be.above(0);
-        usersRequests[0].language.length.should.be.above(0);
-        usersRequests[0].status.length.should.be.above(0);
-        usersRequests[0].messages.should.be.an("array");
+        const testRequest = res.body.requests[0];
+        testRequest.requesterId.toString().should.equal(User1.id);
+        testRequest.reviewerId.toString().should.equal(User2.id);
+        testRequest.title.length.should.be.above(0);
+        testRequest.language.length.should.be.above(0);
+        testRequest.status.length.should.be.above(0);
+        testRequest.messages.should.be.an("array");
 
         done();
       });
@@ -420,16 +416,13 @@ describe("GET /api/reviews/requests/:id", () => {
 
     chai
       .request(app)
-      .get("/api/reviews/requests")
+      .get(`/api/reviews/requests/${User1SingleReviews.id}`)
       .set("Authorization", `Bearer ${token}`)
       .end(async (err, res) => {
         should.not.exist(err);
-        const singleRequest = await Review.find({
-          _id: { $in: [User1SingleReviews.id] },
-          requesterId: { $in: [User1Single.id] },
-        });
-        should.exist(singleRequest);
-        singleRequest.should.be.an("array").with.lengthOf(1);
+        const singleRequest = res.body.singleRequest[0];
+        singleRequest._id.should.equal(User1SingleReviews.id);
+
         done();
       });
   });
@@ -439,22 +432,17 @@ describe("GET /api/reviews/requests/:id", () => {
 
     chai
       .request(app)
-      .get("/api/reviews/requests")
+      .get(`/api/reviews/requests/${User1SingleReviews.id}`)
       .set("Authorization", `Bearer ${token}`)
       .end(async (err, res) => {
         should.not.exist(err);
-        const singleRequest = await Review.find({
-          _id: { $in: [User1SingleReviews.id] },
-          requesterId: { $in: [User1Single.id] },
-        });
-        should.exist(singleRequest);
-
-        singleRequest[0].requesterId.toString().should.equal(User1Single.id);
-        singleRequest[0].reviewerId.toString().should.equal(User2Single.id);
-        singleRequest[0].title.length.should.be.above(0);
-        singleRequest[0].language.length.should.be.above(0);
-        singleRequest[0].status.length.should.be.above(0);
-        singleRequest[0].messages.should.be.an("array");
+        const singleRequest = res.body.singleRequest[0];
+        singleRequest.requesterId.toString().should.equal(User1Single.id);
+        singleRequest.reviewerId.toString().should.equal(User2Single.id);
+        singleRequest.title.length.should.be.above(0);
+        singleRequest.language.length.should.be.above(0);
+        singleRequest.status.length.should.be.above(0);
+        singleRequest.messages.should.be.an("array");
 
         done();
       });
