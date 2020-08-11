@@ -23,9 +23,12 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
   },
-  button: {
+  loginButton: {
     marginTop: 30,
-    marginBottom: 60,
+    marginBottom: 10,
+  },
+  demoButton: {
+    marginBottom: 30,
   },
   textfield: {
     "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
@@ -87,6 +90,16 @@ const Login = () => {
     }
   };
 
+  const handleDemo = (e) => {
+    e.preventDefault();
+
+    const demoUser = 'demo@email.com';
+    const demoPassword = 'password';
+
+    setEmail(demoUser);
+    setPassword(demoPassword);
+  };
+
   if (user && user.experience.length === 0) {
     return <Redirect from="/login" exact to="/experience" />;
   } else if (user && user.experience.length > 0) {
@@ -127,7 +140,11 @@ const Login = () => {
               </FormHelperText>
             )}
 
-            <SubmitButton className={classes.button}>Login</SubmitButton>
+            <SubmitButton className={classes.loginButton}>Login</SubmitButton>
+
+            <SubmitButton className={classes.demoButton} onClick={handleDemo}>
+              Demo
+            </SubmitButton>
 
             <div>
               <strong>
