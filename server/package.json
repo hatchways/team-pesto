@@ -16,7 +16,7 @@
     "start": "NODE_ENV=production node ./bin/www"
   },
   "dependencies": {
-    "aws-sdk": "^2.663.0",
+    "aws-sdk": "^2.814.0",
     "axios": "^0.19.2",
     "bcrypt": "^4.0.1",
     "bull": "^3.13.0",
